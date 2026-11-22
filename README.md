@@ -37,7 +37,7 @@ Un planning de devoirs partagé, accessible sur internet, qui se met à jour tou
    - `SUPABASE_URL` : la Project URL ;
    - `SUPABASE_ANON_KEY` : la clé Publishable ;
    - `FAMILY_EMAIL` : l’e-mail du compte famille ;
-   - `GITHUB_ACTIONS_URL` : `https://github.com/Radouane-git/Kidz-Homeworks/actions/workflows/sync.yml`.
+   - `GITHUB_ACTIONS_URL` : laissez vide.
 
 ### 3. Ajouter les secrets
 
