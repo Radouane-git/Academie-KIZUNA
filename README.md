@@ -24,8 +24,9 @@ Un planning de devoirs partagé, accessible sur internet, qui se met à jour tou
    - cochez **Auto Confirm User**.
 4. **Important pour la sécurité** : menu **Authentication** → **Sign In / Providers** → désactivez
    **Allow new users to sign up**. Sinon, n’importe qui pourrait se créer un compte et lire le planning.
-5. Menu **Project Settings** → **API** : notez la **Project URL**, la clé **anon public** et la clé **service_role**.
-   La clé service_role est secrète : elle ne va que dans les secrets GitHub (étape 3).
+5. Menu **Project Settings** → **API Keys** : notez la clé **Publishable** (`sb_publishable_…`) et la clé
+   **Secret** (`sb_secret_…`). La Project URL est dans **Project Settings** → **Data API** (ou bouton **Connect**).
+   La clé Secret ne va que dans les secrets GitHub (étape 3). Les anciennes clés `anon` / `service_role` marchent aussi.
 
 ### 2. Mettre le code sur GitHub
 
@@ -34,7 +35,7 @@ Un planning de devoirs partagé, accessible sur internet, qui se met à jour tou
 2. **Add file** → **Upload files** → glissez tout le contenu du dossier (y compris le dossier `.github`) → **Commit**.
 3. Ouvrez `site/config.js` sur GitHub (icône crayon) et remplissez :
    - `SUPABASE_URL` : la Project URL ;
-   - `SUPABASE_ANON_KEY` : la clé anon public ;
+   - `SUPABASE_ANON_KEY` : la clé Publishable ;
    - `FAMILY_EMAIL` : l’e-mail du compte famille ;
    - `GITHUB_ACTIONS_URL` : `https://github.com/Radouane-git/Kidz-Homeworks/actions/workflows/sync.yml`.
 
@@ -47,7 +48,7 @@ Dans le dépôt : **Settings** → **Secrets and variables** → **Actions** →
 | `ED_USERNAME` | identifiant EcoleDirecte du compte parent |
 | `ED_PASSWORD` | mot de passe EcoleDirecte |
 | `SUPABASE_URL` | la Project URL |
-| `SUPABASE_SERVICE_KEY` | la clé service_role |
+| `SUPABASE_SERVICE_KEY` | la clé Secret (`sb_secret_…`) |
 
 ### 4. Publier le site
 

@@ -30,7 +30,9 @@ import planner  # noqa: E402
 class Supa:
     def __init__(self, url: str, key: str):
         self.base = url.rstrip("/") + "/rest/v1"
-        self.h = {"apikey": key, "Authorization": f"Bearer {key}", "Content-Type": "application/json"}
+        self.h = {"apikey": key, "Content-Type": "application/json"}
+        if key.startswith("eyJ"):  # ancienne clé service_role (JWT) ; une clé sb_secret_ passe seulement par « apikey »
+            self.h["Authorization"] = f"Bearer {key}"
 
     def get(self, table: str, query: str = "select=*"):
         r = requests.get(f"{self.base}/{table}?{query}", headers=self.h, timeout=30)
