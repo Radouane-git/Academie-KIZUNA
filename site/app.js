@@ -133,7 +133,11 @@ function renderLogin(err){
  document.getElementById("login").addEventListener("submit",function(e){
   e.preventDefault();
   sb.auth.signInWithPassword({email:CFG.FAMILY_EMAIL,password:document.getElementById("pw").value}).then(function(r){
-   if(r.error)renderLogin("Mot de passe incorrect.");else loadAll();
+   if(!r.error){loadAll();return;}
+   var m=String(r.error.message||"");
+   if(/invalid login credentials/i.test(m))renderLogin("Mot de passe incorrect (ou e-mail du compte famille différent de celui de config.js).");
+   else if(/not confirmed/i.test(m))renderLogin("Le compte famille n’est pas confirmé : dans Supabase > Authentication > Users, recréez-le en cochant « Auto Confirm User ».");
+   else renderLogin("Connexion impossible : "+m);
   });
  });
 }
