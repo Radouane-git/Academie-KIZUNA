@@ -97,7 +97,7 @@ def main() -> int:
 
     try:
         res = asyncio.run(ed_fetch.fetch(
-            os.environ["ED_USERNAME"], os.environ["ED_PASSWORD"], start.isoformat(), end.isoformat(),
+            os.environ["ED_USERNAME"].strip(), os.environ["ED_PASSWORD"].strip("\r\n"), start.isoformat(), end.isoformat(),
             answers, db.kv("ed_device"), db.kv("ed_qcm")))
     except ed_fetch.NeedMFA as e:
         log(db, "mfa", "EcoleDirecte pose une question de sécurité : répondez-y dans la page (onglet Vue parents).",
