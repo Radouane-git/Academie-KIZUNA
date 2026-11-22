@@ -212,69 +212,161 @@ def shape_of(raw, depth=0):
     return type(raw).__name__
 
 
-# ---------------------------------------------------------------- récupération
+# ---------------------------------------------------------------- client EcoleDirecte
+#
+# Connexion calquée sur le site www.ecoledirecte.com (protocole observé en 2026) :
+#  1. GET  /v3/login.awp?gtk=1        -> cookie GTK (à refaire avant CHAQUE login)
+#  2. POST /v3/login.awp              -> en-têtes X-Gtk + Cookie, corps « data={...} »
+#  3. code 250 = question de sécurité : doubleauth.awp (get puis post), puis nouveau
+#     login avec cn/cv au premier niveau ET dans « fa », en-têtes X-Token + 2FA-Token.
+
+import urllib.parse
+
+import requests
+
+API = "https://api.ecoledirecte.com/v3"
+UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+      "(KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36")
+
+
+class EDError(Exception):
+    pass
+
+
+def _enc(s: str) -> str:
+    """Équivalent de encodeURIComponent (JavaScript)."""
+    return urllib.parse.quote(s, safe="-_.!~*'()")
+
+
+class EDClient:
+    def __init__(self, version: str | None = None):
+        self.v = version or os.environ.get("ED_API_VERSION") or "4.101.4"
+        self.s = requests.Session()
+        self.s.headers.update({
+            "User-Agent": UA,
+            "Accept": "application/json, text/plain, */*",
+            "Accept-Language": "fr-FR,fr;q=0.9",
+            "Origin": "https://www.ecoledirecte.com",
+            "Referer": "https://www.ecoledirecte.com/",
+        })
+        self.token = ""
+        self.fa_token = ""
+
+    # -- bas niveau
+    def _gtk(self):
+        self.s.headers.pop("X-Gtk", None)
+        self.s.cookies.clear()
+        r = self.s.get(f"{API}/login.awp", params={"gtk": "1", "v": self.v}, timeout=30)
+        gtk = self.s.cookies.get("GTK") or r.cookies.get("GTK")
+        if not gtk:
+            raise EDError("cookie GTK absent")
+        self.s.headers["X-Gtk"] = gtk
+
+    def _post(self, url: str, data: dict | None = None, params: dict | None = None, raw: str | None = None):
+        p = {"v": self.v}
+        p.update(params or {})
+        h = {"Content-Type": "application/x-www-form-urlencoded"}
+        if self.token:
+            h["X-Token"] = self.token
+        if self.fa_token:
+            h["2FA-Token"] = self.fa_token
+        body = raw if raw is not None else "data=" + json.dumps(data or {}, ensure_ascii=False, separators=(",", ":"))
+        r = self.s.post(url, params=p, data=body.encode("utf-8"), headers=h, timeout=30)
+        tok = r.headers.get("x-token") or r.headers.get("X-Token")
+        if tok:
+            self.token = tok
+        fat = r.headers.get("2fa-token") or r.headers.get("2FA-Token")
+        if fat:
+            self.fa_token = fat
+        try:
+            js = r.json()
+        except ValueError:
+            raise EDError(f"réponse illisible (HTTP {r.status_code})")
+        if js.get("token"):
+            self.token = js["token"]
+        return js
+
+    # -- connexion
+    def _login_once(self, user: str, pwd: str, cn: str = "", cv: str = ""):
+        self._gtk()
+        u, pw = json.dumps(_enc(user))[1:-1], json.dumps(_enc(pwd))[1:-1]
+        if cn and cv:
+            raw = ('data={"identifiant":"%s","motdepasse":"%s","isRelogin":false,"uuid":"",'
+                   '"cn":"%s","cv":"%s","fa":[{"cn":"%s","cv":"%s"}]}') % (u, pw, cn, cv, cn, cv)
+        else:
+            raw = 'data={"identifiant":"%s","motdepasse":"%s","isRelogin":false,"uuid":""}' % (u, pw)
+        return self._post(f"{API}/login.awp", raw=raw)
+
+    def login(self, user: str, pwd: str, known_answers: dict[str, str], device: dict | None):
+        cn, cv = (device or {}).get("cn", ""), (device or {}).get("cv", "")
+        js = self._login_once(user, pwd, cn, cv)
+        if js.get("code") == 250:
+            q = self._post(f"{API}/connexion/doubleauth.awp", {}, {"verbe": "get"})
+            if q.get("code") != 200:
+                raise EDError(f"question de sécurité indisponible ({q.get('code')} {q.get('message', '')})")
+            question = maybe_b64(q["data"].get("question", ""))
+            props = q["data"].get("propositions", [])
+            choices = [maybe_b64(x) for x in props]
+            answer = known_answers.get(question)
+            if answer is None or answer not in choices:
+                raise NeedMFA(question, choices)
+            raw_choice = props[choices.index(answer)]
+            a = self._post(f"{API}/connexion/doubleauth.awp", {"choix": raw_choice}, {"verbe": "post"})
+            if a.get("code") != 200:
+                raise EDError(f"réponse de sécurité refusée ({a.get('code')} {a.get('message', '')})")
+            cn, cv = a["data"].get("cn", ""), a["data"].get("cv", "")
+            js = self._login_once(user, pwd, cn, cv)
+        if js.get("code") != 200:
+            raise EDError(f"{js.get('code')} {js.get('message', '')}".strip())
+        self.device = {"cn": cn, "cv": cv} if cn and cv else device
+        self.s.headers.pop("X-Gtk", None)
+        self.fa_token = ""
+        return js.get("data", {})
+
+    # -- données
+    def homework(self, eid) -> list:
+        base = self._post(f"{API}/Eleves/{eid}/cahierdetexte.awp", {}, {"verbe": "get"})
+        dates = sorted((base.get("data") or {}).keys()) if isinstance(base.get("data"), dict) else []
+        out = {}
+        for d in dates:
+            det = self._post(f"{API}/Eleves/{eid}/cahierdetexte/{d}.awp", {}, {"verbe": "get"})
+            mats = (det.get("data") or {}).get("matieres", [])
+            out[d] = [m for m in mats if m.get("aFaire")] or base["data"][d]
+        return out
+
+    def schedule(self, eid, start: str, end: str) -> list:
+        js = self._post(f"{API}/E/{eid}/emploidutemps.awp", {"dateDebut": start, "dateFin": end, "avecTrous": False}, {"verbe": "get"})
+        return js.get("data") or []
+
+
+def students_of(data: dict) -> list[dict]:
+    out = []
+    for acc in data.get("accounts", []):
+        eleves = (acc.get("profile") or {}).get("eleves") or []
+        if eleves:
+            for e in eleves:
+                out.append({"id": e.get("id"), "name": f"{e.get('prenom', '')} {e.get('nom', '')}".strip()})
+        elif acc.get("typeCompte") == "E":
+            out.append({"id": acc.get("id"), "name": f"{acc.get('prenom', '')} {acc.get('nom', '')}".strip()})
+    return out
+
 
 async def fetch(username: str, password: str, start: str, end: str,
                 known_answers: dict[str, str], device_state: dict | None, qcm_state: dict | None) -> dict:
     """Retourne {students:[{name,id,homework,schedule}], device_state, qcm_state, shapes}."""
-    from ecoledirecte_py_client import Client, MFARequiredError  # import tardif
-    try:
-        from ecoledirecte_py_client import Family
-    except ImportError:  # pragma: no cover
-        Family = ()
-
-    tmp = tempfile.mkdtemp(prefix="ed-")
-    device_file = os.path.join(tmp, "device.json")
-    qcm_file = os.path.join(tmp, "qcm.json")
-    if device_state:
-        with open(device_file, "w") as f:
-            json.dump(device_state, f)
-    if qcm_state:
-        with open(qcm_file, "w") as f:
-            json.dump(qcm_state, f)
-
-    client = Client(device_file=device_file, qcm_file=qcm_file)
-    try:
+    cli = EDClient()
+    data = cli.login(username, password, known_answers, device_state)
+    result, shapes = [], {}
+    for st in students_of(data):
+        hw_raw = cli.homework(st["id"])
         try:
-            session = await client.login(username, password)
-        except MFARequiredError as e:
-            question = str(getattr(e, "question", "") or "")
-            choices = [str(c) for c in (getattr(e, "propositions", None) or getattr(e, "choices", None) or [])]
-            answer = known_answers.get(question)
-            if answer is None:
-                raise NeedMFA(question, choices)
-            session = await client.submit_mfa(answer)
-
-        students = list(getattr(session, "students", None) or []) if isinstance(session, Family) or hasattr(session, "students") else [session]
-        if not students:
-            students = [session]
-        result, shapes = [], {}
-        for st in students:
-            name = str(getattr(st, "name", None) or getattr(st, "first_name", None) or getattr(st, "prenom", "") or "")
-            hw_raw = await st.get_homework()
-            try:
-                sch_raw = await st.get_schedule(start, end)
-            except Exception:  # l'emploi du temps n'est pas indispensable
-                sch_raw = []
-            if not shapes:
-                shapes = {"homework": shape_of(hw_raw), "schedule": shape_of(sch_raw)}
-            result.append({
-                "name": name,
-                "id": str(getattr(st, "id", "")),
-                "homework": normalize_homework(hw_raw),
-                "schedule": normalize_schedule(sch_raw),
-            })
-    finally:
-        try:
-            await client.close()
-        except Exception:
-            pass
-
-    def load(p):
-        try:
-            with open(p) as f:
-                return json.load(f)
-        except Exception:
-            return None
-
-    return {"students": result, "device_state": load(device_file), "qcm_state": load(qcm_file), "shapes": shapes}
+            sch_raw = cli.schedule(st["id"], start, end)
+        except Exception:  # l'emploi du temps n'est pas indispensable
+            sch_raw = []
+        if not shapes:
+            shapes = {"homework": shape_of(hw_raw), "schedule": shape_of(sch_raw)}
+        result.append({"name": st["name"], "id": str(st["id"]),
+                       "homework": normalize_homework(hw_raw), "schedule": normalize_schedule(sch_raw)})
+    if not result:
+        shapes["accounts"] = shape_of(data)
+    return {"students": result, "device_state": getattr(cli, "device", None), "qcm_state": None, "shapes": shapes}
