@@ -110,3 +110,21 @@ grant select, insert, update, delete on settings, plans, checks, extras, mfa_ans
 grant select on sync_log to authenticated;
 grant all on all tables in schema public to service_role;
 grant usage, select on all sequences in schema public to service_role;
+
+-- v0.2.0 : idées de loisirs et de sorties (proposées par les parents)
+create table if not exists ideas (
+  id uuid primary key default gen_random_uuid(),
+  child text not null,                 -- identifiant de l'enfant ou « tous »
+  kind text not null default 'autre',  -- lecture | sortie | defi | echecs | sport | autre
+  title text not null,
+  detail text,
+  link text,
+  date date,
+  time text,
+  created_at timestamptz not null default now()
+);
+alter table ideas enable row level security;
+drop policy if exists "famille ideas" on ideas;
+create policy "famille ideas" on ideas for all to authenticated using (public.is_family()) with check (public.is_family());
+grant select, insert, update, delete on ideas to authenticated;
+grant all on ideas to service_role;

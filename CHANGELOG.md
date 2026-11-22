@@ -5,6 +5,20 @@ Numérotation : `MAJEUR.MINEUR.CORRECTIF` (ex. 0.2.1).
 - **mineur** (0.**2**.0) : une nouveauté (un réglage, un écran, une règle de planning) ;
 - **majeur** (**1**.0.0) : la version jugée stable après plusieurs semaines d'usage réel.
 
+## [0.2.0] – 22 novembre 2026
+
+- **Vue à 3 semaines** : boutons « Semaine dernière », « Cette semaine », « Semaine prochaine » ;
+  les autres semaines restent accessibles dans « Autres semaines… ».
+- La synchro prépare la semaine suivante, et une semaine de plus le week-end
+  (la semaine à venir est visible dès le samedi).
+- **Saisie rapide de devoirs** (Vue parents) : on colle la liste telle qu'on la reçoit
+  (prénom, dates, un devoir par ligne), aperçu avec le type modifiable, enregistrement en une fois.
+  Le planificateur respecte le type choisi (devoir, à apprendre, lecture, évaluation).
+- **Idées de loisirs et de sorties** : lecture plaisir, sortie, défi construction, échecs…
+  Affichées dans l'onglet de chaque enfant (« Idées pour toi »), à cocher, et dans la journée si elles sont datées.
+
+Nécessite d'exécuter une fois dans Supabase le bloc SQL « v0.2.0 » de `supabase/schema.sql` (table `ideas`).
+
 ## [0.1.0] – 22 novembre 2026
 
 Première version en service.

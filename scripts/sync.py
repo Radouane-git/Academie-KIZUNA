@@ -150,7 +150,8 @@ def main() -> int:
         return 1
 
     monday = today - timedelta(days=today.weekday())
-    weeks = [monday, monday + timedelta(days=7)]   # semaine en cours + suivante
+    # semaine en cours + suivante ; le week-end, une semaine de plus (la « prochaine » vue depuis lundi)
+    weeks = [monday + timedelta(days=7 * k) for k in range(3 if today.weekday() >= 5 else 2)]
     start, end = weeks[0], weeks[-1] + timedelta(days=9)
 
     answers = {r["question"]: r["answer"] for r in db.get("mfa_answers", "select=question,answer")}

@@ -155,6 +155,9 @@ class Day:
 # ---------------------------------------------------------------- tâches
 
 def classify(h: dict) -> str:
+    forced = {"rev": "eval", "app": "app", "lec": "lec", "dev": "dev"}.get(h.get("kind") or "")
+    if forced:
+        return forced
     t = f"{h.get('subject', '')} {h['text']}"
     if h.get("eval") or EVAL_RE.search(t):
         return "eval"
@@ -255,7 +258,7 @@ def build_week(cfg: dict, monday: date, data_by_child: dict, extras: list[dict],
         child = dict(child, sibling_name=names.get(child.get("sibling")))
         data = data_by_child.get(cid, {"homework": [], "schedule": []})
         schedule = data.get("schedule", [])
-        extra_hw = [{"due": e["due"], "subject": e.get("subject") or "", "text": e["text"], "eval": e.get("kind") == "rev"}
+        extra_hw = [{"due": e["due"], "subject": e.get("subject") or "", "text": e["text"], "eval": e.get("kind") == "rev", "kind": e.get("kind")}
                     for e in extras if e["child"] in (cid, "tous")]
         rec_tasks, rec_hw = recurring_tasks(child, week_days)
         homework = data.get("homework", []) + extra_hw + rec_hw

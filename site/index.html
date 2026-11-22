@@ -12,7 +12,7 @@
 /* Cahier de textes numérique : onglet par enfant, semaines, bande de jours, frise horaire à cocher. */
 :root{
   --paper:#f4f6fa; --card:#ffffff; --ink:#172031; --muted:#5b6677; --line:#dde3ec; --soft:#eef1f6;
-  --k-dev:#2f5bea; --k-app:#7b4fd6; --k-rev:#e0552b; --k-lec:#0f8f7e; --k-rel:#3f51b5; --k-cor:#c48a00; --k-ran:#8a7a14; --k-org:#56657a; --k-calm:#9aa6b6;
+  --k-dev:#2f5bea; --k-app:#7b4fd6; --k-rev:#e0552b; --k-lec:#0f8f7e; --k-rel:#3f51b5; --k-cor:#c48a00; --k-ran:#8a7a14; --k-org:#56657a; --k-calm:#9aa6b6; --k-loi:#c2255c;
   --ok:#1f9d55; --warn:#e0552b;
   --display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
   --body:"Atkinson Hyperlegible","Segoe UI",system-ui,sans-serif;
@@ -20,7 +20,7 @@
 }
 @media (prefers-color-scheme:dark){:root{
   --paper:#10151d; --card:#18202b; --ink:#e6ebf2; --muted:#9ba6b6; --line:#2a3442; --soft:#1f2834;
-  --k-dev:#6f8ff5; --k-app:#a283ec; --k-rev:#f0815c; --k-lec:#3cc2ae; --k-rel:#7d8ce0; --k-cor:#e0ad2e; --k-ran:#c3b245; --k-org:#8d9bb0; --k-calm:#5f6b7c;
+  --k-dev:#6f8ff5; --k-app:#a283ec; --k-rev:#f0815c; --k-lec:#3cc2ae; --k-rel:#7d8ce0; --k-cor:#e0ad2e; --k-ran:#c3b245; --k-org:#8d9bb0; --k-calm:#5f6b7c; --k-loi:#f06595;
   --ok:#3ccf7d; --warn:#f0815c; color-scheme:dark;}}
 *{box-sizing:border-box}
 html,body{margin:0}
@@ -43,6 +43,7 @@ nav.tabs,.weeks{display:flex;flex-wrap:wrap;gap:8px}
 .tab[aria-selected="true"] small{color:rgba(255,255,255,.85)} .tab[aria-selected="true"] .dot{background:#fff}
 .wk{border:1.5px solid var(--line);background:var(--card);border-radius:10px;padding:7px 14px;cursor:pointer;font-weight:700}
 .wk small{font-weight:400;color:var(--muted)}
+.wk:disabled{opacity:.5;cursor:default}
 .wk[aria-pressed="true"]{border-color:var(--child,var(--ink));box-shadow:0 0 0 2px var(--child,var(--ink)) inset}
 .days{display:grid;gap:6px;overflow-x:auto}
 .day{border:1.5px solid var(--line);background:var(--card);border-radius:12px;padding:8px 6px 9px;cursor:pointer;text-align:center;min-width:64px;display:grid;gap:4px}

@@ -5,7 +5,8 @@ var DEMO = /[?&]demo\b/.test(location.search) || !CFG.SUPABASE_URL;
 var root = document.getElementById("root");
 var sb = null;
 
-var KINDS = {dev:["Devoirs","--k-dev",1],app:["Apprendre / réciter","--k-app",1],rev:["Réviser une éval","--k-rev",1],lec:["Lecture","--k-lec",1],rel:["Relire les leçons","--k-rel",0],cor:["Corvée","--k-cor",1],ran:["Rangement","--k-ran",1],org:["Sac & agenda","--k-org",1],rep:["Pause","--k-calm",0],repas:["Repas","--k-calm",0],act:["Activité","--k-calm",0],dodo:["Soirée","--k-calm",0]};
+var KINDS = {dev:["Devoirs","--k-dev",1],app:["Apprendre / réciter","--k-app",1],rev:["Réviser une éval","--k-rev",1],lec:["Lecture","--k-lec",1],rel:["Relire les leçons","--k-rel",0],cor:["Corvée","--k-cor",1],ran:["Rangement","--k-ran",1],org:["Sac & agenda","--k-org",1],rep:["Pause","--k-calm",0],repas:["Repas","--k-calm",0],act:["Activité","--k-calm",0],dodo:["Soirée","--k-calm",0],loi:["Loisir / sortie","--k-loi",1]};
+var IDEA_KINDS=[["lecture","Lecture plaisir"],["sortie","Sortie"],["defi","Défi construction"],["echecs","Échecs"],["sport","Sport / plein air"],["autre","Autre"]];
 var TIPS = [
  ["Une pause avant de s’y mettre","20 à 30 minutes de goûter et de repos sans écran en rentrant : le travail qui suit va plus vite."],
  ["25 minutes de travail, 5 minutes de pause","Un minuteur posé sur le bureau aide à tenir le rythme et à éviter de traîner."],
@@ -18,7 +19,7 @@ var TIPS = [
 ];
 
 /* ------------------------------------------------------------ état */
-var S = {fam:null, plans:[], done:{}, extras:[], sync:null, mfa:null, view:null, day:null, msg:{}};
+var S = {fam:null, plans:[], done:{}, extras:[], ideas:[], ideasMissing:false, sync:null, mfa:null, view:null, day:null, msg:{}, bulk:{text:"",items:null}};
 function lsGet(k){try{return localStorage.getItem(k);}catch(e){return null;}}
 function lsSet(k,v){try{localStorage.setItem(k,v);}catch(e){}}
 function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
@@ -33,9 +34,13 @@ function fmtDate(s,opt){try{return new Date(s+"T12:00:00").toLocaleDateString("f
 function children(){return (S.fam&&S.fam.children)||[];}
 function child(id){return children().filter(function(c){return c.id===id;})[0];}
 function planOf(date){for(var i=0;i<S.plans.length;i++){var p=S.plans[i].data;if(p.days.some(function(d){return d.date===date;}))return S.plans[i];}return null;}
+function curWeekIndex(){var p=planOf(TODAY);if(p)return S.plans.indexOf(p);for(var i=0;i<S.plans.length;i++){if(S.plans[i].data.days[0].date>TODAY)return i;}return S.plans.length-1;}
 function weekIdx(){var p=planOf(S.day);return p?S.plans.indexOf(p):S.plans.length-1;}
 function dayInfo(date){var p=planOf(date);if(!p)return null;return p.data.days.filter(function(d){return d.date===date;})[0];}
-function blocksOf(cid,date){var p=planOf(date);var ch=p&&p.data.children[cid];return ((ch&&ch.blocks&&ch.blocks[date])||[]).slice().sort(function(a,b){return mins(a.t)-mins(b.t);});}
+function ideasFor(cid){return S.ideas.filter(function(x){return x.child===cid||x.child==="tous";});}
+function blocksOf(cid,date){var p=planOf(date);var ch=p&&p.data.children[cid];var bl=((ch&&ch.blocks&&ch.blocks[date])||[]).slice();
+ ideasFor(cid).forEach(function(x){if(x.date===date)bl.push({t:x.time||"16h00",k:"loi",l:x.title,d:[x.detail,x.link].filter(Boolean).join(" · "),id:"idea|"+x.id});});
+ return bl.sort(function(a,b){return mins(a.t)-mins(b.t);});}
 function taskIds(cid,date){
  var ids=[];
  blocksOf(cid,date).forEach(function(b){
@@ -78,7 +83,7 @@ function loadAll(){
   return fetch("demo.json").then(function(r){return r.json();}).then(function(d){
    S.fam=d.settings.famille;S.plans=d.plans.sort(function(a,b){return a.week_start<b.week_start?-1:1;});
    try{S.done=JSON.parse(lsGet("planning-demo-done")||"{}");}catch(e){S.done={};}
-   S.sync=d.sync;start();
+   S.sync=d.sync;S.ideas=d.ideas||[];start();
   });
  }
  return Promise.all([
@@ -86,9 +91,11 @@ function loadAll(){
   sb.from("plans").select("*").order("week_start"),
   sb.from("checks").select("id"),
   sb.from("extras").select("*").order("due"),
-  sb.from("sync_log").select("*").order("ran_at",{ascending:false}).limit(1)
+  sb.from("sync_log").select("*").order("ran_at",{ascending:false}).limit(1),
+  sb.from("ideas").select("*").order("created_at")
  ]).then(function(r){
-  var err=r.filter(function(x){return x.error;})[0];
+  S.ideasMissing=!!r[5].error;S.ideas=r[5].error?[]:(r[5].data||[]);
+  var err=r.slice(0,5).filter(function(x){return x.error;})[0];
   if(err){renderError("Lecture impossible : "+err.error.message);return;}
   var set={};r[0].data.forEach(function(x){set[x.key]=x.value;});
   S.fam=set.famille||null;S.plans=r[1].data||[];
@@ -161,10 +168,14 @@ function render(){
  h+='<button class="tab" role="tab" data-view="conseils" aria-selected="'+(v==="conseils")+'">Conseils</button></nav>';
  if(v!=="conseils"&&S.plans.length){
   h+='<nav class="weeks" aria-label="Semaines">';
-  var start=Math.max(0,S.plans.length-6);
-  S.plans.slice(start).forEach(function(p,i){var idx=start+i;var on=idx===weekIdx();var cur=p.data.days.some(function(d){return d.date===TODAY;});
-   h+='<button class="wk" data-week="'+idx+'" aria-pressed="'+on+'">Semaine du '+fmtDate(p.data.days[0].date,{day:"numeric",month:"short"})+(cur?' <small>en cours</small>':'')+'</button>';});
-  if(start>0)h+='<select class="wk" id="oldweek" aria-label="Semaines plus anciennes"><option value="">Plus ancien…</option>'+S.plans.slice(0,start).map(function(p,i){return '<option value="'+i+'">Semaine du '+fmtDate(p.data.days[0].date,{day:"numeric",month:"short"})+'</option>';}).join("")+'</select>';
+  var ci=curWeekIndex();var sel=weekIdx();
+  var lbl=function(i){var ds=S.plans[i].data.days;var mo=ds.filter(function(d){return d.wd===1;})[0]||ds[0];return fmtDate(mo.date,{day:"numeric",month:"short"});};
+  [[ci-1,"Semaine dernière"],[ci,"Cette semaine"],[ci+1,"Semaine prochaine"]].forEach(function(w){
+   if(w[0]>=0&&w[0]<S.plans.length)h+='<button class="wk" data-week="'+w[0]+'" aria-pressed="'+(w[0]===sel)+'">'+w[1]+' <small>'+lbl(w[0])+'</small></button>';
+   else if(w[1]==="Semaine prochaine")h+='<button class="wk" disabled aria-disabled="true">Semaine prochaine <small>bientôt</small></button>';
+  });
+  var others=S.plans.map(function(p,i){return i;}).filter(function(i){return i<ci-1||i>ci+1;});
+  if(others.length)h+='<select class="wk" id="oldweek" aria-label="Autres semaines"><option value="">Autres semaines…</option>'+others.map(function(i){return '<option value="'+i+'"'+(i===sel?" selected":"")+'>Semaine du '+lbl(i)+'</option>';}).join("")+'</select>';
   h+='</nav>';
  }
  if(c)h+=plan?renderChild(c,plan):'<div class="card"><p>Aucun planning pour cette période.</p></div>';
@@ -211,6 +222,9 @@ function renderSide(c){
  var ev=evalsFor(c.id);
  if(!ev.length)h+='<p class="none">Aucune évaluation notée.</p>';
  ev.forEach(function(e){var d=dDiff(e[0],S.day);var lab=d<0?"passée":d===0?"aujourd’hui":d===1?"demain":"J-"+d;h+='<div class="ev'+(d<0?" past":"")+'"><span>'+esc(e[1])+'<br><small style="color:var(--muted)">'+esc(fmtDate(e[0]))+'</small></span><b>'+lab+'</b></div>';});
+ var ids=ideasFor(c.id).filter(function(x){return !x.date||x.date>=addDays(TODAY,-1);});
+ h+='</div><div class="card"><h3>Idées pour toi</h3>'+(ids.length?ids.map(function(x){var id="idea|"+x.id;var k=(IDEA_KINDS.filter(function(z){return z[0]===x.kind;})[0]||["","Idée"])[1];
+   return '<div class="xl"><span><small style="color:var(--k-loi);font-weight:700;text-transform:uppercase;font-size:.7rem;letter-spacing:.06em">'+esc(k)+(x.date?' · '+esc(fmtDate(x.date))+(x.time?' '+esc(x.time):''):'')+'</small><br><b>'+esc(x.title)+'</b>'+(x.detail?'<br><span style="color:var(--muted)">'+esc(x.detail)+'</span>':'')+(x.link?'<br><a href="'+esc(x.link)+'" rel="noopener" target="_blank">Lien</a>':'')+'</span><input type="checkbox" class="chk" data-id="'+esc(id)+'" aria-label="Fait : '+esc(x.title)+'"'+(S.done[id]?" checked":"")+'></div>';}).join(""):'<p class="none">Pas d’idée pour le moment.</p>');
  var w=weekProg(c.id,planOf(S.day));
  h+='</div><div class="card"><h3>Ma semaine</h3><div class="prog"><span>'+w.n+' / '+w.t+' tâches cochées · '+pct(w)+' %</span></div><div class="weekbar"><i style="width:'+pct(w)+'%"></i></div></div></aside>';
  return h;
@@ -255,6 +269,30 @@ function renderParents(noFam){
   // liste des ajouts
   var up=S.extras.filter(function(e){return e.due>=TODAY;});
   h+='<div class="card"><h3>Devoirs ajoutés à la main</h3>'+(up.length?up.map(function(e){var c=child(e.child);return '<div class="xl"><span><b>'+esc(c?c.name:"Tous")+'</b> · '+esc(fmtDate(e.due))+'<br>'+esc((e.subject?e.subject+" : ":"")+e.text)+'</span><button class="btn sec" data-del="'+esc(e.id)+'">Supprimer</button></div>';}).join(""):'<p class="none">Aucun pour le moment.</p>')+'</div>';
+  // saisie rapide
+  h+='<form class="card f" id="bulk" style="grid-column:1/-1"><h3>Saisie rapide de devoirs</h3><p>Collez ou tapez les devoirs comme vous les recevez (M. Viste, mosquée…). Une ligne avec le prénom (ou « tous »), puis une ligne par date et un devoir par ligne. Le planificateur les répartit à la prochaine synchronisation.</p>';
+  h+='<label for="bulk-text">Devoirs<textarea id="bulk-text" spellcheck="true" style="min-height:200px" placeholder="Aliya&#10;lundi 30/11 :&#10;  * lire 20 pages et faire un résumé de 10 lignes&#10;  * apprendre le vocabulaire&#10;dimanche 06/12 :&#10;  * Allemand : Bled page 12&#10;&#10;Imrane, Nahila&#10;samedi 05/12 : arabe, lecture + vocabulaire">'+esc(S.bulk.text)+'</textarea></label>';
+  h+='<div class="cols" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr))"><label for="bulk-child">Enfant si aucun prénom n’est écrit<select id="bulk-child"><option value="">—</option>'+children().map(function(c){return '<option value="'+esc(c.id)+'">'+esc(c.name)+'</option>';}).join("")+'<option value="tous">Tous</option></select></label><label for="bulk-subj">Matière par défaut<input id="bulk-subj" type="text" placeholder="ex. M. Viste"></label></div>';
+  h+='<button class="btn sec" type="submit">Voir l’aperçu</button>';
+  if(S.bulk.items){
+   if(!S.bulk.items.length)h+='<p class="msg err">Aucun devoir reconnu : vérifiez qu’il y a un prénom et des dates (ex. « lundi 30/11 »).</p>';
+   else{
+    h+='<div class="ovwrap"><table class="ov" style="min-width:640px"><thead><tr><th>Garder</th><th>Enfant</th><th>Pour le</th><th style="text-align:left">Devoir</th><th>Type</th></tr></thead><tbody>';
+    S.bulk.items.forEach(function(it,i){var c=child(it.child);h+='<tr><td><input type="checkbox" class="bulk-keep" data-i="'+i+'" checked aria-label="Garder"></td><td>'+esc(c?c.name:"Tous")+'</td><td>'+esc(fmtDate(it.due))+'</td><td style="text-align:left">'+esc((it.subject?it.subject+" : ":"")+it.text)+'</td><td><select class="bulk-kind" data-i="'+i+'">'+[["dev","Devoir"],["app","À apprendre"],["lec","Lecture"],["rev","Évaluation"]].map(function(k){return '<option value="'+k[0]+'"'+(k[0]===it.kind?" selected":"")+'>'+k[1]+'</option>';}).join("")+'</select></td></tr>';});
+    h+='</tbody></table></div><button class="btn" type="button" id="bulk-save">Enregistrer '+S.bulk.items.length+' devoir'+(S.bulk.items.length>1?"s":"")+'</button>';
+   }
+  }
+  h+=msgHtml("bulk")+'</form>';
+  // idées loisirs
+  h+='<form class="card f" id="idea"><h3>Ajouter une idée de loisir ou de sortie</h3><p>Un livre à lire pour le plaisir, une sortie, un défi construction, une partie d’échecs… Elle s’affiche dans l’onglet de l’enfant, et dans sa journée si vous mettez une date.</p>';
+  h+='<label for="i-child">Pour<select id="i-child">'+children().map(function(c){return '<option value="'+esc(c.id)+'">'+esc(c.name)+'</option>';}).join("")+'<option value="tous">Tous</option></select></label>';
+  h+='<label for="i-kind">Type<select id="i-kind">'+IDEA_KINDS.map(function(k){return '<option value="'+k[0]+'">'+k[1]+'</option>';}).join("")+'</select></label>';
+  h+='<label for="i-title">Idée<input id="i-title" type="text" required placeholder="ex. Lire « Le Petit Prince »"></label>';
+  h+='<label for="i-detail">Détail (facultatif)<input id="i-detail" type="text" placeholder="ex. avec Imrane, 2 parties"></label>';
+  h+='<label for="i-link">Lien (facultatif)<input id="i-link" type="url" placeholder="https://…"></label>';
+  h+='<div class="cols" style="grid-template-columns:1fr 1fr"><label for="i-date">Date (facultatif)<input id="i-date" type="date"></label><label for="i-time">Heure (facultatif)<input id="i-time" type="time"></label></div>';
+  h+='<button class="btn" type="submit">Ajouter l’idée</button>'+msgHtml("idea")+(S.ideasMissing?'<p class="msg err">La table des idées n’existe pas encore dans Supabase : exécutez le bloc SQL fourni.</p>':'')+'</form>';
+  h+='<div class="card"><h3>Idées proposées</h3>'+(S.ideas.length?S.ideas.map(function(x){var c=child(x.child);return '<div class="xl"><span><b>'+esc(c?c.name:"Tous")+'</b> · '+esc(x.title)+(x.date?' · '+esc(fmtDate(x.date)):'')+(S.done["idea|"+x.id]?' · fait':'')+'</span><button class="btn sec" data-delidea="'+esc(x.id)+'">Supprimer</button></div>';}).join(""):'<p class="none">Aucune idée pour le moment.</p>')+'</div>';
   // évaluations à venir
   var evh="";
   children().forEach(function(c){evalsFor(c.id).filter(function(e){return e[0]>=TODAY;}).forEach(function(e){evh+='<div class="ev"><span><b>'+esc(c.name)+'</b> · '+esc(e[1])+'</span><b>'+esc(fmtDate(e[0]))+'</b></div>';});});
@@ -275,6 +313,52 @@ function renderTips(plan){
  h+='<div class="cols">'+TIPS.map(function(t){return '<div class="card"><h3>'+esc(t[0])+'</h3><p>'+esc(t[1])+'</p></div>';}).join("")+'</div>';
  return h;
 }
+
+/* ------------------------------------------------------------ saisie rapide */
+var JOURS=["dimanche","lundi","mardi","mercredi","jeudi","vendredi","samedi"];
+function fold(s){return String(s||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();}
+function guessKind(t){var f=fold(t);
+ if(/\b(evaluation|controle|ds|qcm|interro|interrogation|test|devoir surveille)\b/.test(f))return "rev";
+ if(/\b(lire|lecture)\b/.test(f)&&!/exercice|\bex\b/.test(f))return "lec";
+ if(/(apprendre|par c(oe|œ)ur|reciter|vocabulaire|lecon|\bcours\b)/.test(f)&&!/exercice|faire|rediger|ecrire/.test(f))return "app";
+ return "dev";}
+function parseDateIn(line){
+ var f=fold(line),m=/(\d{1,2})[\/.\-](\d{1,2})(?:[\/.\-](\d{2,4}))?/.exec(f);
+ var today=new Date(TODAY+"T12:00:00");
+ if(m){var d=+m[1],mo=+m[2],y=m[3]?(+m[3]<100?2000+(+m[3]):+m[3]):today.getFullYear();
+  if(d<1||d>31||mo<1||mo>12)return null;
+  var dt=new Date(y,mo-1,d,12);if(!m[3]&&dt<new Date(today.getTime()-60*864e5))dt=new Date(y+1,mo-1,d,12);
+  return {date:iso(dt),idx:m.index,end:m.index+m[0].length};}
+ for(var i=0;i<7;i++){var r=new RegExp("^\\W*"+JOURS[i]+"\\b");var mm=r.exec(f);
+  if(mm){var dd=new Date(today.getTime());do{dd.setDate(dd.getDate()+1);}while(dd.getDay()!==i);return {date:iso(dd),idx:mm.index,end:mm.index+mm[0].length};}}
+ return null;}
+function parseBulk(text,defChild,defSubj){
+ var kids=children(),items=[],cur=defChild?[defChild]:[],due=null,subj=null,subjIndent=-1;
+ text.split(/\r?\n/).forEach(function(raw){
+  if(!raw.trim())return;
+  var indent=raw.match(/^\s*/)[0].replace(/\t/g,"    ").length;
+  var line=raw.trim().replace(/^[*\-•·–]+\s*/,"");
+  var f=fold(line);
+  var dates=(f.match(/\d{1,2}[\/.\-]\d{1,2}/g)||[]).length;
+  if(dates>=2)return;
+  var dt=parseDateIn(line);
+  if(!dt){
+   var found=kids.filter(function(c){return new RegExp("\\b"+fold(c.name)+"\\b").test(f);}).map(function(c){return c.id;});
+   if(/\btous\b/.test(f)&&line.length<40)found=["tous"];
+   if(found.length&&line.length<80&&!/:\s*\S/.test(line)){cur=found;due=null;subj=null;return;}
+  }
+  if(dt){due=dt.date;subj=null;subjIndent=-1;line=line.slice(0,dt.idx)+line.slice(dt.end);line=line.replace(/^[^:]*:\s*/,"").trim();if(!line)return;}
+  if(!due||!cur.length)return;
+  if(subj!==null&&indent<=subjIndent){subj=null;subjIndent=-1;}
+  if(/:\s*$/.test(line)){subj=line.replace(/:\s*$/,"").trim().replace(/^devoirs?\s+(de|du|d['’])\s*/i,"");subjIndent=indent;return;}
+  line.split(/\s;\s/).forEach(function(part){
+   part=part.trim().replace(/^[*\-•·–]+\s*/,"");if(!part)return;
+   var s2=subj||defSubj||"",m=/^([^:]{2,30}?)\s*:\s+(.+)$/.exec(part);
+   if(m&&!/\d/.test(m[1])){s2=m[1].trim();part=m[2].trim();}
+   cur.forEach(function(cid){items.push({child:cid,due:due,subject:s2,text:part,kind:guessKind(s2+" "+part)});});
+  });
+ });
+ return items;}
 
 /* ------------------------------------------------------------ actions */
 function bindForms(){
@@ -310,6 +394,24 @@ function bindForms(){
    Promise.all(jobs).then(function(rs){var bad=rs.filter(function(r){return r.error;})[0];if(bad)flash("import","Erreur : "+bad.error.message,true);else{flash("import","Import terminé.");loadAll();}});
   });
  });
+ if((f=document.getElementById("bulk"))){
+  var ta=document.getElementById("bulk-text");ta.addEventListener("input",function(){S.bulk.text=ta.value;});
+  f.addEventListener("submit",function(e){e.preventDefault();S.bulk.text=ta.value;S.bulk.items=parseBulk(ta.value,val("bulk-child"),val("bulk-subj"));render();var p=document.getElementById("bulk");if(p)p.scrollIntoView({block:"start"});});
+  var sv=document.getElementById("bulk-save");
+  if(sv)sv.addEventListener("click",function(){
+   var rows=S.bulk.items.map(function(it,i){var k=document.querySelector('.bulk-keep[data-i="'+i+'"]');var t=document.querySelector('.bulk-kind[data-i="'+i+'"]');return k&&k.checked?{child:it.child,due:it.due,subject:it.subject||null,text:it.text,kind:t?t.value:it.kind}:null;}).filter(Boolean);
+   if(!rows.length){flash("bulk","Aucun devoir coché.",true);return;}
+   var done=function(data){S.extras=S.extras.concat(data);S.bulk={text:"",items:null};flash("bulk",rows.length+" devoir"+(rows.length>1?"s":"")+" enregistré"+(rows.length>1?"s":"")+". Ils seront placés dans le planning à la prochaine synchronisation.");};
+   if(DEMO){done(rows.map(function(r,i){r.id="demo-"+Date.now()+i;return r;}));return;}
+   sb.from("extras").insert(rows).select().then(function(r){if(r.error)flash("bulk","Erreur : "+r.error.message,true);else done(r.data);});
+  });
+ }
+ if((f=document.getElementById("idea")))f.addEventListener("submit",function(e){
+  e.preventDefault();
+  var tm=val("i-time");var row={child:val("i-child"),kind:val("i-kind"),title:val("i-title"),detail:val("i-detail")||null,link:val("i-link")||null,date:val("i-date")||null,time:tm?tm.replace(":","h"):null};
+  if(DEMO){row.id="demo-"+Date.now();S.ideas.push(row);flash("idea","Idée ajoutée (démo).");return;}
+  sb.from("ideas").insert(row).select().then(function(r){if(r.error)flash("idea","Erreur : "+r.error.message,true);else{S.ideas.push(r.data[0]);flash("idea","Idée ajoutée.");}});
+ });
  var sel=document.getElementById("oldweek");
  if(sel)sel.addEventListener("change",function(){if(sel.value!=="")pickWeek(+sel.value);});
 }
@@ -317,7 +419,9 @@ function val(id){return (document.getElementById(id).value||"").trim();}
 function pickWeek(idx){var p=S.plans[idx];if(!p)return;var has=p.data.days.some(function(d){return d.date===TODAY;});setDay(has?TODAY:(p.data.days[1]||p.data.days[0]).date);}
 
 root.addEventListener("click",function(e){
- var t=e.target.closest("[data-view],[data-day],[data-id],[data-go],[data-week],[data-del],[data-act]");if(!t)return;
+ var t=e.target.closest("[data-view],[data-day],[data-id],[data-go],[data-week],[data-del],[data-act],[data-delidea]");if(!t)return;
+ if(t.hasAttribute("data-delidea")){var di=t.getAttribute("data-delidea");var aft=function(){S.ideas=S.ideas.filter(function(x){return String(x.id)!==di;});render();};
+  if(DEMO)aft();else sb.from("ideas").delete().eq("id",di).then(function(r){if(!r.error)aft();});return;}
  if(t.matches("input.chk")){setDone(t.getAttribute("data-id"),t.checked);return;}
  if(t.hasAttribute("data-act")){sb.auth.signOut().then(function(){location.reload();});return;}
  if(t.hasAttribute("data-del")){var id=t.getAttribute("data-del");

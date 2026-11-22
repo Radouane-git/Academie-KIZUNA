@@ -87,7 +87,10 @@ def main():
     w1 = planner.build_week(CFG, monday, data, extras, today=monday)
     w2 = planner.build_week(CFG, monday + timedelta(days=7), data, extras, prev_week=w1, today=monday)
     out = {"settings": {"famille": CFG}, "plans": [{"week_start": w["week_start"], "data": w, "source": "auto"} for w in (w1, w2)],
-           "checks": {}, "sync": {"status": "ok", "ran_at": today.isoformat() + "T17:05:00", "message": "Démo : données fictives."}}
+           "checks": {}, "sync": {"status": "ok", "ran_at": today.isoformat() + "T17:05:00", "message": "Démo : données fictives."},
+           "ideas": [{"id": "d1", "child": "tous", "kind": "sortie", "title": "Cinéma entre amis", "detail": "Séance de l’après-midi", "date": (monday + timedelta(days=5)).isoformat(), "time": "15h00"},
+                     {"id": "d2", "child": "leo", "kind": "echecs", "title": "Partie d’échecs avec papa", "detail": "Ouverture italienne"},
+                     {"id": "d3", "child": "sarah", "kind": "lecture", "title": "Lire « Le Petit Prince »", "detail": "Lecture plaisir, sans résumé"}]}
     target = os.path.join(os.path.dirname(__file__), "..", "site", "demo.json")
     with open(target, "w", encoding="utf-8") as f:
         json.dump(out, f, ensure_ascii=False, indent=1)

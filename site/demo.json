@@ -3341,5 +3341,30 @@
   "status": "ok",
   "ran_at": "2026-11-22T17:05:00",
   "message": "Démo : données fictives."
- }
+ },
+ "ideas": [
+  {
+   "id": "d1",
+   "child": "tous",
+   "kind": "sortie",
+   "title": "Cinéma entre amis",
+   "detail": "Séance de l’après-midi",
+   "date": "2026-11-21",
+   "time": "15h00"
+  },
+  {
+   "id": "d2",
+   "child": "leo",
+   "kind": "echecs",
+   "title": "Partie d’échecs avec papa",
+   "detail": "Ouverture italienne"
+  },
+  {
+   "id": "d3",
+   "child": "sarah",
+   "kind": "lecture",
+   "title": "Lire « Le Petit Prince »",
+   "detail": "Lecture plaisir, sans résumé"
+  }
+ ]
 }
