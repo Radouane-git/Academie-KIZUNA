@@ -1,9 +1,9 @@
 name: Synchro EcoleDirecte
 
+# EcoleDirecte bloque les serveurs de GitHub (adresses « suspectes ») : la synchro
+# planifiée tourne sur le PC de la maison (dossier windows/). Ce workflow reste
+# disponible à la main, pour un test depuis un réseau autorisé uniquement.
 on:
-  schedule:
-    # Heures en UTC : 5h13 et 16h13 UTC = 6h13 et 17h13 à Paris en hiver (7h13 / 18h13 en été)
-    - cron: "13 5,16 * * *"
   workflow_dispatch: {}
 
 permissions:

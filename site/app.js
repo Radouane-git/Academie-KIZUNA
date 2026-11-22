@@ -238,7 +238,7 @@ function renderParents(noFam){
  // double authentification
  if(S.sync&&S.sync.status==="mfa"&&S.sync.details){
   var q=S.sync.details;
-  h+='<form class="card f warn" id="mfa"><h3>Question de sécurité EcoleDirecte</h3><p>'+esc(q.question)+'</p><label for="mfa-a">Votre réponse<select id="mfa-a">'+(q.choices||[]).map(function(c){return '<option>'+esc(c)+'</option>';}).join("")+'</select></label><button class="btn" type="submit">Enregistrer</button><p class="none">La réponse sera utilisée à la prochaine synchronisation'+(CFG.GITHUB_ACTIONS_URL?' (ou <a href="'+esc(CFG.GITHUB_ACTIONS_URL)+'">lancez-la maintenant sur GitHub</a>, bouton « Run workflow »)':'')+'.</p>'+msgHtml("mfa")+'</form>';
+  h+='<form class="card f warn" id="mfa"><h3>Question de sécurité EcoleDirecte</h3><p>'+esc(q.question)+'</p><label for="mfa-a">Votre réponse<select id="mfa-a">'+(q.choices||[]).map(function(c){return '<option>'+esc(c)+'</option>';}).join("")+'</select></label><button class="btn" type="submit">Enregistrer</button><p class="none">La réponse sera utilisée à la prochaine synchronisation. Pour ne pas attendre : sur le PC de la maison, double-cliquez sur « Synchro planning » (bureau).</p>'+msgHtml("mfa")+'</form>';
  } else if(S.sync&&S.sync.status==="error"){
   h+='<div class="card warn"><h3>La dernière synchronisation a échoué</h3><p>'+esc(S.sync.message||"")+'</p></div>';
  }

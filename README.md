@@ -4,7 +4,7 @@ Un planning de devoirs partagé, accessible sur internet, qui se met à jour tou
 
 - **Site** : GitHub Pages (gratuit), protégé par un mot de passe familial.
 - **Données** (réglages, semaines, coches, historique) : Supabase (gratuit). Rien de personnel n’est stocké dans ce dépôt.
-- **Synchronisation** : un programme GitHub Actions lit EcoleDirecte deux fois par jour (vers 6h et 17h), place les créneaux de travail selon des règles, et écrit le planning dans Supabase.
+- **Synchronisation** : un programme lancé sur le PC de la maison (tâche planifiée Windows, 7h et 18h) lit EcoleDirecte, place les créneaux de travail selon des règles, et écrit le planning dans Supabase.
 
 > EcoleDirecte n’a pas d’API officielle. La synchro utilise la bibliothèque communautaire
 > [`ecoledirecte-py-client`](https://pypi.org/project/ecoledirecte-py-client/), qui peut cesser de fonctionner si
@@ -64,12 +64,27 @@ Dans le dépôt : **Settings** → **Secrets and variables** → **Actions** →
 
 Les semaines déjà faites, les coches et les réglages (enfants, activités, heures de coucher) sont alors en place.
 
-### 6. Première synchronisation EcoleDirecte
+### 6. Synchronisation EcoleDirecte depuis le PC de la maison
 
-1. Onglet **Actions** → **Synchro EcoleDirecte** → **Run workflow**.
-2. Si EcoleDirecte pose une question de sécurité, la page l’affiche dans **Vue parents** : choisissez la réponse,
-   enregistrez, puis relancez **Run workflow**. Les synchros suivantes s’en souviennent.
-3. Ensuite, tout est automatique, deux fois par jour.
+EcoleDirecte bloque les connexions venant des serveurs de GitHub (adresses jugées « suspectes »,
+avec un e-mail « Nous venons de bloquer une connexion »). La synchro tourne donc sur le PC familial.
+
+1. Sur le PC Windows, ouvrez **PowerShell** (menu Démarrer → tapez « PowerShell » → Entrée).
+2. Collez cette commande puis **Entrée** :
+   ```powershell
+   irm https://raw.githubusercontent.com/Radouane-git/Kidz-Homeworks/main/windows/installer.ps1 | iex
+   ```
+3. Répondez aux questions : identifiant et mot de passe EcoleDirecte, adresse Supabase (Entrée pour garder
+   celle proposée), clé **Secret** Supabase (`sb_secret_…`). Rien ne s’affiche quand vous tapez un mot de passe : c’est normal.
+4. L’installateur installe Python si besoin, enregistre ces informations **chiffrées par Windows**
+   (lisibles seulement par votre session), crée la tâche planifiée « Kidz-Homeworks synchro »
+   (7h et 18h, rattrapée au démarrage si le PC était éteint) et un raccourci **Synchro planning** sur le bureau,
+   puis lance une première synchro.
+5. Si EcoleDirecte pose une question de sécurité : répondez-y dans la page (**Vue parents**), puis double-cliquez
+   sur **Synchro planning**.
+
+Journal de la dernière synchro : `%LOCALAPPDATA%\KidzHomeworks\synchro.log`.
+Pour changer le mot de passe EcoleDirecte : relancez simplement la commande d’installation.
 
 ### 7. Partager
 
@@ -101,10 +116,8 @@ Les semaines importées depuis un historique (faites à la main) sont **verrouil
 
 ## Entretien
 
-- **GitHub désactive les tâches planifiées après 60 jours sans activité** sur un dépôt public. Vous recevez un
-  e-mail : il suffit de cliquer sur *Enable workflow* dans l’onglet Actions.
 - Supabase met en pause un projet gratuit inactif depuis 7 jours. La synchro quotidienne le garde actif.
-- Si la synchro échoue, la page l’indique en haut. Le détail est dans l’onglet Actions de GitHub et dans la table
+- Si la synchro échoue, la page l’indique en haut. Le détail est dans `%LOCALAPPDATA%\KidzHomeworks\synchro.log` sur le PC et dans la table
   `sync_log` de Supabase (colonne `details`).
 
 ## Sécurité
