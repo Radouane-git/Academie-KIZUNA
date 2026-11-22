@@ -238,7 +238,7 @@ function renderParents(noFam){
  // double authentification
  if(S.sync&&S.sync.status==="mfa"&&S.sync.details){
   var q=S.sync.details;
-  h+='<form class="card f warn" id="mfa"><h3>Question de sécurité EcoleDirecte</h3><p>'+esc(q.question)+'</p><label for="mfa-a">Votre réponse<select id="mfa-a">'+(q.choices||[]).map(function(c){return '<option>'+esc(c)+'</option>';}).join("")+'</select></label><button class="btn" type="submit">Enregistrer</button><p class="none">La réponse sera utilisée à la prochaine synchronisation. Pour ne pas attendre : sur le PC de la maison, double-cliquez sur « Synchro planning » (bureau).</p>'+msgHtml("mfa")+'</form>';
+  h+='<form class="card f warn" id="mfa"><h3>Question de sécurité EcoleDirecte</h3><p>'+esc(q.question)+'</p><label for="mfa-a">Votre réponse<select id="mfa-a">'+(q.choices||[]).map(function(c){return '<option>'+esc(c)+'</option>';}).join("")+'</select></label><button class="btn" type="submit">Enregistrer</button><p class="none">EcoleDirecte change de question à chaque connexion : le plus simple est de répondre directement sur le PC. Double-cliquez sur « Synchro planning » (bureau) : la question s’affiche dans la fenêtre, tapez le numéro de la bonne réponse.</p>'+msgHtml("mfa")+'</form>';
  } else if(S.sync&&S.sync.status==="error"){
   h+='<div class="card warn"><h3>La dernière synchronisation a échoué</h3><p>'+esc(S.sync.message||"")+'</p></div>';
  }
@@ -287,7 +287,8 @@ function bindForms(){
  });
  if((f=document.getElementById("mfa")))f.addEventListener("submit",function(e){
   e.preventDefault();
-  sb.from("mfa_answers").upsert({question:S.sync.details.question,answer:val("mfa-a")}).then(function(r){flash("mfa",r.error?"Erreur : "+r.error.message:"Réponse enregistrée.",!!r.error);});
+  var chosen=val("mfa-a");
+  sb.from("mfa_answers").upsert({question:S.sync.details.question,answer:chosen}).then(function(r){flash("mfa",r.error?"Erreur : "+r.error.message:"Réponse enregistrée : « "+chosen+" ».",!!r.error);});
  });
  if((f=document.getElementById("settings")))f.addEventListener("submit",function(e){
   e.preventDefault();var v;

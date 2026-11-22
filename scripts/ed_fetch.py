@@ -297,7 +297,7 @@ class EDClient:
             raw = 'data={"identifiant":"%s","motdepasse":"%s","isRelogin":false,"uuid":""}' % (u, pw)
         return self._post(f"{API}/login.awp", raw=raw)
 
-    def login(self, user: str, pwd: str, known_answers: dict[str, str], device: dict | None):
+    def login(self, user: str, pwd: str, known_answers: dict[str, str], device: dict | None, ask=None):
         cn, cv = (device or {}).get("cn", ""), (device or {}).get("cv", "")
         js = self._login_once(user, pwd, cn, cv)
         if js.get("code") == 250:
@@ -308,6 +308,10 @@ class EDClient:
             props = q["data"].get("propositions", [])
             choices = [maybe_b64(x) for x in props]
             answer = known_answers.get(question)
+            if (answer is None or answer not in choices) and ask:
+                answer = ask(question, choices)
+                if answer in choices:
+                    self.answered = (question, answer)
             if answer is None or answer not in choices:
                 raise NeedMFA(question, choices)
             raw_choice = props[choices.index(answer)]
@@ -352,10 +356,10 @@ def students_of(data: dict) -> list[dict]:
 
 
 async def fetch(username: str, password: str, start: str, end: str,
-                known_answers: dict[str, str], device_state: dict | None, qcm_state: dict | None) -> dict:
-    """Retourne {students:[{name,id,homework,schedule}], device_state, qcm_state, shapes}."""
+                known_answers: dict[str, str], device_state: dict | None, qcm_state: dict | None, ask=None) -> dict:
+    """Retourne {students:[{name,id,homework,schedule}], device_state, qcm_state, shapes, answered}."""
     cli = EDClient()
-    data = cli.login(username, password, known_answers, device_state)
+    data = cli.login(username, password, known_answers, device_state, ask=ask)
     result, shapes = [], {}
     for st in students_of(data):
         hw_raw = cli.homework(st["id"])
@@ -369,4 +373,5 @@ async def fetch(username: str, password: str, start: str, end: str,
                        "homework": normalize_homework(hw_raw), "schedule": normalize_schedule(sch_raw)})
     if not result:
         shapes["accounts"] = shape_of(data)
-    return {"students": result, "device_state": getattr(cli, "device", None), "qcm_state": None, "shapes": shapes}
+    return {"students": result, "device_state": getattr(cli, "device", None), "qcm_state": None, "shapes": shapes,
+            "answered": getattr(cli, "answered", None)}

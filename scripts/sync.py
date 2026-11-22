@@ -66,6 +66,57 @@ def log(db: Supa, status: str, message: str, details: dict | None = None):
         print("Impossible d’écrire dans sync_log")
 
 
+# ---------------------------------------------------------------- mode interactif (PC)
+
+def _console_visible() -> bool:
+    """Vrai si la synchro est lancée à la main (fenêtre visible), faux pour la tâche planifiée cachée."""
+    if os.environ.get("ED_INTERACTIVE") == "1":
+        return True
+    if os.name != "nt":
+        return False
+    try:
+        import ctypes
+        h = ctypes.windll.kernel32.GetConsoleWindow()
+        return bool(h) and bool(ctypes.windll.user32.IsWindowVisible(h))
+    except Exception:
+        return False
+
+
+def _console():
+    """Écrit et lit directement dans la fenêtre (contourne la redirection du journal)."""
+    if os.name == "nt":
+        import ctypes
+        enc = f"cp{ctypes.windll.kernel32.GetConsoleOutputCP()}"
+        return (open("CONOUT$", "w", encoding=enc, errors="replace"),
+                open("CONIN$", "r", encoding=f"cp{ctypes.windll.kernel32.GetConsoleCP()}", errors="replace"))
+    return sys.stdout, sys.stdin
+
+
+def ask_console(question: str, choices: list[str]) -> str | None:
+    out, inp = _console()
+    out.write("\n=== Question de sécurité EcoleDirecte ===\n" + question + "\n")
+    for i, c in enumerate(choices, 1):
+        out.write(f"   {i}. {c}\n")
+    for _ in range(3):
+        out.write("Tapez le numéro de la bonne réponse puis Entrée : ")
+        out.flush()
+        r = inp.readline().strip()
+        if r.isdigit() and 1 <= int(r) <= len(choices):
+            return choices[int(r) - 1]
+        out.write("Numéro invalide.\n")
+    return None
+
+
+def pause_console(text: str):
+    try:
+        out, inp = _console()
+        out.write("\n" + text + "\nAppuyez sur Entrée pour fermer cette fenêtre.")
+        out.flush()
+        inp.readline()
+    except Exception:
+        pass
+
+
 def match_child(children: list[dict], ed_name: str) -> str | None:
     n = (ed_name or "").lower()
     for c in children:
@@ -73,6 +124,20 @@ def match_child(children: list[dict], ed_name: str) -> str | None:
         if key and key in n:
             return c["id"]
     return None
+
+
+def _update_windows_runner():
+    """Sur le PC, remplace le lanceur local par la dernière version du dépôt."""
+    if os.name != "nt":
+        return
+    try:
+        import shutil
+        src = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "windows", "sync-windows.ps1")
+        dst = os.path.join(os.environ.get("LOCALAPPDATA", ""), "KidzHomeworks", "sync-windows.ps1")
+        if os.path.exists(src) and os.path.isdir(os.path.dirname(dst)):
+            shutil.copyfile(src, dst)
+    except Exception:
+        pass
 
 
 def main() -> int:
@@ -95,13 +160,16 @@ def main() -> int:
         except ValueError:
             pass
 
+    interactive = _console_visible()
     try:
         res = asyncio.run(ed_fetch.fetch(
             os.environ["ED_USERNAME"].strip(), os.environ["ED_PASSWORD"].strip("\r\n"), start.isoformat(), end.isoformat(),
-            answers, db.kv("ed_device"), db.kv("ed_qcm")))
+            answers, db.kv("ed_device"), db.kv("ed_qcm"), ask=ask_console if interactive else None))
     except ed_fetch.NeedMFA as e:
-        log(db, "mfa", "EcoleDirecte pose une question de sécurité : répondez-y dans la page (onglet Vue parents).",
+        log(db, "mfa", "EcoleDirecte pose une question de sécurité : sur le PC, double-cliquez sur « Synchro planning » et répondez dans la fenêtre.",
             {"question": e.question, "choices": e.choices})
+        if interactive:
+            pause_console("La question n'a pas pu être validée. Relancez « Synchro planning ».")
         return 2
     except Exception as e:  # noqa: BLE001
         msg = str(e).replace(os.environ.get("ED_USERNAME", "\0"), "***").replace(os.environ.get("ED_PASSWORD", "\0"), "***")[:300]
@@ -110,9 +178,15 @@ def main() -> int:
         # Pile d'appels sans valeurs : seulement fichiers / lignes / types d'erreur
         for fr in traceback.extract_tb(e.__traceback__)[-6:]:
             print(f"  à {os.path.basename(fr.filename)}:{fr.lineno} dans {fr.name}")
+        if interactive:
+            pause_console(f"Échec : {msg}")
         return 1
 
     db.set_kv("ed_device", res.get("device_state"))
+    if res.get("answered"):
+        q, a = res["answered"]
+        db.upsert("mfa_answers", [{"question": q, "answer": a}])
+    _update_windows_runner()
     db.set_kv("ed_qcm", res.get("qcm_state"))
 
     data_by_child, unmatched = {}, 0
@@ -155,6 +229,8 @@ def main() -> int:
     n_hw = sum(len(v["homework"]) for v in data_by_child.values())
     log(db, "ok", f"Synchronisation réussie : {n_hw} devoirs lus, semaines {', '.join(written)}.",
         {"students": len(res["students"]), "unmatched": unmatched, "shapes": res.get("shapes")})
+    if interactive:
+        pause_console(f"Synchronisation réussie : {n_hw} devoirs lus. Le planning est à jour.")
     return 0
 
 
