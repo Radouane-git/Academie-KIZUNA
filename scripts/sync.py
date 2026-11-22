@@ -104,8 +104,12 @@ def main() -> int:
             {"question": e.question, "choices": e.choices})
         return 2
     except Exception as e:  # noqa: BLE001
-        log(db, "error", f"Connexion ou lecture EcoleDirecte impossible ({type(e).__name__}).",
+        msg = str(e).replace(os.environ.get("ED_USERNAME", "\0"), "***").replace(os.environ.get("ED_PASSWORD", "\0"), "***")[:300]
+        log(db, "error", f"Connexion ou lecture EcoleDirecte impossible ({type(e).__name__} : {msg}).",
             {"trace": traceback.format_exc()[-1500:]})
+        # Pile d'appels sans valeurs : seulement fichiers / lignes / types d'erreur
+        for fr in traceback.extract_tb(e.__traceback__)[-6:]:
+            print(f"  à {os.path.basename(fr.filename)}:{fr.lineno} dans {fr.name}")
         return 1
 
     db.set_kv("ed_device", res.get("device_state"))
