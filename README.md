@@ -138,7 +138,7 @@ scripts/
   sync.py        orchestration : EcoleDirecte -> planificateur -> Supabase
   demo_data.py   famille fictive (tests + site/demo.json)
 supabase/schema.sql
-.github/workflows/  sync.yml (2 fois par jour), pages.yml (publication du site)
+.github/workflows/  pages.yml (publication du site)
 ```
 
 Tester le planificateur en local : `python scripts/demo_data.py`.
