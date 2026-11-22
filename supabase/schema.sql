@@ -102,3 +102,11 @@ create policy "famille mfa" on mfa_answers for all to authenticated using (publi
 do $$ begin
   alter publication supabase_realtime add table checks;
 exception when duplicate_object then null; end $$;
+
+-- Droits d'accès aux tables (les nouveaux projets Supabase ne les donnent plus automatiquement).
+-- Les règles RLS ci-dessus continuent de filtrer : seul le compte famille passe.
+grant usage on schema public to authenticated, service_role;
+grant select, insert, update, delete on settings, plans, checks, extras, mfa_answers to authenticated;
+grant select on sync_log to authenticated;
+grant all on all tables in schema public to service_role;
+grant usage, select on all sequences in schema public to service_role;
