@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Planning devoirs de la famille</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+/* Cahier de textes numérique : onglet par enfant, semaines, bande de jours, frise horaire à cocher. */
+:root{
+  --paper:#f4f6fa; --card:#ffffff; --ink:#172031; --muted:#5b6677; --line:#dde3ec; --soft:#eef1f6;
+  --k-dev:#2f5bea; --k-app:#7b4fd6; --k-rev:#e0552b; --k-lec:#0f8f7e; --k-rel:#3f51b5; --k-cor:#c48a00; --k-ran:#8a7a14; --k-org:#56657a; --k-calm:#9aa6b6;
+  --ok:#1f9d55; --warn:#e0552b;
+  --display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  --body:"Atkinson Hyperlegible","Segoe UI",system-ui,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root{
+  --paper:#10151d; --card:#18202b; --ink:#e6ebf2; --muted:#9ba6b6; --line:#2a3442; --soft:#1f2834;
+  --k-dev:#6f8ff5; --k-app:#a283ec; --k-rev:#f0815c; --k-lec:#3cc2ae; --k-rel:#7d8ce0; --k-cor:#e0ad2e; --k-ran:#c3b245; --k-org:#8d9bb0; --k-calm:#5f6b7c;
+  --ok:#3ccf7d; --warn:#f0815c; color-scheme:dark;}}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.45;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--child,var(--k-dev));outline-offset:2px;border-radius:6px}
+.wrap{max-width:1120px;margin:0 auto;padding:20px 18px 60px;display:grid;gap:18px}
+header.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(1.5rem,3.2vw,2.1rem);margin:0;letter-spacing:-.01em;text-wrap:balance}
+.sub{color:var(--muted);margin:2px 0 0;font-size:.95rem}
+.status{font-size:.82rem;color:var(--muted);display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.status i{width:8px;height:8px;border-radius:50%;background:var(--k-calm);display:inline-block}
+.status.ok i{background:var(--ok)} .status.bad i{background:var(--warn)}
+.linkbtn{background:none;border:0;color:var(--muted);text-decoration:underline;cursor:pointer;padding:0;font-size:.82rem}
+nav.tabs,.weeks{display:flex;flex-wrap:wrap;gap:8px}
+.tab{border:1.5px solid var(--line);background:var(--card);border-radius:999px;padding:8px 16px;cursor:pointer;display:flex;align-items:center;gap:8px;font-weight:700}
+.tab .dot{width:10px;height:10px;border-radius:50%;background:var(--tc,var(--muted))}
+.tab small{font-weight:400;color:var(--muted)}
+.tab[aria-selected="true"]{background:var(--tc,var(--ink));border-color:var(--tc,var(--ink));color:#fff}
+.tab[aria-selected="true"] small{color:rgba(255,255,255,.85)} .tab[aria-selected="true"] .dot{background:#fff}
+.wk{border:1.5px solid var(--line);background:var(--card);border-radius:10px;padding:7px 14px;cursor:pointer;font-weight:700}
+.wk small{font-weight:400;color:var(--muted)}
+.wk[aria-pressed="true"]{border-color:var(--child,var(--ink));box-shadow:0 0 0 2px var(--child,var(--ink)) inset}
+.days{display:grid;gap:6px;overflow-x:auto}
+.day{border:1.5px solid var(--line);background:var(--card);border-radius:12px;padding:8px 6px 9px;cursor:pointer;text-align:center;min-width:64px;display:grid;gap:4px}
+.day b{font-family:var(--display);font-size:1.05rem}
+.day span{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.bar{height:4px;border-radius:2px;background:var(--soft);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--child);border-radius:2px}
+.day[aria-selected="true"]{border-color:var(--child);box-shadow:0 0 0 2px var(--child) inset}
+.day.today span{color:var(--child);font-weight:700}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:18px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:1fr}.side{order:-1}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px}
+.dayhead{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;margin-bottom:6px}
+.dayhead h2{font-family:var(--display);font-size:1.35rem;margin:0}
+.prog{display:flex;align-items:center;gap:10px;font-size:.9rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.prog .track{width:120px;height:8px;background:var(--soft);border-radius:4px;overflow:hidden}
+.prog .track i{display:block;height:100%;background:var(--child)}
+.prog.full{color:var(--ok);font-weight:700}
+.school{font-size:.9rem;color:var(--muted);margin:0 0 10px}
+ol.tl{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.it{display:grid;grid-template-columns:58px 4px minmax(0,1fr) auto;gap:12px;align-items:start;padding:10px 6px 10px 0;border-radius:10px}
+.it .t{font-variant-numeric:tabular-nums;font-weight:700;text-align:right;padding-top:1px;font-size:.92rem}
+.it .st{align-self:stretch;border-radius:2px;background:var(--k)}
+.it .kind{font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;font-weight:700;color:var(--k)}
+.it .lab{font-weight:700}
+.it .det{color:var(--muted);font-size:.9rem;margin-top:2px;white-space:pre-line}
+.it.calm .lab{font-weight:400;color:var(--muted)} .it.calm .t{color:var(--muted);font-weight:400}
+.it.task{background:var(--soft)}
+.it.done .lab{text-decoration:line-through;text-decoration-thickness:2px;color:var(--muted)}
+.chk{appearance:none;width:30px;height:30px;border:2px solid var(--line);border-radius:9px;background:var(--card);cursor:pointer;display:grid;place-items:center;margin:0}
+.chk:checked{background:var(--ok);border-color:var(--ok)}
+.chk:checked::after{content:"";width:8px;height:15px;border:solid #fff;border-width:0 3px 3px 0;transform:rotate(45deg) translate(-1px,-2px)}
+.rel{display:grid;gap:8px;margin-top:6px}
+.rel .row{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.rel .row em{font-style:normal;font-size:.82rem;color:var(--muted);min-width:118px}
+.chip{border:1.5px solid var(--line);background:var(--card);border-radius:999px;padding:4px 11px;font-size:.88rem;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--ok);border-color:var(--ok);color:#fff;text-decoration:line-through}
+.side{display:grid;gap:14px}
+.side h3,.card h3{font-family:var(--display);font-size:1.05rem;margin:0 0 8px}
+.side ul{margin:0;padding-left:18px;display:grid;gap:4px}
+.none{color:var(--muted);font-size:.92rem;margin:0}
+.ev{display:flex;justify-content:space-between;gap:8px;padding:7px 0;border-top:1px solid var(--line)}
+.ev:first-of-type{border-top:0}
+.ev b{font-variant-numeric:tabular-nums;color:var(--k-rev);white-space:nowrap}
+.ev.past{opacity:.5} .ev.past b{color:var(--muted)}
+.weekbar{height:10px;border-radius:5px;background:var(--soft);overflow:hidden;margin-top:6px}
+.weekbar i{display:block;height:100%;background:var(--child)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:.8rem;color:var(--muted)}
+.legend span{display:flex;align-items:center;gap:5px}
+.legend span::before{content:"";width:10px;height:10px;border-radius:3px;background:var(--k)}
+table.ov{border-collapse:collapse;width:100%;min-width:680px;font-variant-numeric:tabular-nums}
+.ovwrap{overflow-x:auto}
+table.ov th,table.ov td{padding:10px 8px;border-bottom:1px solid var(--line);text-align:center}
+table.ov th{font-size:.8rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+table.ov td.n{text-align:left;font-weight:700;white-space:nowrap}
+table.ov td.n i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:8px;background:var(--child)}
+.cell{border:0;background:none;cursor:pointer;display:grid;gap:4px;width:100%;padding:2px}
+.cell .bar{height:6px}
+.cell small{font-size:.8rem;color:var(--muted)} .cell.full small{color:var(--ok);font-weight:700}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;align-items:start}
+.card p{margin:0;color:var(--muted)}
+.card.warn{border-color:var(--warn);border-width:1.5px}
+form.f{display:grid;gap:10px}
+form.f label{display:grid;gap:4px;font-size:.88rem;color:var(--muted)}
+form.f input,form.f select,form.f textarea{border:1.5px solid var(--line);background:var(--paper);border-radius:10px;padding:8px 10px;color:var(--ink)}
+form.f textarea{min-height:90px}
+.btn{border:0;background:var(--ink);color:var(--paper);border-radius:10px;padding:9px 16px;font-weight:700;cursor:pointer;justify-self:start}
+.btn.sec{background:var(--soft);color:var(--ink)}
+.msg{font-size:.88rem;color:var(--ok)} .msg.err{color:var(--warn)}
+.xl{display:flex;justify-content:space-between;gap:8px;align-items:flex-start;padding:7px 0;border-top:1px solid var(--line);font-size:.92rem}
+.xl:first-of-type{border-top:0}
+.login{min-height:100%;display:grid;place-items:center;padding:24px}
+.login .card{max-width:380px;width:100%;display:grid;gap:12px}
+.how{max-width:70ch;color:var(--muted);margin:0}
+@media (prefers-reduced-motion:no-preference){.prog .track i,.bar i,.weekbar i{transition:width .3s ease}}
+</style>
+</head>
+<body>
+<div id="root"><div class="login"><p class="none">Chargement…</p></div></div>
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

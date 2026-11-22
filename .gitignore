@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.env
+qcm.json
+device.json
+prive/
+*.local.json
