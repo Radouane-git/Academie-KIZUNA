@@ -30,7 +30,7 @@ Un planning de devoirs partagé, accessible sur internet, qui se met à jour tou
 
 ### 2. Mettre le code sur GitHub
 
-1. Sur GitHub : **New repository** → nom `Kidz-Homeworks` → **Public** (nécessaire pour GitHub Pages gratuit ;
+1. Sur GitHub : **New repository** → nom `Academie-KIZUNA` (anciennement `Kidz-Homeworks`) → **Public** (nécessaire pour GitHub Pages gratuit ;
    aucune donnée personnelle n’y est stockée).
 2. **Add file** → **Upload files** → glissez tout le contenu du dossier (y compris le dossier `.github`) → **Commit**.
 3. Ouvrez `site/config.js` sur GitHub (icône crayon) et remplissez :
@@ -54,7 +54,7 @@ Dans le dépôt : **Settings** → **Secrets and variables** → **Actions** →
 
 1. **Settings** → **Pages** → *Source* : **GitHub Actions**.
 2. Onglet **Actions** → workflow **Publier le site** → **Run workflow**.
-3. Le site est en ligne à l’adresse `https://radouane-git.github.io/Kidz-Homeworks/`.
+3. Le site est en ligne à l’adresse `https://radouane-git.github.io/Academie-KIZUNA/`.
 
 ### 5. Importer l’historique
 
@@ -72,7 +72,7 @@ avec un e-mail « Nous venons de bloquer une connexion »). La synchro tourne do
 1. Sur le PC Windows, ouvrez **PowerShell** (menu Démarrer → tapez « PowerShell » → Entrée).
 2. Collez cette commande puis **Entrée** :
    ```powershell
-   irm https://raw.githubusercontent.com/Radouane-git/Kidz-Homeworks/main/windows/installer.ps1 | iex
+   irm https://raw.githubusercontent.com/Radouane-git/Academie-KIZUNA/main/windows/installer.ps1 | iex
    ```
 3. Répondez aux questions : identifiant et mot de passe EcoleDirecte, adresse Supabase (Entrée pour garder
    celle proposée), clé **Secret** Supabase (`sb_secret_…`). Rien ne s’affiche quand vous tapez un mot de passe : c’est normal.

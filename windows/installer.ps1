@@ -1,6 +1,6 @@
 # Kidz-Homeworks : installation de la synchronisation EcoleDirecte sur ce PC.
 # A lancer UNE fois dans PowerShell :
-#   irm https://raw.githubusercontent.com/Radouane-git/Kidz-Homeworks/main/windows/installer.ps1 | iex
+#   irm https://raw.githubusercontent.com/Radouane-git/Academie-KIZUNA/main/windows/installer.ps1 | iex
 $ErrorActionPreference = "Stop"
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 $Dir = Join-Path $env:LOCALAPPDATA "KidzHomeworks"
@@ -60,7 +60,7 @@ $cfg | ConvertTo-Json | Set-Content -Path (Join-Path $Dir "config.json") -Encodi
 
 # 3. Script de synchro --------------------------------------------------------
 $runner = Join-Path $Dir "sync-windows.ps1"
-Invoke-WebRequest "https://raw.githubusercontent.com/Radouane-git/Kidz-Homeworks/main/windows/sync-windows.ps1" -OutFile $runner -UseBasicParsing
+Invoke-WebRequest "https://raw.githubusercontent.com/Radouane-git/Academie-KIZUNA/main/windows/sync-windows.ps1" -OutFile $runner -UseBasicParsing
 
 # 4. Tache planifiee : 7h et 18h, rattrapage au demarrage si le PC etait eteint ---
 $arg = "-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File `"$runner`""
