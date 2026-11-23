@@ -5,6 +5,11 @@ Numérotation : `MAJEUR.MINEUR.CORRECTIF` (ex. 0.2.1).
 - **mineur** (0.**2**.0) : une nouveauté (un réglage, un écran, une règle de planning) ;
 - **majeur** (**1**.0.0) : la version jugée stable après plusieurs semaines d'usage réel.
 
+## [0.5.2] – 23 novembre 2026
+
+- Nouvelle page « Paramètres » (roue dentée en haut à droite, ou lien en bas de la Vue parents) :
+  couleurs de héros, import d'historique et réglages avancés y sont rangés, hors de la Vue parents.
+
 ## [0.5.1] – 23 novembre 2026
 
 - Retour de la carte à lignes de vitesse aux couleurs de chaque enfant en haut des sections

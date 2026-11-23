@@ -134,7 +134,7 @@ function defaultDay(){
  var last=S.plans[S.plans.length-1].data.days;var first=S.plans[0].data.days;
  return TODAY<first[0].date?first[0].date:last[last.length-1].date;
 }
-function curView(){var h=(location.hash||"").replace("#","").split("/")[0];var ok=children().map(function(c){return c.id;}).concat(["parents","conseils"]);return ok.indexOf(h)>=0?h:(children()[0]?children()[0].id:"parents");}
+function curView(){var h=(location.hash||"").replace("#","").split("/")[0];var ok=children().map(function(c){return c.id;}).concat(["parents","conseils","parametres"]);return ok.indexOf(h)>=0?h:(children()[0]?children()[0].id:"parents");}
 function start(){
  var saved=null;try{saved=sessionStorage.getItem("planning-day");}catch(e){}
  S.day=(saved&&planOf(saved))?saved:defaultDay();
@@ -240,6 +240,7 @@ function syncLine(){
  return '<span class="status '+cls+'"><i></i>'+esc(txt)+(DEMO?' · <b>démo</b>':'')+(!DEMO?' · <button class="linkbtn" data-act="logout">Se déconnecter</button>':'')+'</span>';
 }
 function curSection(){var h=(location.hash||"").replace("#","").split("/");return ["semaine","livres","tampons"].indexOf(h[1])>=0?h[1]:"jour";}
+var GEAR='<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7zm8.2 4.7-.1-1.2 2-1.6-2-3.4-2.4.9a8 8 0 0 0-2-1.2L15.3 4h-4l-.4 2.7a8 8 0 0 0-2 1.2l-2.4-.9-2 3.4 2 1.6a8 8 0 0 0 0 2.4l-2 1.6 2 3.4 2.4-.9a8 8 0 0 0 2 1.2l.4 2.7h4l.4-2.7a8 8 0 0 0 2-1.2l2.4.9 2-3.4-2-1.6z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>';
 var SECTIONS=[["jour","Aujourd’hui","Devoir"],["semaine","Ma semaine","Sac"],["livres","Bibliothèque","Lecture"],["tampons","Tampons","Loisir"]];
 var FLAME='<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c1 4 5 5.5 5 11a5 5 0 0 1-10 0c0-3 2-4.5 2-7 2 1.2 3 2.6 3 4 1-2 .5-5 0-8z" fill="#FF6B4A"/></svg>';
 function ring(p,size,stroke,label,col,track,txt){var r=(size-stroke)/2,c=2*Math.PI*r;return '<span class="ring" style="width:'+size+'px;height:'+size+'px"><svg width="'+size+'" height="'+size+'" viewBox="0 0 '+size+' '+size+'" aria-hidden="true"><circle cx="'+size/2+'" cy="'+size/2+'" r="'+r+'" stroke="'+(track||"var(--line)")+'" stroke-width="'+stroke+'" fill="none"/><circle cx="'+size/2+'" cy="'+size/2+'" r="'+r+'" stroke="'+(col||"var(--child)")+'" stroke-width="'+stroke+'" fill="none" stroke-linecap="round" stroke-dasharray="'+(c*p).toFixed(1)+' '+c.toFixed(1)+'" transform="rotate(-90 '+size/2+' '+size/2+')"/></svg><b style="font-size:'+Math.round(size/4.2)+'px'+(txt?';color:'+txt:'')+'">'+(label||Math.round(p*100)+"%")+'</b></span>';}
@@ -259,7 +260,7 @@ function topbar(v){
  children().forEach(function(ch){var t=theme(ch);var on=v===ch.id;h+='<button class="prof" data-view="'+esc(ch.id)+'" aria-current="'+(on?"page":"false")+'" style="--tc:'+t.bg+';--tt:'+t.txt+'"><span class="av">'+esc(ch.name.charAt(0))+'</span><span class="pn">'+esc(ch.name)+'</span></button>';});
  var tp=THEMES[themeName(null)];
  h+='<button class="prof txt" data-view="parents" aria-current="'+(v==="parents"?"page":"false")+'" style="--tc:'+tp.bg+';--tt:'+tp.txt+'">Parents</button>';
- h+='<button class="prof txt" data-view="conseils" aria-current="'+(v==="conseils"?"page":"false")+'" style="--tc:#0D3B45;--tt:#FFFFFF">Conseils</button></nav></div>';
+ h+='<button class="prof txt" data-view="conseils" aria-current="'+(v==="conseils"?"page":"false")+'" style="--tc:#0D3B45;--tt:#FFFFFF">Conseils</button><button class="prof gear" data-view="parametres" aria-current="'+(v==="parametres"?"page":"false")+'" aria-label="Paramètres" title="Paramètres" style="--tc:#3A4250;--tt:#FFFFFF">'+GEAR+'</button></nav></div>';
  return h+'</header>';
 }
 function weeksNav(){
@@ -290,6 +291,7 @@ function render(){
   else if(sec==="semaine")h+=renderWeek(c,plan);
   else h+=renderChild(c,plan);}
  else if(v==="parents")h+=renderParents(false);
+ else if(v==="parametres")h+=renderSettings(false);
  else h+=renderTips(plan);
  h+=footer();
  if(c&&S.focus)h+=renderFocus(c);
@@ -495,7 +497,14 @@ function renderParents(noFam){
   h+='<div class="cols two"><label for="i-date">Date (facultatif)<input id="i-date" type="date"></label><label for="i-time">Heure (facultatif)<input id="i-time" type="time"></label></div>';
   h+='<button class="btn" type="submit">Ajouter l’idée</button>'+msgHtml("idea")+'</form>';
   h+='<section class="card"><h2>Idées proposées</h2>'+(S.ideas.length?S.ideas.map(function(x){var c=child(x.child);return '<div class="xl"><span><b>'+esc(c?c.name:"Tous")+'</b> · '+esc(x.title)+(x.date?' · '+esc(fmtDate(x.date)):'')+(S.done["idea|"+x.id]?' · fait':'')+'</span><button class="btn sec" data-delidea="'+esc(x.id)+'">Supprimer</button></div>';}).join(""):'<p class="none">Aucune idée pour le moment.</p>')+'</section>';
-  // couleurs
+ }
+ if(noFam)h+=renderSettings(true);
+ else h+='<a class="setlink" href="#parametres">'+GEAR+'<span>Paramètres : couleurs de héros, import d’historique, réglages avancés</span></a>';
+ return h+'</div>';
+}
+function renderSettings(noFam){
+ var h='<div class="narrow"><section class="hero" style="background-color:#3A4250;color:#fff"><div class="hero-id"><div><span class="over">Réservé aux parents</span><h1>Paramètres</h1></div></div></section><div class="cols">';
+ if(!noFam){
   h+='<form class="card f" id="themesf"><h2>Couleurs de héros</h2><p>Chaque profil choisit sa couleur.</p>';
   children().forEach(function(c){h+='<label for="th-'+esc(c.id)+'">'+esc(c.name)+'<select id="th-'+esc(c.id)+'" data-theme-for="'+esc(c.id)+'">'+Object.keys(THEMES).map(function(n){return '<option'+(n===themeName(c)?" selected":"")+'>'+n+'</option>';}).join("")+'</select></label>';});
   h+='<label for="th-parents">Parents<select id="th-parents" data-theme-for="__parents">'+Object.keys(THEMES).map(function(n){return '<option'+(n===themeName(null)?" selected":"")+'>'+n+'</option>';}).join("")+'</select></label>';
@@ -505,7 +514,7 @@ function renderParents(noFam){
  if(!noFam&&!DEMO){
   h+='<form class="card f wide" id="settings"><h2>Réglages (avancé)</h2><p>Enfants, activités, heures de coucher, tâches récurrentes. Format JSON : modifiez avec précaution.</p><label for="set-json">Réglages<textarea id="set-json" spellcheck="false" style="min-height:220px;font-family:ui-monospace,monospace;font-size:.8rem">'+esc(JSON.stringify(S.fam,null,2))+'</textarea></label><button class="btn" type="submit">Enregistrer les réglages</button>'+msgHtml("settings")+'</form>';
  }
- return h+'</div>';
+ return h+'</div></div>';
 }
 function renderTips(plan){
  var notes=(plan&&plan.data.notes)||[];

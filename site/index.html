@@ -267,6 +267,10 @@ a{color:var(--child)}
 .hero-ring{display:flex;align-items:center;gap:10px}
 .hero-ring small,.hero-num small{color:inherit;opacity:.88;line-height:1.2}
 .hero-num b{font-family:var(--display);font-weight:900;font-size:1.6rem;display:block;line-height:1.1}
+.prof.gear{width:44px;height:44px;padding:0;justify-content:center;color:var(--muted)}
+.prof.gear[aria-current="page"]{background:var(--tc);color:var(--tt)}
+.setlink{display:flex;align-items:center;gap:12px;margin-top:20px;padding:14px 18px;border-radius:16px;border:2px dashed var(--line);color:var(--muted);text-decoration:none;font-weight:700}
+.setlink:hover{border-color:#3A4250;color:var(--ink)}
 .kicker{display:block;font-size:.95rem;color:var(--muted)}
 .kicker.acc,.acc{font-family:var(--display);font-weight:700;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:#C9472C}
 .today{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:40px;align-items:start}
@@ -395,8 +399,8 @@ a{color:var(--child)}
 </head>
 <body>
 <div id="root"><p style="padding:2rem;font-family:sans-serif">Chargement de l’Académie…</p></div>
-<script src="config.js?v=0.5.1"></script>
+<script src="config.js?v=0.5.2"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script src="app.js?v=0.5.1"></script>
+<script src="app.js?v=0.5.2"></script>
 </body>
 </html>
