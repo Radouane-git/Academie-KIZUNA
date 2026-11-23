@@ -291,7 +291,7 @@ a{color:var(--child)}
 .dchip b{font-family:var(--display);font-weight:800;font-size:1.05rem}
 .dchip i{width:8px;height:8px;border-radius:50%;background:var(--line)}
 .dchip i.part{background:var(--acc)}.dchip i.full{background:var(--child)}
-.dchip.today span{color:var(--ink)}
+.dchip.is-today span{color:var(--ink)}
 .dchip[aria-pressed="true"]{background:#fff;border-color:var(--ink)}
 .dchip:hover{background:#fff}
 .nextcard{display:flex;align-items:center;gap:24px;background:#fff;border:2px solid var(--line);border-radius:24px;box-shadow:0 6px 0 var(--line);padding:24px 28px}
@@ -353,7 +353,7 @@ a{color:var(--child)}
 .wrow{display:flex;align-items:center;gap:16px;width:100%;background:none;border:0;border-bottom:1px solid var(--soft);padding:12px 4px;text-align:left;cursor:pointer;border-radius:12px}
 .weeklist li:last-child .wrow{border-bottom:0}
 .wrow:hover{background:var(--soft)}
-.wrow.today b{color:var(--child)}
+.wrow.is-today b{color:var(--child)}
 .wr-txt{flex:1;display:flex;flex-direction:column}
 .wr-txt .acc{font-size:.68rem}
 .chev{font-size:1.6rem;color:var(--muted)}
@@ -504,8 +504,8 @@ a{color:var(--child)}
 </head>
 <body>
 <div id="root"><p style="padding:2rem;font-family:sans-serif">Chargement de l’Académie…</p></div>
-<script src="config.js?v=0.8.1"></script>
+<script src="config.js?v=0.8.2"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script src="app.js?v=0.8.1"></script>
+<script src="app.js?v=0.8.2"></script>
 </body>
 </html>

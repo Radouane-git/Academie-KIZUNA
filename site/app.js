@@ -159,6 +159,8 @@ var THEMES={
  "Émeraude":{bg:"#1E7A4E",acc:"#F2C94C",txt:"#FFFFFF"},
  "Éclair":{bg:"#F2B705",acc:"#16181D",txt:"#2B2100"}
 };
+function lumHex(h){h=h.replace("#","");var c=[0,2,4].map(function(i){var v=parseInt(h.substr(i,2),16)/255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4);});return .2126*c[0]+.7152*c[1]+.0722*c[2];}
+function shieldFg(t){return lumHex(t.acc)<.25?"#FFE58A":"#0D3B45";}
 var DEFAULT_THEMES=["Lagon","Sakura","Améthyste","Émeraude","Brasier","Éclair"];
 function themeName(c){if(!c)return (S.fam&&S.fam.parents_theme)||"Graphite";var i=children().indexOf(c);return (c.theme&&THEMES[c.theme])?c.theme:DEFAULT_THEMES[i%DEFAULT_THEMES.length];}
 function theme(c){return THEMES[themeName(c)];}
@@ -252,7 +254,7 @@ var FLAME='<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><p
 function ring(p,size,stroke,label,col,track,txt){var r=(size-stroke)/2,c=2*Math.PI*r;return '<span class="ring" style="width:'+size+'px;height:'+size+'px"><svg width="'+size+'" height="'+size+'" viewBox="0 0 '+size+' '+size+'" aria-hidden="true"><circle cx="'+size/2+'" cy="'+size/2+'" r="'+r+'" stroke="'+(track||"var(--line)")+'" stroke-width="'+stroke+'" fill="none"/><circle cx="'+size/2+'" cy="'+size/2+'" r="'+r+'" stroke="'+(col||"var(--child)")+'" stroke-width="'+stroke+'" fill="none" stroke-linecap="round" stroke-dasharray="'+(c*p).toFixed(1)+' '+c.toFixed(1)+'" transform="rotate(-90 '+size/2+' '+size/2+')"/></svg><b style="font-size:'+Math.round(size/4.2)+'px'+(txt?';color:'+txt:'')+'">'+(label||Math.round(p*100)+"%")+'</b></span>';}
 function banner(c,kicker,title,sub,right,withCard){
  var t=theme(c),k=card(c.id);
- var h='<section class="hero kid-hero" style="background-color:'+t.bg+';color:'+t.txt+'"><div class="hero-id">'+(withCard?'<span class="shield" style="background:'+t.acc+';color:#0D3B45" aria-label="Niveau '+k.level+'">'+k.level+'</span>':'')+'<div><span class="over">'+kicker+'</span><h1>'+esc(title)+'</h1>'+(sub?'<p class="hsub">'+esc(sub)+'</p>':'');
+ var h='<section class="hero kid-hero" style="background-color:'+t.bg+';color:'+t.txt+'"><div class="hero-id">'+(withCard?'<span class="shield" style="background:'+t.acc+';color:'+shieldFg(t)+'" aria-label="Niveau '+k.level+'">'+k.level+'</span>':'')+'<div><span class="over">'+kicker+'</span><h1>'+esc(title)+'</h1>'+(sub?'<p class="hsub">'+esc(sub)+'</p>':'');
  if(withCard)h+='<div class="badges">'+(k.badges.length?k.badges.map(function(b){return '<span>'+esc(b)+'</span>';}).join(""):'<span>Encore '+k.next+' missions pour le niveau '+(k.level+1)+'</span>')+'</div>';
  return h+'</div></div>'+(right?'<div class="hero-stats">'+right+'</div>':'')+'</section>';}
 
@@ -295,7 +297,7 @@ function renderHome(){
  var hr=new Date().getHours();
  var h='<div class="home"><div class="home-head">'+logo(72)+'<h1>'+(hr<18?"Bonjour":"Bonsoir")+' !</h1><p>Qui ouvre l’Académie ?</p></div><div class="home-grid">';
  children().forEach(function(c){var t=theme(c),k=card(c.id),mp=mprog(c.id,TODAY),left=mp.t-mp.n;
-  h+='<a class="home-card" href="#'+esc(c.id)+'" style="background-color:'+t.bg+';color:'+t.txt+'"><span class="shield" style="background:'+t.acc+';color:#0D3B45" aria-hidden="true">'+k.level+'</span><span class="hc-txt"><b>'+esc(c.name)+'</b><small>'+(mp.t?(left?left+" mission"+(left>1?"s":"")+" aujourd’hui":"Tout est fait aujourd’hui !"):"Rien de prévu aujourd’hui")+(k.streak>1?" · "+k.streak+" jours de suite":"")+'</small></span>'+(mp.t?ring(mp.n/mp.t,56,6,mp.n+"/"+mp.t,t.acc,"rgba(255,255,255,.25)",t.txt):'')+'</a>';});
+  h+='<a class="home-card" href="#'+esc(c.id)+'" style="background-color:'+t.bg+';color:'+t.txt+'"><span class="shield" style="background:'+t.acc+';color:'+shieldFg(t)+'" aria-hidden="true">'+k.level+'</span><span class="hc-txt"><b>'+esc(c.name)+'</b><small>'+(mp.t?(left?left+" mission"+(left>1?"s":"")+" aujourd’hui":"Tout est fait aujourd’hui !"):"Rien de prévu aujourd’hui")+(k.streak>1?" · "+k.streak+" jours de suite":"")+'</small></span>'+(mp.t?ring(mp.n/mp.t,56,6,mp.n+"/"+mp.t,t.acc,"rgba(255,255,255,.25)",t.txt):'')+'</a>';});
  var tp=THEMES[themeName(null)];
  h+='</div><div class="home-more"><a class="home-small" href="#parents" style="--tc:'+tp.bg+'"><span class="av" style="background:'+tp.bg+';color:#fff">P</span>Vue parents</a><a class="home-small" href="#conseils"><span class="av" style="background:#0D3B45;color:#fff">?</span>Conseils</a></div></div>';
  return h;}
@@ -326,7 +328,7 @@ function render(){
 function hero(c,plan){
  var t=theme(c),k=card(c.id),w=weekProg(c.id,plan),st=stampsFor(c.id);
  var h='<section class="hero" style="background-color:'+t.bg+';color:'+t.txt+'">';
- h+='<div class="hero-id"><span class="shield" style="background:'+t.acc+';color:#0D3B45">'+k.level+'</span><div><span class="over">Carte d’élève · niveau '+k.level+'</span><h1>'+esc(c.name)+'</h1><div class="badges">'+(k.badges.length?k.badges.map(function(b){return '<span>'+esc(b)+'</span>';}).join(""):'<span>Encore '+k.next+' missions pour le niveau '+(k.level+1)+'</span>')+'</div></div></div>';
+ h+='<div class="hero-id"><span class="shield" style="background:'+t.acc+';color:'+shieldFg(t)+'">'+k.level+'</span><div><span class="over">Carte d’élève · niveau '+k.level+'</span><h1>'+esc(c.name)+'</h1><div class="badges">'+(k.badges.length?k.badges.map(function(b){return '<span>'+esc(b)+'</span>';}).join(""):'<span>Encore '+k.next+' missions pour le niveau '+(k.level+1)+'</span>')+'</div></div></div>';
  h+='<div class="hero-stats"><div class="wk-prog"><div><span>Ma semaine</span><b>'+pct(w)+' %</b></div><div class="track"><i style="width:'+pct(w)+'%;background:'+t.acc+'"></i></div><small>'+w.n+' mission'+(w.n>1?"s":"")+' sur '+w.t+'</small></div>';
  h+='<div class="hero-stamps">'+stampHtml(54)+'<div><b>'+st.length+'</b><small>tampon'+(st.length>1?"s":"")+'</small></div></div></div>';
  return h+'</section>';
@@ -340,7 +342,7 @@ function keyOf(b){return b.k==="rel"&&b.rel?b.rel.idp:b.id;}
 function tasksOf(cid,date){var all=blocksOf(cid,date);return all.filter(function(b){return !b.over&&isTask(b);}).concat(all.filter(function(b){return b.over&&isTask(b);}));}
 function mprog(cid,date){var t=tasksOf(cid,date);return {n:t.filter(isDoneB).length,t:t.length};}
 function nextTask(cid,date){return tasksOf(cid,date).filter(function(b){return !isDoneB(b);})[0]||null;}
-function dayChip(c,d){var p=mprog(c.id,d.date);var st=p.t&&p.n===p.t?"full":p.n?"part":"";return '<button class="dchip'+(d.date===TODAY?" today":"")+'" data-day="'+d.date+'" aria-pressed="'+(d.date===S.day)+'" aria-label="'+esc(d.long)+', '+p.n+' sur '+p.t+'"><span>'+esc(d.short.charAt(0))+'</span><b>'+d.num+'</b><i class="'+st+'"></i></button>';}
+function dayChip(c,d){var p=mprog(c.id,d.date);var st=p.t&&p.n===p.t?"full":p.n?"part":"";return '<button class="dchip'+(d.date===TODAY?" is-today":"")+'" data-day="'+d.date+'" aria-pressed="'+(d.date===S.day)+'" aria-label="'+esc(d.long)+', '+p.n+' sur '+p.t+'"><span>'+esc(d.short.charAt(0))+'</span><b>'+d.num+'</b><i class="'+st+'"></i></button>';}
 
 function renderChild(c,plan){
  var days=plan.data.days;var di=dayInfo(S.day)||days[0];var p=mprog(c.id,S.day);var full=p.t&&p.n===p.t;
@@ -410,7 +412,7 @@ function renderWeek(c,plan){
  var wp=weekProg(c.id,plan);var h='<div class="narrow">'+banner(c,esc(plan.data.title),"Ma semaine","",'<div class="hero-ring">'+ring(wp.t?wp.n/wp.t:0,72,8,pct(wp)+"%",theme(c).acc,"rgba(255,255,255,.25)",theme(c).txt)+'</div>')+weeksNav();
  h+='<section class="card"><ol class="weeklist">';
  plan.data.days.forEach(function(d){var p=mprog(c.id,d.date);var sc=((plan.data.children[c.id]||{}).school||{})[d.date]||"";var ev=evalsFor(c.id).filter(function(e){return e[0]===d.date;});
-  h+='<li><button class="wrow'+(d.date===TODAY?" today":"")+'" data-day="'+d.date+'" data-sec="jour">'+ring(p.t?p.n/p.t:0,52,6,p.t?p.n+"/"+p.t:"–")+'<span class="wr-txt"><b>'+esc(d.date===TODAY?"Aujourd’hui · "+d.long:d.long)+'</b><small>'+esc(sc)+'</small>'+(ev.length?'<small class="evtxt">Évaluation : '+esc(ev.map(function(e){return e[1];}).join(" ; "))+'</small>':'')+'</span><span class="chev" aria-hidden="true">›</span></button></li>';});
+  h+='<li><button class="wrow'+(d.date===TODAY?" is-today":"")+'" data-day="'+d.date+'" data-sec="jour">'+ring(p.t?p.n/p.t:0,52,6,p.t?p.n+"/"+p.t:"–")+'<span class="wr-txt"><b>'+esc(d.date===TODAY?"Aujourd’hui · "+d.long:d.long)+'</b><small>'+esc(sc)+'</small>'+(ev.length?'<small class="evtxt">Évaluation : '+esc(ev.map(function(e){return e[1];}).join(" ; "))+'</small>':'')+'</span><span class="chev" aria-hidden="true">›</span></button></li>';});
  h+='</ol></section>';
  var ev=evalsFor(c.id);
  h+=side("Évaluations à venir",ev.length?ev.map(function(e){var d=dDiff(e[0],TODAY);var lab=d<0?"passée":d===0?"aujourd’hui":d===1?"demain":"J-"+d;return '<div class="ev'+(d<0?" past":"")+'"><span>'+esc(e[1])+'<small>'+esc(fmtDate(e[0]))+'</small></span><b>'+lab+'</b></div>';}).join(""):'<p class="none">Aucune évaluation notée.</p>');

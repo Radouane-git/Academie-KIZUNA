@@ -5,6 +5,11 @@ Numérotation : `MAJEUR.MINEUR.CORRECTIF` (ex. 0.2.1).
 - **mineur** (0.**2**.0) : une nouveauté (un réglage, un écran, une règle de planning) ;
 - **majeur** (**1**.0.0) : la version jugée stable après plusieurs semaines d'usage réel.
 
+## [0.8.2] – 23 novembre 2026
+
+- Téléphone : la case du jour (bande des 7 jours) n'est plus décalée ni plus haute que les autres.
+- Couleur Éclair (et toute couleur à accent sombre) : chiffre du niveau en jaune clair dans le bouclier noir.
+
 ## [0.8.1] – 23 novembre 2026
 
 - « ACADÉMIE KIZUNA » toujours affiché en entier sur ordinateur (seulement « KIZUNA » sur téléphone).
