@@ -107,8 +107,9 @@ SUBJECT_NAMES = [
     ("EDUCATION MUS", "Éducation musicale"), ("MUSI", "Éducation musicale"), ("ARTS PLA", "Arts plastiques"),
     ("FRANC", "Français"), ("MATH", "Maths"), ("ANGL", "Anglais"), ("ESPAG", "Espagnol"), ("ALLEM", "Allemand"),
     ("HISTOIRE", "Histoire-Géo"), ("HIST", "Histoire-Géo"), ("SCIENCES DE LA VIE", "SVT"), ("SVT", "SVT"),
-    ("PHYSIQUE", "Physique-Chimie"), ("PH-CH", "Physique-Chimie"), ("TECHNO", "Technologie"),
-    ("EDUCATION PHYS", "EPS"), ("EPS", "EPS"), ("SCIENCES ECO", "SES"), ("SES", "SES"),
+    # EPS avant Physique-Chimie : « ED.PHYSIQUE & SPORT. » contient « PHYSIQUE »
+    ("SPORT", "EPS"), ("ED.PHYS", "EPS"), ("ED PHYS", "EPS"), ("EDUCATION PHYS", "EPS"), ("EDUC. PHYS", "EPS"), ("E.P.S", "EPS"), ("EPS", "EPS"),
+    ("PHYSIQUE", "Physique-Chimie"), ("PH-CH", "Physique-Chimie"), ("TECHNO", "Technologie"), ("SCIENCES ECO", "SES"), ("SES", "SES"),
     ("SCIENCES NUM", "SNT"), ("SNT", "SNT"), ("ENSEIGNEMENT MORAL", "EMC"), ("EMC", "EMC"),
     ("ACCOMPAGNEMENT", "Accompagnement personnalisé"), ("ARABE", "Arabe"), ("LATIN", "Latin"),
 ]
@@ -190,10 +191,14 @@ def normalize_schedule(raw) -> list[dict]:
         d = as_date(start)
         if not d:
             continue
-        if first(it, ["isAnnule", "is_cancelled", "cancelled", "annule"], False):
-            continue
         subj = pretty_subject(first(it, ["matiere", "subject", "text", "codeMatiere"], ""))
-        out.append({"date": d, "start": as_time(start), "end": as_time(end), "subject": subj})
+        row = {"date": d, "start": as_time(start), "end": as_time(end), "subject": subj}
+        room = first(it, ["salle", "room"], "")
+        if room:
+            row["room"] = str(room).strip()[:30]
+        if first(it, ["isAnnule", "is_cancelled", "cancelled", "annule"], False):
+            row["cancelled"] = "Annulé sur EcoleDirecte"
+        out.append(row)
     return out
 
 

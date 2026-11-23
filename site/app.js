@@ -20,7 +20,7 @@ var TIPS = [
 ];
 
 /* ------------------------------------------------------------ état */
-var S = {fam:null, plans:[], done:{}, extras:[], ideas:[], ideasMissing:false, stamps:[], sensei:[], stampsMissing:false, books:[], booksMissing:false, bookOpen:false, sync:null, mfa:null, view:null, day:null, msg:{}, bulk:{text:"",items:null}};
+var S = {fam:null, plans:[], done:{}, extras:[], ideas:[], ideasMissing:false, stamps:[], sensei:[], stampsMissing:false, books:[], booksMissing:false, cancels:[], cancelsMissing:false, edtOpen:false, bookOpen:false, sync:null, mfa:null, view:null, day:null, msg:{}, bulk:{text:"",items:null}};
 function lsGet(k){try{return localStorage.getItem(k);}catch(e){return null;}}
 function lsSet(k,v){try{localStorage.setItem(k,v);}catch(e){}}
 function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
@@ -84,7 +84,7 @@ function loadAll(){
   return fetch("demo.json").then(function(r){return r.json();}).then(function(d){
    S.fam=d.settings.famille;S.plans=d.plans.sort(function(a,b){return a.week_start<b.week_start?-1:1;});
    try{S.done=JSON.parse(lsGet("planning-demo-done")||"{}");}catch(e){S.done={};}
-   S.sync=d.sync;S.ideas=d.ideas||[];S.stamps=d.stamps||[];S.sensei=d.sensei||[];S.books=d.books||[];start();
+   S.sync=d.sync;S.ideas=d.ideas||[];S.stamps=d.stamps||[];S.sensei=d.sensei||[];S.books=d.books||[];S.cancels=d.cancellations||[];start();
   });
  }
  return Promise.all([
@@ -96,8 +96,10 @@ function loadAll(){
   sb.from("ideas").select("*").order("created_at"),
   sb.from("stamps").select("*").order("created_at"),
   sb.from("sensei_messages").select("*").order("created_at"),
-  sb.from("books").select("*").order("finished",{ascending:false})
+  sb.from("books").select("*").order("finished",{ascending:false}),
+  sb.from("cancellations").select("*").gte("date",addDays(TODAY,-14))
  ]).then(function(r){
+  S.cancelsMissing=!!r[9].error;S.cancels=r[9].error?[]:(r[9].data||[]);
   S.booksMissing=!!r[8].error;S.books=r[8].error?[]:(r[8].data||[]);
   S.ideasMissing=!!r[5].error;S.ideas=r[5].error?[]:(r[5].data||[]);
   S.stampsMissing=!!(r[6].error||r[7].error);S.stamps=r[6].error?[]:(r[6].data||[]);S.sensei=r[7].error?[]:(r[7].data||[]);
@@ -203,6 +205,16 @@ function pagesOf(list){return list.reduce(function(n,b){return n+(+b.pages||0);}
 function fmtN(n){return n.toLocaleString("fr-FR");}
 function bookForm(cid){
  return '<form class="f bookf" id="bookf" data-child="'+esc(cid)+'"><label for="b-title">Titre<input id="b-title" type="text" required placeholder="ex. Le Petit Prince"></label><label for="b-author">Auteur (facultatif)<input id="b-author" type="text"></label><div class="cols two"><label for="b-pages">Pages<input id="b-pages" type="number" min="1" max="5000" inputmode="numeric" placeholder="96"></label><label for="b-date">Fini le<input id="b-date" type="date" value="'+TODAY+'"></label></div><div class="btnrow"><button class="btn" type="submit">Ajouter à ma bibliothèque</button><button class="btn sec" type="button" data-act="book-close">Annuler</button></div>'+msgHtml("book")+(S.booksMissing?'<p class="msg err">Exécutez le bloc SQL « livres » dans Supabase.</p>':'')+'</form>';}
+function sameClass(a,b){if(a===b||a==="tous"||b==="tous")return true;var ca=child(a),cb=child(b);return !!((ca&&ca.ed_same_as===b)||(cb&&cb.ed_same_as===a)||(ca&&cb&&ca.ed_same_as&&ca.ed_same_as===cb.ed_same_as));}
+function manualCancel(cid,date,l){return S.cancels.filter(function(x){return x.date===date&&x.subject===l.m&&(!x.start||x.start===l.s)&&sameClass(x.child,cid);})[0]||null;}
+function lessonsOf(cid,date){var p=planOf(date);var ch=p&&p.data.children[cid];var ls=((ch&&ch.lessons&&ch.lessons[date])||[]).map(function(l){var o={};for(var k in l)o[k]=l[k];var mc=manualCancel(cid,date,l);if(mc){o.mc=mc;if(!o.x||/sur le site/.test(o.x))o.x="Annulé sur le site"+(mc.reason?" : "+mc.reason:"");}else if(o.x&&/sur le site/.test(o.x)){delete o.x;}return o;});return ls;}
+function renderEdt(c,date){
+ var ls=lessonsOf(c.id,date);if(!ls.length)return "";
+ var nx=ls.filter(function(l){return l.x;}).length;
+ var h='<details class="edt"'+(S.edtOpen?" open":"")+'><summary>Emploi du temps · '+ls.length+' cours'+(nx?' · <b class="cx">'+nx+' annulé'+(nx>1?"s":"")+'</b>':'')+'</summary><ul>';
+ ls.forEach(function(l,i){h+='<li class="'+(l.x?"cancelled":"")+'"><span class="et">'+esc(l.s)+(l.e?' – '+esc(l.e):'')+'</span><span class="em"><b>'+esc(l.m)+'</b>'+(l.r?' · salle '+esc(l.r):'')+(l.x?'<small>'+esc(l.x)+'</small>':'')+'</span>'+(l.mc?'<button class="btn sec mini" data-uncancel="'+esc(l.mc.id)+'">Rétablir</button>':l.x?'':'<button class="btn sec mini" data-cancel="'+i+'" data-date="'+esc(date)+'" data-child="'+esc(c.id)+'" aria-label="Annuler le cours de '+esc(l.m)+' à '+esc(l.s)+'">Prof absent</button>')+'</li>';});
+ h+='</ul><p class="det">« Prof absent » retire le cours du planning à la prochaine synchronisation (pour '+(children().filter(function(k){return k.id!==c.id&&sameClass(k.id,c.id);}).map(function(k){return esc(k.name);}).concat([esc(c.name)]).join(" et "))+').'+(S.cancelsMissing?' <b>Exécutez le bloc SQL « annulations » dans Supabase.</b>':'')+'</p></details>';
+ return h;}
 function senseiFor(cid){var m=S.sensei.filter(function(x){return x.child===cid||x.child==="tous";}).sort(function(a,b){return a.created_at<b.created_at?1:-1;});return m[0]||null;}
 
 /* --- écrans --- */
@@ -279,7 +291,7 @@ function renderChild(c,plan){
  var di=dayInfo(S.day)||days[0];var p=prog(c.id,S.day);var full=p.t&&p.n===p.t;
  var sc=((plan.data.children[c.id]||{}).school||{})[S.day];
  h+='<div class="mhead"><h2>Missions du '+esc(di.long.replace(/^(\S+)/,function(x){return x.toLowerCase();}))+'</h2><span>'+(sc?esc(sc)+' · ':'')+(full?'<b class="ok-txt">Mission accomplie !</b>':p.n+' sur '+p.t)+'</span></div>';
- h+='<div class="track big"><i style="width:'+pct(p)+'%"></i></div>';
+ h+='<div class="track big"><i style="width:'+pct(p)+'%"></i></div>'+renderEdt(c,S.day);
  if(full)h+='<div class="boom"><span>MISSION ACCOMPLIE !</span></div>';
  h+='<ol class="tl">';
  var all=blocksOf(c.id,S.day);var bl=all.filter(function(b){return !b.over;});var over=all.filter(function(b){return b.over;});
@@ -568,7 +580,7 @@ function val(id){return (document.getElementById(id).value||"").trim();}
 function pickWeek(idx){var p=S.plans[idx];if(!p)return;var has=p.data.days.some(function(d){return d.date===TODAY;});setDay(has?TODAY:(p.data.days[1]||p.data.days[0]).date);}
 
 root.addEventListener("click",function(e){
- var t=e.target.closest("[data-delbook],[data-view],[data-day],[data-id],[data-go],[data-week],[data-del],[data-act],[data-delidea]");if(!t)return;
+ var t=e.target.closest("[data-cancel],[data-uncancel],[data-delbook],[data-view],[data-day],[data-id],[data-go],[data-week],[data-del],[data-act],[data-delidea]");if(!t)return;
  if(t.hasAttribute("data-delidea")){var di=t.getAttribute("data-delidea");var aft=function(){S.ideas=S.ideas.filter(function(x){return String(x.id)!==di;});render();};
   if(DEMO)aft();else sb.from("ideas").delete().eq("id",di).then(function(r){if(!r.error)aft();});return;}
  if(t.matches("input.chk")){setDone(t.getAttribute("data-id"),t.checked);return;}
@@ -576,6 +588,13 @@ root.addEventListener("click",function(e){
   var aftb=function(){S.books=S.books.filter(function(x){return String(x.id)!==bid;});render();};
   if(DEMO)aftb();else sb.from("books").delete().eq("id",bid).then(function(r){if(!r.error)aftb();});return;}
  if(t.getAttribute("data-act")==="book-open"){S.bookOpen=true;render();var bi=document.getElementById("b-title");if(bi)bi.focus();return;}
+ if(t.hasAttribute("data-cancel")){var cc=t.getAttribute("data-child"),cd=t.getAttribute("data-date");var l=lessonsOf(cc,cd)[+t.getAttribute("data-cancel")];if(!l)return;
+  var row={child:cc,date:cd,subject:l.m,start:l.s,reason:"prof absent"};
+  var okc=function(x){S.cancels.push(x);flash("global",l.m+" du "+fmtDate(cd)+" annulé. Le planning sera recalculé à la prochaine synchronisation (ou double-cliquez sur « Synchro planning » sur le PC).");};
+  if(DEMO){row.id="demo-"+Date.now();okc(row);return;}
+  sb.from("cancellations").insert(row).select().then(function(r){if(r.error)flash("global","Erreur : "+r.error.message,true);else okc(r.data[0]);});return;}
+ if(t.hasAttribute("data-uncancel")){var uid=t.getAttribute("data-uncancel");var aftu=function(){S.cancels=S.cancels.filter(function(x){return String(x.id)!==uid;});render();};
+  if(DEMO)aftu();else sb.from("cancellations").delete().eq("id",uid).then(function(r){if(!r.error)aftu();});return;}
  if(t.getAttribute("data-act")==="book-close"){S.bookOpen=false;render();var ob=document.querySelector('[data-act="book-open"]');if(ob)ob.focus();return;}
  if(t.getAttribute("data-act")==="books-all"){S.bookAll=true;render();return;}
  if(t.hasAttribute("data-act")){sb.auth.signOut().then(function(){location.reload();});return;}
@@ -588,6 +607,7 @@ root.addEventListener("click",function(e){
  if(t.hasAttribute("data-day")){setDay(t.getAttribute("data-day"));return;}
  if(t.hasAttribute("data-id")){var i=t.getAttribute("data-id");setDone(i,!S.done[i]);}
 });
+root.addEventListener("toggle",function(e){if(e.target.classList&&e.target.classList.contains("edt"))S.edtOpen=e.target.open;},true);
 root.addEventListener("keydown",function(e){if(e.key==="Escape"&&S.bookOpen&&e.target.closest&&e.target.closest("#bookf")){S.bookOpen=false;render();var ob=document.querySelector('[data-act="book-open"]');if(ob)ob.focus();}});
 window.addEventListener("hashchange",function(){S.bookOpen=false;render();window.scrollTo(0,0);});
 

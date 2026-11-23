@@ -5,6 +5,19 @@ Numérotation : `MAJEUR.MINEUR.CORRECTIF` (ex. 0.2.1).
 - **mineur** (0.**2**.0) : une nouveauté (un réglage, un écran, une règle de planning) ;
 - **majeur** (**1**.0.0) : la version jugée stable après plusieurs semaines d'usage réel.
 
+## [0.4.0] – 23 novembre 2026
+
+- Emploi du temps du jour (lu sur EcoleDirecte) affiché en haut des missions, avec les salles.
+- Cours annulés : ceux marqués annulés sur EcoleDirecte, ceux que le professeur annonce dans les devoirs
+  (« pas cours », « cours annulé », « professeur absent »…) et ceux annulés sur le site avec le bouton
+  « Prof absent » (pour les jumeaux, l'annulation vaut pour les deux). Le planning en tient compte
+  (heures de retour, leçons à relire) à la synchronisation suivante ; « Rétablir » annule l'annulation.
+- Une annonce d'annulation n'est plus prise pour un devoir ni une évaluation.
+- Correction : « ED.PHYSIQUE & SPORT. » est bien l'EPS (et non la Physique-Chimie).
+- Journées chargées : devoirs possibles jusqu'à 21h30 (réglage « work_until »), en commençant par
+  les révisions d'évaluation ; le coucher est alors décalé, au plus tard à 22h00 (réglage « bedtime_max »).
+- Nouvelle table Supabase : `cancellations` (bloc SQL « v0.4.0 » de schema.sql).
+
 ## [0.3.2] – 23 novembre 2026
 
 - Bibliothèque : bouton « Annuler » (et touche Échap) pour refermer le formulaire « J'ai fini un livre ».

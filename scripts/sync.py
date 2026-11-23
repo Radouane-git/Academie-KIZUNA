@@ -205,6 +205,10 @@ def main() -> int:
             data_by_child[c["id"]] = data_by_child[c["ed_same_as"]]
 
     extras = db.get("extras", f"select=*&due=gte.{start.isoformat()}")
+    try:   # table ajoutée en 0.4.0 : absente tant que le SQL n'a pas été exécuté
+        cancellations = db.get("cancellations", f"select=*&date=gte.{start.isoformat()}")
+    except Exception:
+        cancellations = []
     existing = {r["week_start"]: r for r in db.get("plans", "select=week_start,source,data")}
     written = []
     for wk in weeks:
@@ -212,7 +216,7 @@ def main() -> int:
         prev = existing.get((wk - timedelta(days=7)).isoformat())
         week = planner.build_week(cfg, wk, data_by_child, extras,
                                   prev_week=prev and prev["data"], today=today,
-                                  frozen=cur and cur["data"])
+                                  frozen=cur and cur["data"], cancellations=cancellations)
         if cur and cur["source"] != "auto":
             # semaine verrouillée (faite à la main) : seuls « à rendre » et évaluations sont mis à jour
             # + les jours à venir sont recalculés (les jours passés et leurs coches restent tels quels)
@@ -222,6 +226,7 @@ def main() -> int:
                 tgt = data.setdefault("children", {}).setdefault(cid, {})
                 tgt["due_ed"] = ch["due"]
                 tgt["evals_ed"] = ch["evals"]
+                tgt["lessons"] = ch.get("lessons", {})
                 blocks = tgt.setdefault("blocks", {})
                 for day_key, fresh_blocks in ch["blocks"].items():
                     if day_key < today.isoformat():

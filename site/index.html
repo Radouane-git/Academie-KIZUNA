@@ -138,6 +138,17 @@ a{color:var(--child)}
 .legend .rank{width:22px;height:22px;font-size:11px}
 .legend span:not(.rank){margin-right:8px}
 
+/* emploi du temps */
+.edt{margin:4px 0 8px;border:2px solid var(--soft);border-radius:14px;padding:6px 12px}
+.edt summary{cursor:pointer;font-weight:700;font-size:.9rem;padding:4px 0;min-height:32px;display:list-item}
+.edt .cx{color:var(--rS)}
+.edt ul{list-style:none;margin:4px 0;padding:0}
+.edt li{display:flex;align-items:center;gap:12px;padding:6px 0;border-top:1px solid var(--soft)}
+.edt .et{font-family:var(--display);font-weight:800;font-size:.8rem;color:var(--muted);min-width:96px}
+.edt .em{flex:1;min-width:0}
+.edt li.cancelled .em b{text-decoration:line-through;color:var(--muted)}
+.edt li.cancelled small{color:var(--rS)}
+.btn.mini{min-height:34px;padding:5px 11px;font-size:.82rem;margin:0}
 /* colonne de droite */
 .side{display:flex;flex-direction:column;gap:14px}
 .side-card h2{font-size:.92rem;margin-bottom:8px}
@@ -228,8 +239,8 @@ a{color:var(--child)}
 </head>
 <body>
 <div id="root"><p style="padding:2rem;font-family:sans-serif">Chargement de l’Académie…</p></div>
-<script src="config.js?v=0.3.2"></script>
+<script src="config.js?v=0.4.0"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script src="app.js?v=0.3.2"></script>
+<script src="app.js?v=0.4.0"></script>
 </body>
 </html>

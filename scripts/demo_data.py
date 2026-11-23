@@ -80,6 +80,7 @@ def main():
     today = date.today()
     monday = today - timedelta(days=today.weekday())
     hw_c, hw_l = homework(monday)
+    hw_l = hw_l + [{"due": (monday + timedelta(days=1)).isoformat(), "subject": "SVT", "text": "Pas cours : la professeure est en formation."}]
     data = {"leo": {"homework": hw_c, "schedule": schedule(COLLEGE, monday)},
             "ines": {"homework": hw_c, "schedule": schedule(COLLEGE, monday)},
             "sarah": {"homework": hw_l, "schedule": schedule(LYCEE, monday)}}

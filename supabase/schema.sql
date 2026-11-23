@@ -167,3 +167,18 @@ alter table public.books enable row level security;
 drop policy if exists "famille books" on public.books;
 create policy "famille books" on public.books for all to authenticated using (public.is_family()) with check (public.is_family());
 grant select, insert, update, delete on public.books to authenticated;
+
+-- ============================================================ v0.4.0 : cours annulés (prof absent)
+create table if not exists public.cancellations (
+  id uuid primary key default gen_random_uuid(),
+  child text not null,
+  date date not null,
+  subject text not null,
+  start text,
+  reason text,
+  created_at timestamptz default now()
+);
+alter table public.cancellations enable row level security;
+drop policy if exists "famille cancellations" on public.cancellations;
+create policy "famille cancellations" on public.cancellations for all to authenticated using (public.is_family()) with check (public.is_family());
+grant select, insert, update, delete on public.cancellations to authenticated;

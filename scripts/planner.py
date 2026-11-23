@@ -24,6 +24,8 @@ NO_REL = re.compile(r"EPS|accompagnement|vie de classe|permanence|étude|AP\b|or
 EVAL_RE = re.compile(r"\b(évaluation|evaluation|contr[ôo]le|DS|devoir surveill|QCM|interro|test|flash test|bac blanc|brevet blanc)\b", re.I)
 APP_RE = re.compile(r"(apprendre|par c[œo]eur|réciter|reciter|leçon|vocabulaire|revoir|réviser)", re.I)
 LEC_RE = re.compile(r"\b(lire|lecture)\b", re.I)
+# le professeur annonce dans les devoirs qu'il n'y aura pas cours
+CANCEL_RE = re.compile(r"(pas (de |d['’]\s?)?(cours|eps|sport|piscine)\b|cours (est |sont )?(annul|supprim)|pas cours|absence (du|de la|de) (prof|professeur|enseignant)|(prof|professeur|enseignant)e? (sera |est )?absent)", re.I)
 BIG_EVAL_RE = re.compile(r"\b(DS|devoir surveill|2\s?h|bac blanc|brevet blanc)\b", re.I)
 
 
@@ -72,11 +74,11 @@ class Day:
         self.d = d
         self.w = jsw(d)
         self.child = child
-        lessons = sorted([c for c in schedule if c["date"] == d.isoformat() and c.get("start")], key=lambda c: m(c["start"]))
+        lessons = sorted([c for c in schedule if c["date"] == d.isoformat() and c.get("start") and not c.get("cancelled")], key=lambda c: m(c["start"]))
         fb = (child.get("school_fallback") or {}).get(str(self.w))
         if lessons:
             self.school = (m(lessons[0]["start"]), max(m(c["end"] or c["start"]) for c in lessons))
-        elif fb and not schedule:
+        elif fb and not [c for c in schedule if not c.get("cancelled")]:
             self.school = (m(fb[0]), m(fb[1]))
         else:
             self.school = None
@@ -241,8 +243,28 @@ def recurring_tasks(child: dict, week_days: list[date]) -> tuple[list[dict], lis
 
 # ---------------------------------------------------------------- semaine
 
+def is_cancel_note(h: dict) -> bool:
+    return bool(CANCEL_RE.search(h.get("text") or ""))
+
+
+def apply_cancellations(schedule: list[dict], homework: list[dict], manual: list[dict]) -> list[dict]:
+    """Marque les cours annulés : annoncés par le professeur dans les devoirs, ou saisis sur le site."""
+    out = [dict(c) for c in schedule]
+    def mark(date_s, subject, reason, start=None):
+        for c in out:
+            if c["date"] == date_s and c["subject"] == subject and (not start or c.get("start") == start) and not c.get("cancelled"):
+                c["cancelled"] = reason
+    for h in homework:
+        if h.get("subject") and is_cancel_note(h):
+            mark(h["due"], h["subject"], "Annoncé par le professeur : " + short_text(h["text"], 80))
+    for x in manual or []:
+        mark(x["date"], x["subject"], "Annulé sur le site" + (f" : {x['reason']}" if x.get("reason") else ""), x.get("start"))
+    return out
+
+
 def build_week(cfg: dict, monday: date, data_by_child: dict, extras: list[dict],
-               prev_week: dict | None = None, today: date | None = None, frozen: dict | None = None) -> dict:
+               prev_week: dict | None = None, today: date | None = None, frozen: dict | None = None,
+               cancellations: list[dict] | None = None) -> dict:
     """prev_week : semaine précédente (pour repérer les doublons) ;
     frozen : version actuelle de cette semaine, dont on garde les jours déjà passés."""
     today = today or date.today()
@@ -261,11 +283,15 @@ def build_week(cfg: dict, monday: date, data_by_child: dict, extras: list[dict],
         cid = child["id"]
         child = dict(child, sibling_name=names.get(child.get("sibling")))
         data = data_by_child.get(cid, {"homework": [], "schedule": []})
-        schedule = data.get("schedule", [])
+        same = {cid, child.get("ed_same_as")} | {c["id"] for c in cfg["children"] if c.get("ed_same_as") == cid}
+        manual = [x for x in (cancellations or []) if x.get("child") in same or x.get("child") == "tous"]
         extra_hw = [{"due": e["due"], "subject": e.get("subject") or "", "text": e["text"], "eval": e.get("kind") == "rev", "kind": e.get("kind"), "extra": True}
                     for e in extras if e["child"] in (cid, "tous")]
         rec_tasks, rec_hw = recurring_tasks(child, week_days)
         homework = data.get("homework", []) + extra_hw + rec_hw
+        schedule = apply_cancellations(data.get("schedule", []), homework, manual)
+        notes_cancel = [h for h in homework if is_cancel_note(h)]
+        homework = [h for h in homework if not is_cancel_note(h)]
         days = {d.isoformat(): Day(d, child, cfg, schedule) for d in week_days}
         tasks = make_tasks(child, homework, week_days, horizon) + rec_tasks
         # attribution aux jours
@@ -318,7 +344,7 @@ def build_week(cfg: dict, monday: date, data_by_child: dict, extras: list[dict],
                     school_lbl[key] = (frozen.get("children", {}).get(cid, {}).get("school", {}) or {}).get(key, "")
                     continue
             nxt = days.get((d + timedelta(days=1)).isoformat())
-            tomorrow_subjects = nxt.subjects if nxt else [c["subject"] for c in schedule if c["date"] == (d + timedelta(days=1)).isoformat() and not NO_REL.search(c["subject"])]
+            tomorrow_subjects = nxt.subjects if nxt else [c["subject"] for c in schedule if c["date"] == (d + timedelta(days=1)).isoformat() and not c.get("cancelled") and not NO_REL.search(c["subject"])]
             tomorrow_subjects = list(dict.fromkeys(tomorrow_subjects))
             blocks[key] = layout_day(days[key], cid, cfg, chores[(i + ci) % len(chores)], tomorrow_subjects)
             dd = days[key]
@@ -336,7 +362,19 @@ def build_week(cfg: dict, monday: date, data_by_child: dict, extras: list[dict],
                 fresh.append(short_text(lbl, 140))
             if kind == "eval":
                 evals.append([h["due"], f"{h.get('subject')} : {short_text(h['text'], 60)}"])
-        week["children"][cid] = {"blocks": blocks, "due": due, "evals": evals, "school": school_lbl}
+        for h in notes_cancel:
+            if monday <= date.fromisoformat(h["due"]) <= horizon:
+                due.setdefault(h["due"], []).append(short_text(f"{h.get('subject')} : pas cours ({h['text']})", 140))
+        lessons = {}
+        for c in sorted(schedule, key=lambda c: (c["date"], m(c.get("start") or "0h"))):
+            if monday.isoformat() <= c["date"] <= week_days[-1].isoformat() and c.get("start"):
+                row = {"s": c["start"], "e": c.get("end") or "", "m": c["subject"]}
+                if c.get("room"):
+                    row["r"] = c["room"]
+                if c.get("cancelled"):
+                    row["x"] = c["cancelled"]
+                lessons.setdefault(c["date"], []).append(row)
+        week["children"][cid] = {"blocks": blocks, "due": due, "evals": evals, "school": school_lbl, "lessons": lessons}
         # remarques : devoirs identiques à la semaine précédente
         if prev_week:
             prev_due = [x for v in (prev_week.get("children", {}).get(cid, {}).get("due", {}) or {}).values() for x in v]
@@ -492,28 +530,38 @@ def layout_day(day: Day, cid: str, cfg: dict, chore: str, tomorrow_subjects: lis
             add(dn - 15, "cor", chore)
         add(dn, "repas", "Dîner")
 
-    # après le dîner : seulement les jours sans sport le soir, et fini avant « écrans coupés »
+    # après le dîner : seulement les jours sans sport le soir ; si besoin jusqu'à 21h30
+    # (« work_until »), le coucher est alors décalé, sans dépasser « bedtime_max » (22h00)
+    bed = day.bedtime
+    calm = bed - 45
     if overflow:
-        calm = day.bedtime - 45
+        work_until = m(cfg.get("work_until", "21h30"))
+        bed_max = m(cfg.get("bedtime_max", "22h00"))
+        limit = max(calm, min(work_until, bed_max - 30))
         t = max(dn + 45, max((m(b["t"]) for b in B if b["k"] in ("repas", "cor") and m(b["t"]) >= dn), default=dn) + 15)
-        for x in sorted(overflow, key=lambda y: y["min"]):
+        # d'abord ce qui prépare une évaluation, puis le plus court
+        for x in sorted(overflow, key=lambda y: (y["k"] != "rev", y["min"])):
             if day.sport_evening or any(a0 <= t < a1 + 15 for a0, a1, _, _ in day.acts):
                 break
-            if t + x["min"] > calm:
+            if t + x["min"] > limit:
                 continue
             add(t, x["k"], x["l"], x.get("d", ""), {"x": 1} if (x.get("src") or {}).get("extra") else None)
             t += x["min"]
             overflow.remove(x)
+        if t > calm:
+            calm = t
+            bed = min(bed_max, max(bed, t + 30))
         for x in overflow:   # aucune place ce jour-là : affiché à part, sans horaire
             add(calm, x["k"], x["l"], x.get("d", ""), dict({"over": 1}, **({"x": 1} if (x.get("src") or {}).get("extra") else {})))
     # coucher
+    late = bed > day.bedtime
     if bedtime:
         x = bedtime[0]
-        add(day.bedtime - 45, "lec", x["l"] + " (au lit)", (x.get("d", "") + " Lecture calme avant de dormir.").strip(),
+        add(calm, "lec", x["l"] + " (au lit)", (x.get("d", "") + " Lecture calme avant de dormir.").strip(),
             {"x": 1} if (x.get("src") or {}).get("extra") else None)
     elif not day.sport_evening:
-        add(day.bedtime - 45, "dodo", "Écrans coupés, temps calme")
-    add(day.bedtime, "dodo", "Coucher" + (" (22h au plus tard)" if day.sport_evening else ""))
+        add(calm, "dodo", "Écrans coupés, temps calme")
+    add(bed, "dodo", "Coucher" + (" (22h au plus tard)" if day.sport_evening else " (plus tard ce soir : grosse journée)" if late else ""))
     B.sort(key=lambda b: m(b["t"]))
     return B
 
