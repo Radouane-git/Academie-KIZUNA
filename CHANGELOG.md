@@ -38,7 +38,7 @@ Validée le 23/11 et publiée. Corrections issues de l'audit UX du 23/11 :
   nom « Kizuna ») : manifeste web, icônes iPhone et Android.
 - Paramètres : encadré « Installer sur un téléphone » (bouton direct sur Android quand c'est possible,
   marche à suivre pour iPhone et Android).
-- Chaque appareil rouvre directement le dernier profil utilisé (le téléphone d'Imrane s'ouvre sur Imrane).
+- Chaque appareil rouvre directement le dernier profil utilisé (le téléphone d'un enfant s'ouvre sur son profil).
 
 ## [0.5.2] – 23 novembre 2026
 
@@ -102,7 +102,7 @@ Navigation inspirée de Brilliant, polices inchangées (Unbounded, Atkinson Hype
 Validée le 23/11 : la préversion devient le site principal (l'adresse `/preview/` renvoie vers l'accueil).
 - Nouvelle identité « Académie Kizuna » : logo 絆, carte d'élève avec niveau et badges,
   missions classées par rang (S, A, B, C, D), pictos autocollants.
-- Couleurs par profil (Imrane Lagon, Nahila Sakura, Aliya Améthyste, Parents Graphite), modifiables dans la Vue parents.
+- Couleurs par profil (Lagon, Sakura, Améthyste, Graphite pour les parents), modifiables dans la Vue parents.
 - Tampon de l'Académie : les parents tamponnent une bonne note, l'enfant le voit sur sa carte.
 - Mot du sensei : message des parents affiché dans la journée de l'enfant.
 - Niveau = 1 + une tranche par 40 missions cochées ; badges « jours de suite » (80 % de la journée faite),
