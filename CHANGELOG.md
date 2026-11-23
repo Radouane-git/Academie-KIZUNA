@@ -5,9 +5,9 @@ Numérotation : `MAJEUR.MINEUR.CORRECTIF` (ex. 0.2.1).
 - **mineur** (0.**2**.0) : une nouveauté (un réglage, un écran, une règle de planning) ;
 - **majeur** (**1**.0.0) : la version jugée stable après plusieurs semaines d'usage réel.
 
-## [0.5.0] – préversion (non publiée)
+## [0.5.0] – 23 novembre 2026
 
-Visible uniquement sur `/preview/` ; le site principal ne change pas tant qu'elle n'est pas validée.
+Validée le 23/11 : la préversion devient le site principal (`/preview/` renvoie vers l'accueil).
 Navigation inspirée de Brilliant, polices inchangées (Unbounded, Atkinson Hyperlegible, Dela Gothic One).
 - Quatre sections par enfant : Aujourd'hui, Ma semaine, Bibliothèque, Tampons (en haut sur ordinateur,
   barre en bas sur téléphone) ; changement de profil par pastilles en haut à droite.

@@ -20,7 +20,7 @@ var TIPS = [
 ];
 
 /* ------------------------------------------------------------ état */
-var S = {fam:null, plans:[], done:{}, extras:[], ideas:[], ideasMissing:false, stamps:[], sensei:[], stampsMissing:false, books:[], booksMissing:false, cancels:[], cancelsMissing:false, edtOpen:false, bookOpen:false, sync:null, mfa:null, view:null, day:null, msg:{}, bulk:{text:"",items:null}};
+var S = {fam:null, plans:[], done:{}, extras:[], ideas:[], ideasMissing:false, stamps:[], sensei:[], stampsMissing:false, books:[], booksMissing:false, cancels:[], cancelsMissing:false, edtOpen:false, focus:null, bookOpen:false, sync:null, mfa:null, view:null, day:null, msg:{}, bulk:{text:"",items:null}};
 function lsGet(k){try{return localStorage.getItem(k);}catch(e){return null;}}
 function lsSet(k,v){try{localStorage.setItem(k,v);}catch(e){}}
 function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
@@ -134,7 +134,7 @@ function defaultDay(){
  var last=S.plans[S.plans.length-1].data.days;var first=S.plans[0].data.days;
  return TODAY<first[0].date?first[0].date:last[last.length-1].date;
 }
-function curView(){var h=(location.hash||"").replace("#","");var ok=children().map(function(c){return c.id;}).concat(["parents","conseils"]);return ok.indexOf(h)>=0?h:(children()[0]?children()[0].id:"parents");}
+function curView(){var h=(location.hash||"").replace("#","").split("/")[0];var ok=children().map(function(c){return c.id;}).concat(["parents","conseils"]);return ok.indexOf(h)>=0?h:(children()[0]?children()[0].id:"parents");}
 function start(){
  var saved=null;try{saved=sessionStorage.getItem("planning-day");}catch(e){}
  S.day=(saved&&planOf(saved))?saved:defaultDay();
@@ -239,14 +239,23 @@ function syncLine(){
  var txt=s.status==="ok"?"EcoleDirecte à jour · "+when:s.status==="mfa"?"EcoleDirecte attend une réponse":"Synchro en échec · "+when;
  return '<span class="status '+cls+'"><i></i>'+esc(txt)+(DEMO?' · <b>démo</b>':'')+(!DEMO?' · <button class="linkbtn" data-act="logout">Se déconnecter</button>':'')+'</span>';
 }
+function curSection(){var h=(location.hash||"").replace("#","").split("/");return ["semaine","livres","tampons"].indexOf(h[1])>=0?h[1]:"jour";}
+var SECTIONS=[["jour","Aujourd’hui","Devoir"],["semaine","Ma semaine","Sac"],["livres","Bibliothèque","Lecture"],["tampons","Tampons","Loisir"]];
+var FLAME='<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c1 4 5 5.5 5 11a5 5 0 0 1-10 0c0-3 2-4.5 2-7 2 1.2 3 2.6 3 4 1-2 .5-5 0-8z" fill="#FF6B4A"/></svg>';
+function ring(p,size,stroke,label){var r=(size-stroke)/2,c=2*Math.PI*r;return '<span class="ring" style="width:'+size+'px;height:'+size+'px"><svg width="'+size+'" height="'+size+'" viewBox="0 0 '+size+' '+size+'" aria-hidden="true"><circle cx="'+size/2+'" cy="'+size/2+'" r="'+r+'" stroke="var(--line)" stroke-width="'+stroke+'" fill="none"/><circle cx="'+size/2+'" cy="'+size/2+'" r="'+r+'" stroke="var(--child)" stroke-width="'+stroke+'" fill="none" stroke-linecap="round" stroke-dasharray="'+(c*p).toFixed(1)+' '+c.toFixed(1)+'" transform="rotate(-90 '+size/2+' '+size/2+')"/></svg><b style="font-size:'+Math.round(size/4.2)+'px">'+(label||Math.round(p*100)+"%")+'</b></span>';}
+
 function topbar(v){
- var h='<header class="topbar">'+'<a class="brand" href="#'+esc(children()[0]?children()[0].id:"parents")+'">'+logo(46)+'<span class="wordmark"><span>ACADÉMIE</span><b>KIZUNA</b></span></a>';
- h+='<nav class="tabs" aria-label="Profils">';
- children().forEach(function(ch){var t=theme(ch);var on=v===ch.id;h+='<button class="tab" data-view="'+esc(ch.id)+'" aria-current="'+(on?"page":"false")+'" style="--tc:'+t.bg+';--tt:'+t.txt+'"><span class="dot"></span>'+esc(ch.name)+'</button>';});
+ var c=child(v),sec=curSection();
+ var h='<header class="topbar"><a class="brand" href="#'+esc(children()[0]?children()[0].id:"parents")+'">'+logo(40)+'<span class="wordmark"><span>ACADÉMIE</span><b>KIZUNA</b></span></a>';
+ if(c){h+='<nav class="secnav" aria-label="Sections">'+SECTIONS.map(function(s){return '<a href="#'+esc(c.id)+(s[0]==="jour"?"":"/"+s[0])+'" class="sec" aria-current="'+(sec===s[0]?"page":"false")+'">'+'<span class="secpic">'+picto(s[2],30)+'</span><span>'+s[1]+'</span></a>';}).join("")+'</nav>';}
+ h+='<div class="who">';
+ if(c){var k=card(c.id);h+='<span class="streak" title="Jours de suite">'+FLAME+'<b>'+k.streak+'</b></span>';}
+ h+='<nav class="profiles" aria-label="Profils">';
+ children().forEach(function(ch){var t=theme(ch);var on=v===ch.id;h+='<button class="prof" data-view="'+esc(ch.id)+'" aria-current="'+(on?"page":"false")+'" style="--tc:'+t.bg+';--tt:'+t.txt+'"><span class="av">'+esc(ch.name.charAt(0))+'</span><span class="pn">'+esc(ch.name)+'</span></button>';});
  var tp=THEMES[themeName(null)];
- h+='<button class="tab" data-view="parents" aria-current="'+(v==="parents"?"page":"false")+'" style="--tc:'+tp.bg+';--tt:'+tp.txt+'">Vue parents</button>';
- h+='<button class="tab" data-view="conseils" aria-current="'+(v==="conseils"?"page":"false")+'" style="--tc:#0D3B45;--tt:#FFFFFF">Conseils</button></nav>';
- return h+syncLine()+'</header>';
+ h+='<button class="prof txt" data-view="parents" aria-current="'+(v==="parents"?"page":"false")+'" style="--tc:'+tp.bg+';--tt:'+tp.txt+'">Parents</button>';
+ h+='<button class="prof txt" data-view="conseils" aria-current="'+(v==="conseils"?"page":"false")+'" style="--tc:#0D3B45;--tt:#FFFFFF">Conseils</button></nav></div>';
+ return h+'</header>';
 }
 function weeksNav(){
  if(!S.plans.length)return "";
@@ -261,81 +270,144 @@ function weeksNav(){
  if(others.length)h+='<select class="wk" id="oldweek" aria-label="Autres semaines"><option value="">Autres semaines…</option>'+others.map(function(i){return '<option value="'+i+'"'+(i===sel?" selected":"")+'>Semaine du '+lbl(i)+'</option>';}).join("")+'</select>';
  return h+'</nav>';
 }
+function footer(){return '<footer class="foot">'+syncLine()+'<a href="#conseils">Conseils</a></footer>';}
 function render(){
- if(!S.fam){root.innerHTML='<div class="wrap">'+topbar("parents")+renderParents(true)+'</div>';bindForms();return;}
+ if(!S.fam){root.innerHTML='<div class="wrap">'+topbar("parents")+renderParents(true)+footer()+'</div>';bindForms();return;}
  var v=curView();var c=child(v);var t=theme(c);
  var plan=planOf(S.day);
- var h='<div class="wrap" style="--child:'+t.bg+';--acc:'+t.acc+';--ctxt:'+t.txt+'">';
+ var h='<div class="wrap'+(c?" kid":"")+'" style="--child:'+t.bg+';--acc:'+t.acc+';--ctxt:'+t.txt+'">';
  h+=topbar(v);
- if(S.msg.global)h+='<p class="msg'+(S.msg.global.e?" err":"")+'">'+esc(S.msg.global.t)+'</p>';
- if(c)h+=plan?renderChild(c,plan):'<div class="card"><p>Aucun planning pour cette période.</p></div>';
+ if(S.msg.global)h+='<p class="msg'+(S.msg.global.e?" err":"")+'" role="status">'+esc(S.msg.global.t)+'</p>';
+ if(c){var sec=curSection();
+  if(sec==="livres")h+=renderLibrary(c);
+  else if(sec==="tampons")h+=renderStamps(c,plan);
+  else if(!plan)h+='<div class="card"><p>Aucun planning pour cette période.</p></div>';
+  else if(sec==="semaine")h+=renderWeek(c,plan);
+  else h+=renderChild(c,plan);}
  else if(v==="parents")h+=renderParents(false);
  else h+=renderTips(plan);
+ h+=footer();
+ if(c&&S.focus)h+=renderFocus(c);
  h+='</div>';
  root.innerHTML=h;bindForms();
+ if(c&&S.focus){var fb=document.querySelector(".focus [data-fdone]")||document.querySelector(".focus [data-fclose]");if(fb)fb.focus();}
 }
 function hero(c,plan){
  var t=theme(c),k=card(c.id),w=weekProg(c.id,plan),st=stampsFor(c.id);
  var h='<section class="hero" style="background-color:'+t.bg+';color:'+t.txt+'">';
  h+='<div class="hero-id"><span class="shield" style="background:'+t.acc+';color:'+t.bg+'">'+k.level+'</span><div><span class="over">Carte d’élève · niveau '+k.level+'</span><h1>'+esc(c.name)+'</h1><div class="badges">'+(k.badges.length?k.badges.map(function(b){return '<span>'+esc(b)+'</span>';}).join(""):'<span>Encore '+k.next+' missions pour le niveau '+(k.level+1)+'</span>')+'</div></div></div>';
- h+='<div class="hero-stats"><div class="wk-prog"><div><span>Ma semaine</span><b>'+pct(w)+' %</b></div><div class="track"><i style="width:'+pct(w)+'%;background:'+t.acc+'"></i></div><small>'+w.n+' missions sur '+w.t+'</small></div>';
+ h+='<div class="hero-stats"><div class="wk-prog"><div><span>Ma semaine</span><b>'+pct(w)+' %</b></div><div class="track"><i style="width:'+pct(w)+'%;background:'+t.acc+'"></i></div><small>'+w.n+' mission'+(w.n>1?"s":"")+' sur '+w.t+'</small></div>';
  h+='<div class="hero-stamps">'+stampHtml(54)+'<div><b>'+st.length+'</b><small>tampon'+(st.length>1?"s":"")+'</small></div></div></div>';
  return h+'</section>';
 }
+
+/* --- missions : ordre, prochaine, état --- */
+function isTask(b){var kd=KINDS[b.k];return !!(kd&&kd[2]&&b.id)||(b.k==="rel"&&b.rel&&(subs(b.rel.today).length||subs(b.rel.tomorrow).length));}
+function relIds(b){return subs(b.rel.today).map(function(s){return b.rel.idp+"|t|"+s;}).concat(subs(b.rel.tomorrow).map(function(s){return b.rel.idp+"|d|"+s;}));}
+function isDoneB(b){if(b.k==="rel"&&b.rel){var ids=relIds(b);return ids.length&&ids.every(function(i){return S.done[i];});}return !!S.done[b.id];}
+function keyOf(b){return b.k==="rel"&&b.rel?b.rel.idp:b.id;}
+function tasksOf(cid,date){var all=blocksOf(cid,date);return all.filter(function(b){return !b.over&&isTask(b);}).concat(all.filter(function(b){return b.over&&isTask(b);}));}
+function mprog(cid,date){var t=tasksOf(cid,date);return {n:t.filter(isDoneB).length,t:t.length};}
+function nextTask(cid,date){return tasksOf(cid,date).filter(function(b){return !isDoneB(b);})[0]||null;}
+function dayChip(c,d){var p=mprog(c.id,d.date);var st=p.t&&p.n===p.t?"full":p.n?"part":"";return '<button class="dchip'+(d.date===TODAY?" today":"")+'" data-day="'+d.date+'" aria-pressed="'+(d.date===S.day)+'" aria-label="'+esc(d.long)+', '+p.n+' sur '+p.t+'"><span>'+esc(d.short.charAt(0))+'</span><b>'+d.num+'</b><i class="'+st+'"></i></button>';}
+
 function renderChild(c,plan){
- var t=theme(c);
- var h=hero(c,plan)+weeksNav();
- var days=plan.data.days;
- h+='<div class="days" role="tablist" aria-label="Jours" style="grid-template-columns:repeat('+days.length+',minmax(0,1fr))">';
- days.forEach(function(d){var p=prog(c.id,d.date);h+='<button class="day'+(d.date===TODAY?" today":"")+'" role="tab" data-day="'+d.date+'" aria-selected="'+(d.date===S.day)+'"><span>'+(d.date===TODAY?"Aujourd’hui":esc(d.short))+'</span><b>'+d.num+'</b><i class="bar"><i style="width:'+pct(p)+'%"></i></i></button>';});
- h+='</div><div class="grid"><main class="card missions">';
- var di=dayInfo(S.day)||days[0];var p=prog(c.id,S.day);var full=p.t&&p.n===p.t;
+ var days=plan.data.days;var di=dayInfo(S.day)||days[0];var p=mprog(c.id,S.day);var full=p.t&&p.n===p.t;
  var sc=((plan.data.children[c.id]||{}).school||{})[S.day];
- h+='<div class="mhead"><h2>Missions du '+esc(di.long.replace(/^(\S+)/,function(x){return x.toLowerCase();}))+'</h2><span>'+(sc?esc(sc)+' · ':'')+(full?'<b class="ok-txt">Mission accomplie !</b>':p.n+' sur '+p.t)+'</span></div>';
- h+='<div class="track big"><i style="width:'+pct(p)+'%"></i></div>'+renderEdt(c,S.day);
- if(full)h+='<div class="boom"><span>MISSION ACCOMPLIE !</span></div>';
- h+='<ol class="tl">';
+ var hr=new Date().getHours();
+ var title=S.day===TODAY?(hr<18?"Bonjour ":"Bonsoir ")+c.name:di.long;
+ var tasks=tasksOf(c.id,S.day);var left=tasks.filter(function(b){return !isDoneB(b);});
+ var lastT=left.length?left[left.length-1].t:null;
+ var sub=!tasks.length?"Rien de prévu ce jour-là.":full?"Tout est fait. Bravo !":(tasks.length-left.length)+" mission"+(tasks.length-left.length>1?"s":"")+" faite"+(tasks.length-left.length>1?"s":"")+", encore "+left.length+"."+(lastT&&!left[left.length-1].over?" Dernière prévue à "+lastT+".":"");
+ var h='<div class="today"><section class="main-col">';
+ h+='<div class="greet"><span class="kicker">'+esc(S.day===TODAY?di.long:(S.day<TODAY?"Journée passée":"À venir"))+(sc?' · '+esc(sc):'')+'</span><h1>'+esc(title)+'</h1><p>'+esc(sub)+'</p></div>';
+ h+='<div class="dstrip" role="group" aria-label="Jours de la semaine">'+days.map(function(d){return dayChip(c,d);}).join("")+'</div>';
+ var nt=nextTask(c.id,S.day);
+ if(nt){h+='<div class="nextcard">'+'<span class="nc-pic">'+picto(pictoName(nt)||"Devoir",64)+'</span><div class="nc-txt"><span class="kicker acc">'+(S.day===TODAY?"Prochaine mission":"Première mission")+(nt.over?"":" · "+esc(nt.t))+'</span><h2>'+esc(nt.l)+'</h2>'+(nt.d?'<p>'+esc(nt.d)+'</p>':'')+'</div><button class="cta" data-focus="'+esc(keyOf(nt))+'">Commencer</button></div>';}
+ else if(full)h+='<div class="boom"><span>MISSION ACCOMPLIE !</span></div>';
+ h+=renderEdt(c,S.day);
+ h+='<section class="card pathcard"><div class="pc-head"><h2>Le chemin du jour</h2><span>'+p.n+' sur '+p.t+'</span></div><ol class="path">';
  var all=blocksOf(c.id,S.day);var bl=all.filter(function(b){return !b.over;});var over=all.filter(function(b){return b.over;});
- if(!bl.length)h+='<li class="none">Rien de prévu ce jour-là.</li>';
- bl.forEach(function(b){
-  var kd=KINDS[b.k]||KINDS.rep;var check=kd[2]&&b.id;var isDone=check&&S.done[b.id];var r=rankOf(b,S.day);
-  var calm=!check&&b.k!=="rel";
-  h+='<li class="m'+(calm?" calm":"")+(isDone?" done":"")+(b.k==="loi"?" loi":"")+'"><span class="t">'+esc(b.t)+'</span>'+picto(pictoName(b),46)+'<div class="mtext"><span class="lab">'+esc(b.l)+'</span>';
-  if(b.d&&!calm)h+='<span class="det">'+esc(b.d)+'</span>';
-  if(b.k==="rel"&&b.rel)h+=renderRel(b.rel);
-  h+='</div>'+rankHtml(r)+(check?'<input type="checkbox" class="chk" data-id="'+esc(b.id)+'" aria-label="Fait : '+esc(b.l)+'"'+(isDone?" checked":"")+'>':'')+'</li>';
- });
+ var nk=nt?keyOf(nt):null;
+ bl.forEach(function(b){h+=stepHtml(b,nk);});
  h+='</ol>';
- if(over.length){h+='<div class="overbox"><h3>Pas de place avant le coucher</h3><p>Trop de travail pour ce jour-là : voyez avec un parent pour le faire plus tôt, le matin ou en version courte.</p><ol class="tl">';
-  over.forEach(function(b){var kd=KINDS[b.k]||KINDS.dev;var isDone=b.id&&S.done[b.id];h+='<li class="m'+(isDone?" done":"")+'"><span class="t">—</span>'+picto(pictoName(b),46)+'<div class="mtext"><span class="lab">'+esc(b.l)+'</span>'+(b.d?'<span class="det">'+esc(b.d)+'</span>':'')+'</div>'+rankHtml(rankOf(b,S.day))+(b.id?'<input type="checkbox" class="chk" data-id="'+esc(b.id)+'" aria-label="Fait : '+esc(b.l)+'"'+(isDone?" checked":"")+'>':'')+'</li>';});
-  h+='</ol></div>';}
- h+='</main>'+renderSide(c)+'</div>';
- h+='<div class="legend">'+rankHtml("S")+'<span>Évaluation du jour</span>'+rankHtml("A")+'<span>Révision</span>'+rankHtml("B")+'<span>Devoir</span>'+rankHtml("C")+'<span>Lecture, leçon</span>'+rankHtml("D")+'<span>Maison, sac</span></div>';
+ if(over.length){h+='<div class="overbox"><h3>Pas de place avant le coucher</h3><p>Trop de travail pour ce jour-là : voyez avec un parent pour le faire plus tôt, le matin ou en version courte.</p><ol class="path">';over.forEach(function(b){h+=stepHtml(b,nk);});h+='</ol></div>';}
+ h+='</section></section>'+renderSide(c,plan)+'</div>';
  return h;
 }
+function stepHtml(b,nk){
+ var task=isTask(b),done=task&&isDoneB(b),now=task&&keyOf(b)===nk;
+ var pn=pictoName(b);
+ if(!task)return '<li class="step calm"><span class="node-col"><span class="dot"></span></span><div class="st-txt"><span class="st-t">'+esc(b.t)+'</span><span class="st-l">'+esc(b.l)+'</span></div></li>';
+ var node;
+ if(b.k==="rel")node='<span class="node rel'+(done?" done":"")+'">'+(done?'':'<span class="np">'+svgPic(pn)+'</span>')+'</span>';
+ else node='<span class="node-wrap"><input type="checkbox" class="chk node'+(now?" now":"")+'" data-id="'+esc(b.id)+'" aria-label="Fait : '+esc(b.l)+'"'+(done?" checked":"")+'>'+(done?'':'<span class="np" aria-hidden="true">'+svgPic(pn)+'</span>')+'</span>';
+ var h='<li class="step'+(done?" done":"")+(now?" now":"")+(b.k==="loi"?" loi":"")+'"><span class="node-col">'+node+'</span><div class="st-txt">';
+ h+=(now?'<span class="st-t acc">En cours · '+esc(b.over?"sans horaire":b.t)+'</span>':'<span class="st-t">'+esc(b.over?"Sans horaire":b.t)+'</span>');
+ h+='<button class="st-l link" data-focus="'+esc(keyOf(b))+'">'+esc(b.l)+'</button>';
+ if(b.d)h+='<span class="st-d">'+esc(b.d)+'</span>';
+ if(b.k==="rel"&&b.rel)h+=renderRel(b.rel);
+ return h+'</div></li>';
+}
+function svgPic(name){return name&&PICTOS[name]?'<svg width="30" height="30" viewBox="0 0 48 48">'+PICTOS[name]+'</svg>':'';}
 function renderRel(r){
  function row(lab,arr,code,empty){arr=subs(arr);if(!arr.length)return empty?'<div class="row"><em>'+lab+'</em><span class="none">'+empty+'</span></div>':"";var s='<div class="row"><em>'+lab+'</em>';arr.forEach(function(sub){var id=r.idp+"|"+code+"|"+sub;s+='<button class="chip" data-id="'+esc(id)+'" aria-pressed="'+(!!S.done[id])+'">'+esc(sub)+'</button>';});return s+'</div>';}
  return '<div class="rel">'+row("Du jour",r.today,"t")+row("De demain",r.tomorrow,"d","Pas de leçon à relire pour demain : profites-en pour avancer ou lire.")+'</div>';
 }
 function side(title,inner,cls){return '<section class="card side-card'+(cls?" "+cls:"")+'"><h2>'+title+'</h2>'+inner+'</section>';}
-function renderSide(c){
+function renderSide(c,plan){
  var h='<aside class="side">';
+ var p=mprog(c.id,S.day),w=weekProg(c.id,plan);
+ h+='<section class="card side-card prog-card">'+ring(p.t?p.n/p.t:0,76,8)+'<div><b>'+(S.day===TODAY?"Aujourd’hui":esc(fmtDate(S.day,{weekday:"long"})))+'</b><small>'+p.n+' mission'+(p.n>1?"s":"")+' sur '+p.t+'</small><small>Semaine : '+pct(w)+' %</small></div></section>';
  var m=senseiFor(c.id);
  if(m)h+=side('<span class="sensei-t">Le mot du sensei</span>','<p class="sensei-msg">'+esc(m.text)+'</p><small class="muted">'+esc(fmtDate(m.created_at.slice(0,10),{weekday:"long",day:"numeric",month:"long"}))+'</small>','sensei');
  var nd=addDays(S.day,1);var due=dueFor(c.id,nd);
- h+=side("Pour demain, "+esc(fmtDate(nd,{weekday:"long",day:"numeric"})),due.length?'<ul>'+due.map(function(x){return "<li>"+esc(x)+"</li>";}).join("")+'</ul>':'<p class="none">Rien de noté pour demain.</p>');
+ h+=side("Pour demain, "+esc(fmtDate(nd,{weekday:"long",day:"numeric"})),due.length?'<ul class="dots">'+due.map(function(x){return "<li>"+esc(x)+"</li>";}).join("")+'</ul>':'<p class="none">Rien de noté pour demain.</p>');
+ var ev=evalsFor(c.id).filter(function(e){return e[0]>=S.day;});
+ if(ev.length){var e=ev[0],d=dDiff(e[0],S.day);
+  h+='<section class="card evalcard"><span class="kicker acc">'+esc(fmtDate(e[0],{weekday:"long",day:"numeric"}))+'</span><h2>'+(d===0?"Évaluation aujourd’hui":d===1?"Évaluation demain":"Évaluation dans "+d+" jours")+'</h2><p>'+esc(e[1])+'</p>'+(ev.length>1?'<a class="more" href="#'+esc(c.id)+'/semaine">'+(ev.length-1)+' autre'+(ev.length>2?"s":"")+' à venir</a>':'')+'</section>';}
+ return h+'</aside>';
+}
+function renderWeek(c,plan){
+ var h='<div class="narrow"><div class="greet"><span class="kicker">'+esc(plan.data.title)+'</span><h1>Ma semaine</h1></div>'+weeksNav();
+ h+='<section class="card"><ol class="weeklist">';
+ plan.data.days.forEach(function(d){var p=mprog(c.id,d.date);var sc=((plan.data.children[c.id]||{}).school||{})[d.date]||"";var ev=evalsFor(c.id).filter(function(e){return e[0]===d.date;});
+  h+='<li><button class="wrow'+(d.date===TODAY?" today":"")+'" data-day="'+d.date+'" data-sec="jour">'+ring(p.t?p.n/p.t:0,52,6,p.t?p.n+"/"+p.t:"–")+'<span class="wr-txt"><b>'+esc(d.date===TODAY?"Aujourd’hui · "+d.long:d.long)+'</b><small>'+esc(sc)+'</small>'+(ev.length?'<small class="evtxt">Évaluation : '+esc(ev.map(function(e){return e[1];}).join(" ; "))+'</small>':'')+'</span><span class="chev" aria-hidden="true">›</span></button></li>';});
+ h+='</ol></section>';
  var ev=evalsFor(c.id);
- h+=side("Évaluations à venir",ev.length?ev.map(function(e){var d=dDiff(e[0],S.day);var lab=d<0?"passée":d===0?"aujourd’hui":d===1?"demain":"J-"+d;return '<div class="ev'+(d<0?" past":"")+'">'+rankHtml("S")+'<span>'+esc(e[1])+'<small>'+esc(fmtDate(e[0]))+'</small></span><b>'+lab+'</b></div>';}).join(""):'<p class="none">Aucune évaluation notée.</p>');
- var st=stampsFor(c.id);
- h+=side("Mes tampons de l’Académie",st.length?st.slice(0,4).map(function(x){return '<div class="stamp-row">'+stampHtml(46)+'<span><b>'+esc((x.title||"")+(x.note?" · "+x.note:""))+'</b>'+(x.message?'<small>« '+esc(x.message)+' »</small>':'')+'<small>'+esc(fmtDate(x.date||x.created_at.slice(0,10)))+'</small></span></div>';}).join(""):'<p class="none">Ton premier tampon arrivera après une bonne note préparée avec tes révisions.</p>');
- var bk=booksFor(c.id);
- h+=side("Ma bibliothèque",'<div class="lib-stats">'+picto("Lecture",44)+'<div><b>'+bk.length+'</b><small>livre'+(bk.length>1?"s":"")+' lu'+(bk.length>1?"s":"")+'</small></div><div><b>'+fmtN(pagesOf(bk))+'</b><small>pages</small></div></div>'
-  +(bk.length?'<ul class="books">'+bk.slice(0,S.bookAll?999:5).map(function(b){return '<li><span><b>'+esc(b.title)+'</b>'+(b.author?' · '+esc(b.author):'')+'<small>'+(b.pages?fmtN(+b.pages)+' pages · ':'')+(b.finished?esc(fmtDate(b.finished,{day:"numeric",month:"short",year:"numeric"})):'')+'</small></span><button class="linkbtn" data-delbook="'+esc(b.id)+'" aria-label="Retirer '+esc(b.title)+'">Retirer</button></li>';}).join("")+'</ul>'+(bk.length>5&&!S.bookAll?'<button class="linkbtn" data-act="books-all">Voir les '+bk.length+' livres</button>':''):'<p class="none">Note ici chaque livre terminé, même pour le plaisir.</p>')
-  +(S.bookOpen?bookForm(c.id):'<button class="btn sec" type="button" data-act="book-open">J’ai fini un livre</button>'));
+ h+=side("Évaluations à venir",ev.length?ev.map(function(e){var d=dDiff(e[0],TODAY);var lab=d<0?"passée":d===0?"aujourd’hui":d===1?"demain":"J-"+d;return '<div class="ev'+(d<0?" past":"")+'"><span>'+esc(e[1])+'<small>'+esc(fmtDate(e[0]))+'</small></span><b>'+lab+'</b></div>';}).join(""):'<p class="none">Aucune évaluation notée.</p>');
  var ids=ideasFor(c.id).filter(function(x){return !x.date||x.date>=addDays(TODAY,-1);});
  h+=side("Idées pour toi",ids.length?ids.map(function(x){var id="idea|"+x.id;var k=(IDEA_KINDS.filter(function(z){return z[0]===x.kind;})[0]||["","Idée"])[1];
    return '<div class="xl">'+picto("Loisir",38)+'<span><small class="loi-t">'+esc(k)+(x.date?' · '+esc(fmtDate(x.date))+(x.time?' '+esc(x.time):''):'')+'</small><b>'+esc(x.title)+'</b>'+(x.detail?'<small>'+esc(x.detail)+'</small>':'')+(x.link?'<a href="'+esc(x.link)+'" rel="noopener" target="_blank">Lien</a>':'')+'</span><input type="checkbox" class="chk" data-id="'+esc(id)+'" aria-label="Fait : '+esc(x.title)+'"'+(S.done[id]?" checked":"")+'></div>';}).join(""):'<p class="none">Pas d’idée pour le moment.</p>');
- return h+'</aside>';
+ return h+'</div>';
+}
+function renderLibrary(c){
+ var bk=booksFor(c.id);
+ var h='<div class="narrow"><div class="greet"><span class="kicker">'+bk.length+' livre'+(bk.length>1?"s":"")+' · '+fmtN(pagesOf(bk))+' pages</span><h1>Ma bibliothèque</h1></div>';
+ h+='<section class="card side-card">'+(S.bookOpen?bookForm(c.id):'<button class="cta" type="button" data-act="book-open">J’ai fini un livre</button>')+'</section>';
+ h+='<section class="card side-card">'+(bk.length?'<ul class="books">'+bk.map(function(b){return '<li>'+picto("Lecture",40)+'<span><b>'+esc(b.title)+'</b>'+(b.author?' · '+esc(b.author):'')+'<small>'+(b.pages?fmtN(+b.pages)+' pages · ':'')+(b.finished?esc(fmtDate(b.finished,{day:"numeric",month:"short",year:"numeric"})):'')+'</small></span><button class="linkbtn" data-delbook="'+esc(b.id)+'" aria-label="Retirer '+esc(b.title)+'">Retirer</button></li>';}).join("")+'</ul>':'<p class="none">Note ici chaque livre terminé, même pour le plaisir.</p>')+'</section>';
+ return h+'</div>';
+}
+function renderStamps(c,plan){
+ var st=stampsFor(c.id);
+ var h='<div class="narrow">'+hero(c,plan||planOf(TODAY)||S.plans[S.plans.length-1]);
+ h+=side("Mes tampons de l’Académie",st.length?st.map(function(x){return '<div class="stamp-row">'+stampHtml(46)+'<span><b>'+esc((x.title||"")+(x.note?" · "+x.note:""))+'</b>'+(x.message?'<small>« '+esc(x.message)+' »</small>':'')+'<small>'+esc(fmtDate(x.date||x.created_at.slice(0,10)))+'</small></span></div>';}).join(""):'<p class="none">Ton premier tampon arrivera après une bonne note préparée avec tes révisions.</p>');
+ h+=side("Comment monter de niveau",'<ul class="dots"><li>Un niveau toutes les 40 missions cochées.</li><li>« Jours de suite » : au moins 80 % de la journée faite.</li><li>Lecteur : 15 lectures ou 3 livres. Stratège : 10 révisions. Pilier de la maison : 15 tâches.</li><li>Un tampon : une bonne note préparée avec tes révisions.</li></ul>');
+ return h+'</div>';
+}
+function renderFocus(c){
+ var tasks=tasksOf(c.id,S.day);var i=-1;tasks.forEach(function(b,j){if(keyOf(b)===S.focus)i=j;});
+ if(i<0){S.focus=null;return "";}
+ var b=tasks[i],done=isDoneB(b),n=tasks.filter(isDoneB).length;
+ var h='<div class="focus-bg" data-fclose="1"></div><div class="focus" role="dialog" aria-modal="true" aria-labelledby="f-title"><header><button class="fx" data-fclose="1" aria-label="Fermer">×</button><span class="fbar"><i style="width:'+Math.round(100*n/tasks.length)+'%"></i></span><b>'+(i+1)+'/'+tasks.length+'</b></header>';
+ h+='<div class="fbody">'+picto(pictoName(b)||"Devoir",84)+'<span class="kicker acc">'+(KINDS[b.k]?esc(KINDS[b.k][0]):"Mission")+(b.over?"":" · "+esc(b.t))+'</span><h2 id="f-title">'+esc(b.l)+'</h2>'+(b.d?'<p>'+esc(b.d)+'</p>':'');
+ if(b.k==="rel"&&b.rel)h+=renderRel(b.rel)+'<p class="st-d">Touche chaque matière quand elle est relue.</p>';
+ if(b.k==="rev")h+='<div class="tipbox">'+stampHtml(34)+'<span>Une bonne note après tes révisions ? Montre-la à un parent : tampon de l’Académie à la clé.</span></div>';
+ else if(b.k==="dev")h+='<div class="tipbox">'+stampHtml(34)+'<span>Bloqué ? Note ta question pour la poser au professeur.</span></div>';
+ h+='</div><footer>';
+ if(b.k==="rel")h+='<button class="cta" data-fnext="1">'+(done?"Suivante":"Continuer")+'</button>';
+ else h+=done?'<button class="cta sec" data-fundo="'+esc(b.id)+'">Pas encore fait</button><button class="cta" data-fnext="1">Suivante</button>':'<button class="cta" data-fdone="'+esc(b.id)+'">C’est fait</button>';
+ return h+'<button class="linkbtn" data-fclose="1">Plus tard</button></footer></div>';
 }
 function msgHtml(k){var m=S.msg[k];return m?'<p class="msg'+(m.e?" err":"")+'">'+esc(m.t)+'</p>':"";}
 function kidOptions(withAll){return children().map(function(c){return '<option value="'+esc(c.id)+'">'+esc(c.name)+'</option>';}).join("")+(withAll?'<option value="tous">Tous</option>':'');}
@@ -581,7 +653,7 @@ function val(id){return (document.getElementById(id).value||"").trim();}
 function pickWeek(idx){var p=S.plans[idx];if(!p)return;var has=p.data.days.some(function(d){return d.date===TODAY;});setDay(has?TODAY:(p.data.days[1]||p.data.days[0]).date);}
 
 root.addEventListener("click",function(e){
- var t=e.target.closest("[data-cancel],[data-uncancel],[data-delbook],[data-view],[data-day],[data-id],[data-go],[data-week],[data-del],[data-act],[data-delidea]");if(!t)return;
+ var t=e.target.closest("[data-focus],[data-fclose],[data-fdone],[data-fundo],[data-fnext],[data-cancel],[data-uncancel],[data-delbook],[data-view],[data-day],[data-id],[data-go],[data-week],[data-del],[data-act],[data-delidea]");if(!t)return;
  if(t.hasAttribute("data-delidea")){var di=t.getAttribute("data-delidea");var aft=function(){S.ideas=S.ideas.filter(function(x){return String(x.id)!==di;});render();};
   if(DEMO)aft();else sb.from("ideas").delete().eq("id",di).then(function(r){if(!r.error)aft();});return;}
  if(t.matches("input.chk")){setDone(t.getAttribute("data-id"),t.checked);return;}
@@ -589,6 +661,16 @@ root.addEventListener("click",function(e){
   var aftb=function(){S.books=S.books.filter(function(x){return String(x.id)!==bid;});render();};
   if(DEMO)aftb();else sb.from("books").delete().eq("id",bid).then(function(r){if(!r.error)aftb();});return;}
  if(t.getAttribute("data-act")==="book-open"){S.bookOpen=true;render();var bi=document.getElementById("b-title");if(bi)bi.focus();return;}
+ if(t.hasAttribute("data-focus")){S.focus=t.getAttribute("data-focus");render();return;}
+ if(t.hasAttribute("data-fclose")){var fk=S.focus;S.focus=null;render();var back=document.querySelector('[data-focus="'+(fk||"").replace(/"/g,'\\"')+'"]');if(back)back.focus();return;}
+ if(t.hasAttribute("data-fundo")){setDone(t.getAttribute("data-fundo"),false);return;}
+ if(t.hasAttribute("data-fdone")||t.hasAttribute("data-fnext")){
+  var fc=child(curView());if(t.hasAttribute("data-fdone"))S.done[t.getAttribute("data-fdone")]=1;
+  var nx=fc?nextTask(fc.id,S.day):null;
+  if(t.hasAttribute("data-fnext")&&nx&&keyOf(nx)===S.focus){var tl=tasksOf(fc.id,S.day),ix=-1;tl.forEach(function(x,j){if(keyOf(x)===S.focus)ix=j;});nx=tl.slice(ix+1).filter(function(x){return !isDoneB(x);})[0]||null;}
+  S.focus=nx?keyOf(nx):null;
+  if(t.hasAttribute("data-fdone")){if(!nx)S.msg.global={t:"Mission accomplie ! Tout est fait pour aujourd’hui.",e:false};setDone(t.getAttribute("data-fdone"),true);}else render();
+  return;}
  if(t.hasAttribute("data-cancel")){var cc=t.getAttribute("data-child"),cd=t.getAttribute("data-date");var l=lessonsOf(cc,cd)[+t.getAttribute("data-cancel")];if(!l)return;
   var row={child:cc,date:cd,subject:l.m,start:l.s,reason:"prof absent"};
   var okc=function(x){S.cancels.push(x);flash("global",l.m+" du "+fmtDate(cd)+" annulé. Le planning sera recalculé à la prochaine synchronisation (ou double-cliquez sur « Synchro planning » sur le PC).");};
@@ -605,12 +687,12 @@ root.addEventListener("click",function(e){
  if(t.hasAttribute("data-week")){pickWeek(+t.getAttribute("data-week"));return;}
  if(t.hasAttribute("data-go")){S.day=t.getAttribute("data-day");location.hash=t.getAttribute("data-go");return;}
  if(t.hasAttribute("data-view")){location.hash=t.getAttribute("data-view");return;}
- if(t.hasAttribute("data-day")){setDay(t.getAttribute("data-day"));return;}
+ if(t.hasAttribute("data-day")){if(t.hasAttribute("data-sec")){var cv=curView();S.day=t.getAttribute("data-day");try{sessionStorage.setItem("planning-day",S.day);}catch(e2){}location.hash=cv;return;}setDay(t.getAttribute("data-day"));return;}
  if(t.hasAttribute("data-id")){var i=t.getAttribute("data-id");setDone(i,!S.done[i]);}
 });
 root.addEventListener("toggle",function(e){if(e.target.classList&&e.target.classList.contains("edt"))S.edtOpen=e.target.open;},true);
-root.addEventListener("keydown",function(e){if(e.key==="Escape"&&S.bookOpen&&e.target.closest&&e.target.closest("#bookf")){S.bookOpen=false;render();var ob=document.querySelector('[data-act="book-open"]');if(ob)ob.focus();}});
-window.addEventListener("hashchange",function(){S.bookOpen=false;render();window.scrollTo(0,0);});
+root.addEventListener("keydown",function(e){if(e.key==="Escape"&&S.focus){S.focus=null;render();return;}if(e.key==="Escape"&&S.bookOpen&&e.target.closest&&e.target.closest("#bookf")){S.bookOpen=false;render();var ob=document.querySelector('[data-act="book-open"]');if(ob)ob.focus();}});
+window.addEventListener("hashchange",function(){S.bookOpen=false;S.focus=null;render();window.scrollTo(0,0);});
 
 /* ------------------------------------------------------------ démarrage */
 if(DEMO){loadAll();}
