@@ -116,1837 +116,6 @@
  },
  "plans": [
   {
-   "week_start": "2026-11-16",
-   "data": {
-    "week_start": "2026-11-16",
-    "title": "Du lundi 16 au dimanche 22 novembre 2026",
-    "days": [
-     {
-      "date": "2026-11-16",
-      "wd": 1,
-      "short": "Lun",
-      "num": 16,
-      "long": "Lundi 16 novembre"
-     },
-     {
-      "date": "2026-11-17",
-      "wd": 2,
-      "short": "Mar",
-      "num": 17,
-      "long": "Mardi 17 novembre"
-     },
-     {
-      "date": "2026-11-18",
-      "wd": 3,
-      "short": "Mer",
-      "num": 18,
-      "long": "Mercredi 18 novembre"
-     },
-     {
-      "date": "2026-11-19",
-      "wd": 4,
-      "short": "Jeu",
-      "num": 19,
-      "long": "Jeudi 19 novembre"
-     },
-     {
-      "date": "2026-11-20",
-      "wd": 5,
-      "short": "Ven",
-      "num": 20,
-      "long": "Vendredi 20 novembre"
-     },
-     {
-      "date": "2026-11-21",
-      "wd": 6,
-      "short": "Sam",
-      "num": 21,
-      "long": "Samedi 21 novembre"
-     },
-     {
-      "date": "2026-11-22",
-      "wd": 0,
-      "short": "Dim",
-      "num": 22,
-      "long": "Dimanche 22 novembre"
-     }
-    ],
-    "children": {
-     "leo": {
-      "blocks": {
-       "2026-11-16": [
-        {
-         "t": "16h55",
-         "k": "rep",
-         "l": "Goûter + pause sans écran",
-         "d": "Souffler 30 minutes avant de s’y mettre."
-        },
-        {
-         "t": "17h25",
-         "k": "rev",
-         "l": "Éducation musicale : faire la fiche de révision",
-         "d": "Éval mardi 17. QCM sur le rythme : apporter la tablette",
-         "id": "leo|2026-11-16|rev|education-musicale-faire-la-fiche-de-rev"
-        },
-        {
-         "t": "18h00",
-         "k": "rep",
-         "l": "Pause 5 min"
-        },
-        {
-         "t": "18h05",
-         "k": "rev",
-         "l": "Éducation musicale : s’entraîner (exercices)",
-         "d": "Éval mardi 17. Refaire des exercices sans la correction, puis corriger.",
-         "id": "leo|2026-11-16|rev|education-musicale-sentrainer-exercices"
-        },
-        {
-         "t": "18h40",
-         "k": "rep",
-         "l": "Pause 5 min"
-        },
-        {
-         "t": "18h45",
-         "k": "rev",
-         "l": "Éducation musicale : se faire interroger",
-         "d": "Éval mardi 17. Avec Inès ou un parent : 10 questions sur la fiche.",
-         "id": "leo|2026-11-16|rev|education-musicale-se-faire-interroger"
-        },
-        {
-         "t": "19h00",
-         "k": "dev",
-         "l": "Maths : Exercices n° 12, 14 et 17 page 62",
-         "d": "Pour mardi 17.",
-         "id": "leo|2026-11-16|dev|maths-exercices-n-12-14-et-17-page-62"
-        },
-        {
-         "t": "19h30",
-         "k": "repas",
-         "l": "Dîner"
-        },
-        {
-         "t": "19h40",
-         "k": "rel",
-         "l": "Relire les leçons",
-         "rel": {
-          "today": [
-           "Technologie",
-           "Histoire-Géo",
-           "Français",
-           "Espagnol",
-           "Anglais"
-          ],
-          "tomorrow": [
-           "Éducation musicale",
-           "Maths"
-          ],
-          "idp": "leo|2026-11-16|r"
-         }
-        },
-        {
-         "t": "19h55",
-         "k": "org",
-         "l": "Préparer le sac de demain",
-         "id": "leo|2026-11-16|org|preparer-le-sac-de-demain"
-        },
-        {
-         "t": "20h05",
-         "k": "cor",
-         "l": "Débarrasser + lave-vaisselle",
-         "id": "leo|2026-11-16|cor|debarrasser-lave-vaisselle"
-        },
-        {
-         "t": "20h30",
-         "k": "dodo",
-         "l": "Écrans coupés, temps calme"
-        },
-        {
-         "t": "21h15",
-         "k": "dodo",
-         "l": "Coucher"
-        }
-       ],
-       "2026-11-17": [
-        {
-         "t": "7h20",
-         "k": "rev",
-         "l": "Éducation musicale : relire la fiche (10 min)",
-         "d": "Éval aujourd’hui : un dernier coup d’œil, rien de nouveau.",
-         "id": "leo|2026-11-17|rev|education-musicale-relire-la-fiche-10-mi"
-        },
-        {
-         "t": "17h30",
-         "k": "rep",
-         "l": "Goûter + pause sans écran",
-         "d": "Souffler 30 minutes avant de s’y mettre."
-        },
-        {
-         "t": "18h00",
-         "k": "rev",
-         "l": "Physique-Chimie : faire la fiche de révision",
-         "d": "Éval vendredi 20. Évaluation sur les atomes et les molécules",
-         "id": "leo|2026-11-17|rev|physique-chimie-faire-la-fiche-de-revisi"
-        },
-        {
-         "t": "18h35",
-         "k": "rel",
-         "l": "Relire les leçons",
-         "rel": {
-          "today": [
-           "Éducation musicale",
-           "Maths"
-          ],
-          "tomorrow": [],
-          "idp": "leo|2026-11-17|r"
-         }
-        },
-        {
-         "t": "18h45",
-         "k": "org",
-         "l": "Préparer le sac de sport + sac de demain",
-         "id": "leo|2026-11-17|org|preparer-le-sac-de-sport-sac-de-demain"
-        },
-        {
-         "t": "18h55",
-         "k": "repas",
-         "l": "Dîner léger avant le sport"
-        },
-        {
-         "t": "19h15",
-         "k": "act",
-         "l": "Judo 19h30 – 20h30"
-        },
-        {
-         "t": "20h45",
-         "k": "rep",
-         "l": "Douche + collation"
-        },
-        {
-         "t": "21h30",
-         "k": "dodo",
-         "l": "Coucher (22h au plus tard)"
-        }
-       ],
-       "2026-11-18": [
-        {
-         "t": "8h45",
-         "k": "repas",
-         "l": "Lever + petit-déjeuner"
-        },
-        {
-         "t": "9h15",
-         "k": "rev",
-         "l": "Physique-Chimie : s’entraîner (exercices)",
-         "d": "Éval vendredi 20. Refaire des exercices sans la correction, puis corriger.",
-         "id": "leo|2026-11-18|rev|physique-chimie-sentrainer-exercices"
-        },
-        {
-         "t": "9h50",
-         "k": "rep",
-         "l": "Pause 5 min"
-        },
-        {
-         "t": "9h55",
-         "k": "app",
-         "l": "Français : Apprendre par cœur la leçon sur les propositions subordonnées",
-         "d": "Pour jeudi 19. Lire 2 fois, cacher, redire à voix haute.",
-         "id": "leo|2026-11-18|app|francais-apprendre-par-cur-la-lecon-sur-"
-        },
-        {
-         "t": "10h10",
-         "k": "ran",
-         "l": "Grand rangement de la chambre (30 min)",
-         "d": "Bureau, sol, armoire, linge sale au panier, poubelle vidée.",
-         "id": "leo|2026-11-18|ran|grand-rangement-de-la-chambre-30-min"
-        },
-        {
-         "t": "12h15",
-         "k": "repas",
-         "l": "Déjeuner"
-        },
-        {
-         "t": "12h45",
-         "k": "cor",
-         "l": "Débarrasser la table + lave-vaisselle",
-         "id": "leo|2026-11-18|cor|debarrasser-la-table-lave-vaisselle"
-        },
-        {
-         "t": "13h00",
-         "k": "rep",
-         "l": "Temps libre"
-        },
-        {
-         "t": "16h00",
-         "k": "rep",
-         "l": "Goûter"
-        },
-        {
-         "t": "17h00",
-         "k": "act",
-         "l": "Cours de piano 17h00 – 18h00"
-        },
-        {
-         "t": "18h40",
-         "k": "rel",
-         "l": "Relire les leçons",
-         "rel": {
-          "today": [],
-          "tomorrow": [
-           "Arts plastiques",
-           "Français",
-           "SVT",
-           "Anglais"
-          ],
-          "idp": "leo|2026-11-18|r"
-         }
-        },
-        {
-         "t": "18h55",
-         "k": "org",
-         "l": "Préparer le sac de demain",
-         "id": "leo|2026-11-18|org|preparer-le-sac-de-demain"
-        },
-        {
-         "t": "19h15",
-         "k": "cor",
-         "l": "Aider à préparer le dîner",
-         "id": "leo|2026-11-18|cor|aider-a-preparer-le-diner"
-        },
-        {
-         "t": "19h30",
-         "k": "repas",
-         "l": "Dîner"
-        },
-        {
-         "t": "20h30",
-         "k": "lec",
-         "l": "Français : Lire le chapitre 3 du roman et faire un résumé de 5 lignes (au lit)",
-         "d": "Pour jeudi 19.  Lecture calme avant de dormir.",
-         "id": "leo|2026-11-18|lec|francais-lire-le-chapitre-3-du-roman-et-"
-        },
-        {
-         "t": "21h15",
-         "k": "dodo",
-         "l": "Coucher"
-        }
-       ],
-       "2026-11-19": [
-        {
-         "t": "7h20",
-         "k": "app",
-         "l": "Réciter à Inès : Français, par cœur la leçon sur les propositions subordonné…",
-         "d": "5 minutes au petit-déjeuner.",
-         "id": "leo|2026-11-19|app|reciter-a-ines-francais-par-cur-la-lecon"
-        },
-        {
-         "t": "16h55",
-         "k": "rep",
-         "l": "Goûter + pause sans écran",
-         "d": "Souffler 30 minutes avant de s’y mettre."
-        },
-        {
-         "t": "17h25",
-         "k": "rev",
-         "l": "Physique-Chimie : se faire interroger",
-         "d": "Éval vendredi 20. Avec Inès ou un parent : 10 questions sur la fiche.",
-         "id": "leo|2026-11-19|rev|physique-chimie-se-faire-interroger"
-        },
-        {
-         "t": "17h45",
-         "k": "rep",
-         "l": "Pause 5 min"
-        },
-        {
-         "t": "17h50",
-         "k": "app",
-         "l": "Histoire-Géo : Apprendre le vocabulaire du chapitre 4",
-         "d": "Pour vendredi 20. Lire 2 fois, cacher, redire à voix haute.",
-         "id": "leo|2026-11-19|app|histoire-geo-apprendre-le-vocabulaire-du"
-        },
-        {
-         "t": "18h40",
-         "k": "rel",
-         "l": "Relire les leçons",
-         "rel": {
-          "today": [
-           "Arts plastiques",
-           "Français",
-           "SVT",
-           "Anglais"
-          ],
-          "tomorrow": [
-           "Physique-Chimie",
-           "Histoire-Géo",
-           "Maths",
-           "Anglais"
-          ],
-          "idp": "leo|2026-11-19|r"
-         }
-        },
-        {
-         "t": "18h55",
-         "k": "org",
-         "l": "Préparer le sac de demain",
-         "id": "leo|2026-11-19|org|preparer-le-sac-de-demain"
-        },
-        {
-         "t": "19h05",
-         "k": "ran",
-         "l": "Ranger la chambre (10 min)",
-         "id": "leo|2026-11-19|ran|ranger-la-chambre-10-min"
-        },
-        {
-         "t": "19h15",
-         "k": "cor",
-         "l": "Mettre la table",
-         "id": "leo|2026-11-19|cor|mettre-la-table"
-        },
-        {
-         "t": "19h30",
-         "k": "repas",
-         "l": "Dîner"
-        },
-        {
-         "t": "20h30",
-         "k": "dodo",
-         "l": "Écrans coupés, temps calme"
-        },
-        {
-         "t": "21h15",
-         "k": "dodo",
-         "l": "Coucher"
-        }
-       ],
-       "2026-11-20": [
-        {
-         "t": "7h20",
-         "k": "rev",
-         "l": "Physique-Chimie : relire la fiche (10 min)",
-         "d": "Éval aujourd’hui : un dernier coup d’œil, rien de nouveau.",
-         "id": "leo|2026-11-20|rev|physique-chimie-relire-la-fiche-10-min"
-        },
-        {
-         "t": "7h30",
-         "k": "app",
-         "l": "Réciter à Inès : Histoire-Géo, le vocabulaire du chapitre 4",
-         "d": "5 minutes au petit-déjeuner.",
-         "id": "leo|2026-11-20|app|reciter-a-ines-histoire-geo-le-vocabulai"
-        },
-        {
-         "t": "16h55",
-         "k": "rep",
-         "l": "Goûter + pause sans écran",
-         "d": "Souffler 30 minutes avant de s’y mettre."
-        },
-        {
-         "t": "17h25",
-         "k": "dev",
-         "l": "Piano : travailler le morceau (20 min)",
-         "d": "Pour samedi 21.",
-         "id": "leo|2026-11-20|dev|piano-travailler-le-morceau-20-min"
-        },
-        {
-         "t": "18h40",
-         "k": "rel",
-         "l": "Relire les leçons",
-         "rel": {
-          "today": [
-           "Physique-Chimie",
-           "Histoire-Géo",
-           "Maths",
-           "Anglais"
-          ],
-          "tomorrow": [],
-          "idp": "leo|2026-11-20|r"
-         }
-        },
-        {
-         "t": "18h55",
-         "k": "ran",
-         "l": "Ranger la chambre (10 min)",
-         "id": "leo|2026-11-20|ran|ranger-la-chambre-10-min"
-        },
-        {
-         "t": "19h15",
-         "k": "cor",
-         "l": "Débarrasser + lave-vaisselle",
-         "id": "leo|2026-11-20|cor|debarrasser-lave-vaisselle"
-        },
-        {
-         "t": "19h30",
-         "k": "repas",
-         "l": "Dîner"
-        },
-        {
-         "t": "20h30",
-         "k": "dodo",
-         "l": "Écrans coupés, temps calme"
-        },
-        {
-         "t": "21h15",
-         "k": "dodo",
-         "l": "Coucher"
-        }
-       ],
-       "2026-11-21": [
-        {
-         "t": "8h45",
-         "k": "repas",
-         "l": "Lever + petit-déjeuner"
-        },
-        {
-         "t": "9h15",
-         "k": "dev",
-         "l": "Anglais : Rédiger 10 lignes sur votre dernier voyage",
-         "d": "Pour lundi 23.",
-         "id": "leo|2026-11-21|dev|anglais-rediger-10-lignes-sur-votre-dern"
-        },
-        {
-         "t": "9h45",
-         "k": "act",
-         "l": "Football 10h00 – 12h00"
-        },
-        {
-         "t": "12h15",
-         "k": "repas",
-         "l": "Déjeuner"
-        },
-        {
-         "t": "12h45",
-         "k": "cor",
-         "l": "Débarrasser la table + lave-vaisselle",
-         "id": "leo|2026-11-21|cor|debarrasser-la-table-lave-vaisselle"
-        },
-        {
-         "t": "13h00",
-         "k": "rep",
-         "l": "Temps libre"
-        },
-        {
-         "t": "14h30",
-         "k": "cor",
-         "l": "Changer les draps + aspirateur dans la chambre",
-         "id": "leo|2026-11-21|cor|changer-les-draps-aspirateur-dans-la-cha"
-        },
-        {
-         "t": "16h00",
-         "k": "rep",
-         "l": "Goûter"
-        },
-        {
-         "t": "19h15",
-         "k": "cor",
-         "l": "Aider à préparer le dîner",
-         "id": "leo|2026-11-21|cor|aider-a-preparer-le-diner"
-        },
-        {
-         "t": "19h30",
-         "k": "repas",
-         "l": "Dîner"
-        },
-        {
-         "t": "20h30",
-         "k": "dodo",
-         "l": "Écrans coupés, temps calme"
-        },
-        {
-         "t": "21h15",
-         "k": "dodo",
-         "l": "Coucher"
-        }
-       ],
-       "2026-11-22": [
-        {
-         "t": "8h45",
-         "k": "repas",
-         "l": "Lever + petit-déjeuner"
-        },
-        {
-         "t": "12h15",
-         "k": "repas",
-         "l": "Déjeuner"
-        },
-        {
-         "t": "12h45",
-         "k": "cor",
-         "l": "Débarrasser la table + lave-vaisselle",
-         "id": "leo|2026-11-22|cor|debarrasser-la-table-lave-vaisselle"
-        },
-        {
-         "t": "13h00",
-         "k": "rep",
-         "l": "Temps libre"
-        },
-        {
-         "t": "16h00",
-         "k": "rep",
-         "l": "Goûter"
-        },
-        {
-         "t": "18h40",
-         "k": "rel",
-         "l": "Relire les leçons",
-         "rel": {
-          "today": [],
-          "tomorrow": [
-           "Technologie",
-           "Histoire-Géo",
-           "Français",
-           "Espagnol",
-           "Anglais"
-          ],
-          "idp": "leo|2026-11-22|r"
-         }
-        },
-        {
-         "t": "18h55",
-         "k": "org",
-         "l": "Préparer la semaine (15 min)",
-         "d": "Agenda EcoleDirecte, devoirs pour lundi, sac prêt.",
-         "id": "leo|2026-11-22|org|preparer-la-semaine-15-min"
-        },
-        {
-         "t": "19h15",
-         "k": "cor",
-         "l": "Mettre la table",
-         "id": "leo|2026-11-22|cor|mettre-la-table"
-        },
-        {
-         "t": "19h30",
-         "k": "repas",
-         "l": "Dîner"
-        },
-        {
-         "t": "20h30",
-         "k": "dodo",
-         "l": "Écrans coupés, temps calme"
-        },
-        {
-         "t": "21h15",
-         "k": "dodo",
-         "l": "Coucher"
-        }
-       ]
-      },
-      "due": {
-       "2026-11-17": [
-        "Maths : Exercices n° 12, 14 et 17 page 62",
-        "Évaluation – Éducation musicale : QCM sur le rythme : apporter la tablette"
-       ],
-       "2026-11-19": [
-        "Français : Apprendre par cœur la leçon sur les propositions subordonnées",
-        "Français : Lire le chapitre 3 du roman et faire un résumé de 5 lignes"
-       ],
-       "2026-11-20": [
-        "Évaluation – Physique-Chimie : Évaluation sur les atomes et les molécules",
-        "Histoire-Géo : Apprendre le vocabulaire du chapitre 4"
-       ],
-       "2026-11-23": [
-        "Anglais : Rédiger 10 lignes sur votre dernier voyage"
-       ],
-       "2026-11-21": [
-        "Piano : travailler le morceau (20 min)"
-       ]
-      },
-      "evals": [
-       [
-        "2026-11-17",
-        "Éducation musicale : QCM sur le rythme : apporter la tablette"
-       ],
-       [
-        "2026-11-20",
-        "Physique-Chimie : Évaluation sur les atomes et les molécules"
-       ]
-      ],
-      "school": {
-       "2026-11-16": "Collège 8h00 – 16h25",
-       "2026-11-17": "Collège 8h00 – 17h00",
-       "2026-11-18": "Pas de cours",
-       "2026-11-19": "Collège 8h00 – 16h25",
-       "2026-11-20": "Collège 8h00 – 16h25",
-       "2026-11-21": "Pas de cours",
-       "2026-11-22": "Pas de cours"
-      }
-     },
-     "ines": {
-      "blocks": {
-       "2026-11-16": [
-        {
-         "t": "16h55",
-         "k": "rep",
-         "l": "Goûter + pause sans écran",
-         "d": "Souffler 30 minutes avant de s’y mettre."
-        },
-        {
-         "t": "17h25",
-         "k": "rev",
-         "l": "Éducation musicale : faire la fiche de révision",
-         "d": "Éval mardi 17. QCM sur le rythme : apporter la tablette",
-         "id": "ines|2026-11-16|rev|education-musicale-faire-la-fiche-de-rev"
-        },
-        {
-         "t": "18h00",
-         "k": "rep",
-         "l": "Pause 5 min"
-        },
-        {
-         "t": "18h05",
-         "k": "rev",
-         "l": "Éducation musicale : s’entraîner (exercices)",
-         "d": "Éval mardi 17. Refaire des exercices sans la correction, puis corriger.",
-         "id": "ines|2026-11-16|rev|education-musicale-sentrainer-exercices"
-        },
-        {
-         "t": "18h40",
-         "k": "rep",
-         "l": "Pause 5 min"
-        },
-        {
-         "t": "18h45",
-         "k": "rev",
-         "l": "Éducation musicale : se faire interroger",
-         "d": "Éval mardi 17. Avec Léo ou un parent : 10 questions sur la fiche.",
-         "id": "ines|2026-11-16|rev|education-musicale-se-faire-interroger"
-        },
-        {
-         "t": "19h00",
-         "k": "dev",
-         "l": "Maths : Exercices n° 12, 14 et 17 page 62",
-         "d": "Pour mardi 17.",
-         "id": "ines|2026-11-16|dev|maths-exercices-n-12-14-et-17-page-62"
-        },
-        {
-         "t": "19h30",
-         "k": "repas",
-         "l": "Dîner"
-        },
-        {
-         "t": "19h40",
-         "k": "rel",
-         "l": "Relire les leçons",
-         "rel": {
-          "today": [
-           "Technologie",
-           "Histoire-Géo",
-           "Français",
-           "Espagnol",
-           "Anglais"
-          ],
-          "tomorrow": [
-           "Éducation musicale",
-           "Maths"
-          ],
-          "idp": "ines|2026-11-16|r"
-         }
-        },
-        {
-         "t": "19h55",
-         "k": "org",
-         "l": "Préparer le sac de demain",
-         "id": "ines|2026-11-16|org|preparer-le-sac-de-demain"
-        },
-        {
-         "t": "20h05",
-         "k": "cor",
-         "l": "Débarrasser + lave-vaisselle",
-         "id": "ines|2026-11-16|cor|debarrasser-lave-vaisselle"
-        },
-        {
-         "t": "20h30",
-         "k": "dodo",
-         "l": "Écrans coupés, temps calme"
-        },
-        {
-         "t": "21h15",
-         "k": "dodo",
-         "l": "Coucher"
-        }
-       ],
-       "2026-11-17": [
-        {
-         "t": "7h20",
-         "k": "rev",
-         "l": "Éducation musicale : relire la fiche (10 min)",
-         "d": "Éval aujourd’hui : un dernier coup d’œil, rien de nouveau.",
-         "id": "ines|2026-11-17|rev|education-musicale-relire-la-fiche-10-mi"
-        },
-        {
-         "t": "17h30",
-         "k": "rep",
-         "l": "Goûter + pause sans écran",
-         "d": "Souffler 30 minutes avant de s’y mettre."
-        },
-        {
-         "t": "17h45",
-         "k": "rel",
-         "l": "Relire les leçons",
-         "rel": {
-          "today": [
-           "Éducation musicale",
-           "Maths"
-          ],
-          "tomorrow": [],
-          "idp": "ines|2026-11-17|r"
-         }
-        },
-        {
-         "t": "17h55",
-         "k": "org",
-         "l": "Préparer le sac de sport + sac de demain",
-         "id": "ines|2026-11-17|org|preparer-le-sac-de-sport-sac-de-demain"
-        },
-        {
-         "t": "18h05",
-         "k": "repas",
-         "l": "En-cas avant le sport"
-        },
-        {
-         "t": "18h15",
-         "k": "act",
-         "l": "Basket 18h30 – 20h00"
-        },
-        {
-         "t": "20h15",
-         "k": "repas",
-         "l": "Dîner (préparé à l’avance) + douche"
-        },
-        {
-         "t": "21h30",
-         "k": "dodo",
-         "l": "Coucher (22h au plus tard)"
-        }
-       ],
-       "2026-11-18": [
-        {
-         "t": "8h45",
-         "k": "repas",
-         "l": "Lever + petit-déjeuner"
-        },
-        {
-         "t": "9h15",
-         "k": "rev",
-         "l": "Physique-Chimie : faire la fiche de révision",
-         "d": "Éval vendredi 20. Évaluation sur les atomes et les molécules",
-         "id": "ines|2026-11-18|rev|physique-chimie-faire-la-fiche-de-revisi"
-        },
-        {
-         "t": "9h50",
-         "k": "rep",
-         "l": "Pause 5 min"
-        },
-        {
-         "t": "9h55",
-         "k": "rev",
-         "l": "Physique-Chimie : s’entraîner (exercices)",
-         "d": "Éval vendredi 20. Refaire des exercices sans la correction, puis corriger.",
-         "id": "ines|2026-11-18|rev|physique-chimie-sentrainer-exercices"
-        },
-        {
-         "t": "10h30",
-         "k": "rep",
-         "l": "Pause 5 min"
-        },
-        {
-         "t": "10h35",
-         "k": "app",
-         "l": "Français : Apprendre par cœur la leçon sur les propositions subordonnées",
-         "d": "Pour jeudi 19. Lire 2 fois, cacher, redire à voix haute.",
-         "id": "ines|2026-11-18|app|francais-apprendre-par-cur-la-lecon-sur-"
-        },
-        {
-         "t": "10h50",
-         "k": "ran",
-         "l": "Grand rangement de la chambre (30 min)",
-         "d": "Bureau, sol, armoire, linge sale au panier, poubelle vidée.",
-         "id": "ines|2026-11-18|ran|grand-rangement-de-la-chambre-30-min"
-        },
-        {
-         "t": "12h15",
-         "k": "repas",
-         "l": "Déjeuner"
-        },
-        {
-         "t": "12h45",
-         "k": "cor",
-         "l": "Débarrasser la table + lave-vaisselle",
-         "id": "ines|2026-11-18|cor|debarrasser-la-table-lave-vaisselle"
-        },
-        {
-         "t": "13h00",
-         "k": "rep",
-         "l": "Temps libre"
-        },
-        {
-         "t": "16h00",
-         "k": "rep",
-         "l": "Goûter"
-        },
-        {
-         "t": "18h40",
-         "k": "rel",
-         "l": "Relire les leçons",
-         "rel": {
-          "today": [],
-          "tomorrow": [
-           "Arts plastiques",
-           "Français",
-           "SVT",
-           "Anglais"
-          ],
-          "idp": "ines|2026-11-18|r"
-         }
-        },
-        {
-         "t": "18h55",
-         "k": "org",
-         "l": "Préparer le sac de demain",
-         "id": "ines|2026-11-18|org|preparer-le-sac-de-demain"
-        },
-        {
-         "t": "19h15",
-         "k": "cor",
-         "l": "Mettre la table",
-         "id": "ines|2026-11-18|cor|mettre-la-table"
-        },
-        {
-         "t": "19h30",
-         "k": "repas",
-         "l": "Dîner"
-        },
-        {
-         "t": "20h30",
-         "k": "lec",
-         "l": "Français : Lire le chapitre 3 du roman et faire un résumé de 5 lignes (au lit)",
-         "d": "Pour jeudi 19.  Lecture calme avant de dormir.",
-         "id": "ines|2026-11-18|lec|francais-lire-le-chapitre-3-du-roman-et-"
-        },
-        {
-         "t": "21h15",
-         "k": "dodo",
-         "l": "Coucher"
-        }
-       ],
-       "2026-11-19": [
-        {
-         "t": "7h20",
-         "k": "app",
-         "l": "Réciter à Léo : Français, par cœur la leçon sur les propositions subordonné…",
-         "d": "5 minutes au petit-déjeuner.",
-         "id": "ines|2026-11-19|app|reciter-a-leo-francais-par-cur-la-lecon-"
-        },
-        {
-         "t": "16h55",
-         "k": "rep",
-         "l": "Goûter + pause sans écran",
-         "d": "Souffler 30 minutes avant de s’y mettre."
-        },
-        {
-         "t": "17h25",
-         "k": "rev",
-         "l": "Physique-Chimie : se faire interroger",
-         "d": "Éval vendredi 20. Avec Léo ou un parent : 10 questions sur la fiche.",
-         "id": "ines|2026-11-19|rev|physique-chimie-se-faire-interroger"
-        },
-        {
-         "t": "17h45",
-         "k": "rep",
-         "l": "Pause 5 min"
-        },
-        {
-         "t": "17h50",
-         "k": "app",
-         "l": "Histoire-Géo : Apprendre le vocabulaire du chapitre 4",
-         "d": "Pour vendredi 20. Lire 2 fois, cacher, redire à voix haute.",
-         "id": "ines|2026-11-19|app|histoire-geo-apprendre-le-vocabulaire-du"
-        },
-        {
-         "t": "18h05",
-         "k": "rel",
-         "l": "Relire les leçons",
-         "rel": {
-          "today": [
-           "Arts plastiques",
-           "Français",
-           "SVT",
-           "Anglais"
-          ],
-          "tomorrow": [
-           "Physique-Chimie",
-           "Histoire-Géo",
-           "Maths",
-           "Anglais"
-          ],
-          "idp": "ines|2026-11-19|r"
-         }
-        },
-        {
-         "t": "18h15",
-         "k": "org",
-         "l": "Préparer le sac de sport + sac de demain",
-         "id": "ines|2026-11-19|org|preparer-le-sac-de-sport-sac-de-demain"
-        },
-        {
-         "t": "18h25",
-         "k": "repas",
-         "l": "Dîner léger avant le sport"
-        },
-        {
-         "t": "18h45",
-         "k": "act",
-         "l": "Basket 19h00 – 20h30"
-        },
-        {
-         "t": "20h45",
-         "k": "rep",
-         "l": "Douche + collation"
-        },
-        {
-         "t": "21h30",
-         "k": "dodo",
-         "l": "Coucher (22h au plus tard)"
-        }
-       ],
-       "2026-11-20": [
-        {
-         "t": "7h20",
-         "k": "rev",
-         "l": "Physique-Chimie : relire la fiche (10 min)",
-         "d": "Éval aujourd’hui : un dernier coup d’œil, rien de nouveau.",
-         "id": "ines|2026-11-20|rev|physique-chimie-relire-la-fiche-10-min"
-        },
-        {
-         "t": "7h30",
-         "k": "app",
-         "l": "Réciter à Léo : Histoire-Géo, le vocabulaire du chapitre 4",
-         "d": "5 minutes au petit-déjeuner.",
-         "id": "ines|2026-11-20|app|reciter-a-leo-histoire-geo-le-vocabulair"
-        },
-        {
-         "t": "16h55",
-         "k": "rep",
-         "l": "Goûter + pause sans écran",
-         "d": "Souffler 30 minutes avant de s’y mettre."
-        },
-        {
-         "t": "18h40",
-         "k": "rel",
-         "l": "Relire les leçons",
-         "rel": {
-          "today": [
-           "Physique-Chimie",
-           "Histoire-Géo",
-           "Maths",
-           "Anglais"
-          ],
-          "tomorrow": [],
-          "idp": "ines|2026-11-20|r"
-         }
-        },
-        {
-         "t": "18h55",
-         "k": "ran",
-         "l": "Ranger la chambre (10 min)",
-         "id": "ines|2026-11-20|ran|ranger-la-chambre-10-min"
-        },
-        {
-         "t": "19h15",
-         "k": "cor",
-         "l": "Aider à préparer le dîner",
-         "id": "ines|2026-11-20|cor|aider-a-preparer-le-diner"
-        },
-        {
-         "t": "19h30",
-         "k": "repas",
-         "l": "Dîner"
-        },
-        {
-         "t": "20h30",
-         "k": "dodo",
-         "l": "Écrans coupés, temps calme"
-        },
-        {
-         "t": "21h15",
-         "k": "dodo",
-         "l": "Coucher"
-        }
-       ],
-       "2026-11-21": [
-        {
-         "t": "8h45",
-         "k": "repas",
-         "l": "Lever + petit-déjeuner"
-        },
-        {
-         "t": "9h15",
-         "k": "dev",
-         "l": "Anglais : Rédiger 10 lignes sur votre dernier voyage",
-         "d": "Pour lundi 23.",
-         "id": "ines|2026-11-21|dev|anglais-rediger-10-lignes-sur-votre-dern"
-        },
-        {
-         "t": "9h40",
-         "k": "rep",
-         "l": "Pause 5 min"
-        },
-        {
-         "t": "9h45",
-         "k": "cor",
-         "l": "Changer les draps + aspirateur dans la chambre",
-         "id": "ines|2026-11-21|cor|changer-les-draps-aspirateur-dans-la-cha"
-        },
-        {
-         "t": "12h15",
-         "k": "repas",
-         "l": "Déjeuner"
-        },
-        {
-         "t": "12h45",
-         "k": "cor",
-         "l": "Débarrasser la table + lave-vaisselle",
-         "id": "ines|2026-11-21|cor|debarrasser-la-table-lave-vaisselle"
-        },
-        {
-         "t": "13h00",
-         "k": "rep",
-         "l": "Temps libre"
-        },
-        {
-         "t": "16h00",
-         "k": "rep",
-         "l": "Goûter"
-        },
-        {
-         "t": "19h15",
-         "k": "cor",
-         "l": "Mettre la table",
-         "id": "ines|2026-11-21|cor|mettre-la-table"
-        },
-        {
-         "t": "19h30",
-         "k": "repas",
-         "l": "Dîner"
-        },
-        {
-         "t": "20h30",
-         "k": "dodo",
-         "l": "Écrans coupés, temps calme"
-        },
-        {
-         "t": "21h15",
-         "k": "dodo",
-         "l": "Coucher"
-        }
-       ],
-       "2026-11-22": [
-        {
-         "t": "8h45",
-         "k": "repas",
-         "l": "Lever + petit-déjeuner"
-        },
-        {
-         "t": "12h15",
-         "k": "repas",
-         "l": "Déjeuner"
-        },
-        {
-         "t": "12h45",
-         "k": "cor",
-         "l": "Débarrasser la table + lave-vaisselle",
-         "id": "ines|2026-11-22|cor|debarrasser-la-table-lave-vaisselle"
-        },
-        {
-         "t": "13h00",
-         "k": "rep",
-         "l": "Temps libre"
-        },
-        {
-         "t": "16h00",
-         "k": "rep",
-         "l": "Goûter"
-        },
-        {
-         "t": "18h40",
-         "k": "rel",
-         "l": "Relire les leçons",
-         "rel": {
-          "today": [],
-          "tomorrow": [
-           "Technologie",
-           "Histoire-Géo",
-           "Français",
-           "Espagnol",
-           "Anglais"
-          ],
-          "idp": "ines|2026-11-22|r"
-         }
-        },
-        {
-         "t": "18h55",
-         "k": "org",
-         "l": "Préparer la semaine (15 min)",
-         "d": "Agenda EcoleDirecte, devoirs pour lundi, sac prêt.",
-         "id": "ines|2026-11-22|org|preparer-la-semaine-15-min"
-        },
-        {
-         "t": "19h15",
-         "k": "cor",
-         "l": "Débarrasser + lave-vaisselle",
-         "id": "ines|2026-11-22|cor|debarrasser-lave-vaisselle"
-        },
-        {
-         "t": "19h30",
-         "k": "repas",
-         "l": "Dîner"
-        },
-        {
-         "t": "20h30",
-         "k": "dodo",
-         "l": "Écrans coupés, temps calme"
-        },
-        {
-         "t": "21h15",
-         "k": "dodo",
-         "l": "Coucher"
-        }
-       ]
-      },
-      "due": {
-       "2026-11-17": [
-        "Maths : Exercices n° 12, 14 et 17 page 62",
-        "Évaluation – Éducation musicale : QCM sur le rythme : apporter la tablette"
-       ],
-       "2026-11-19": [
-        "Français : Apprendre par cœur la leçon sur les propositions subordonnées",
-        "Français : Lire le chapitre 3 du roman et faire un résumé de 5 lignes"
-       ],
-       "2026-11-20": [
-        "Évaluation – Physique-Chimie : Évaluation sur les atomes et les molécules",
-        "Histoire-Géo : Apprendre le vocabulaire du chapitre 4"
-       ],
-       "2026-11-23": [
-        "Anglais : Rédiger 10 lignes sur votre dernier voyage"
-       ]
-      },
-      "evals": [
-       [
-        "2026-11-17",
-        "Éducation musicale : QCM sur le rythme : apporter la tablette"
-       ],
-       [
-        "2026-11-20",
-        "Physique-Chimie : Évaluation sur les atomes et les molécules"
-       ]
-      ],
-      "school": {
-       "2026-11-16": "Collège 8h00 – 16h25",
-       "2026-11-17": "Collège 8h00 – 17h00",
-       "2026-11-18": "Pas de cours",
-       "2026-11-19": "Collège 8h00 – 16h25",
-       "2026-11-20": "Collège 8h00 – 16h25",
-       "2026-11-21": "Pas de cours",
-       "2026-11-22": "Pas de cours"
-      }
-     },
-     "sarah": {
-      "blocks": {
-       "2026-11-16": [
-        {
-         "t": "17h30",
-         "k": "rep",
-         "l": "Goûter + pause sans écran",
-         "d": "Souffler 30 minutes avant de s’y mettre."
-        },
-        {
-         "t": "18h40",
-         "k": "rel",
-         "l": "Relire les leçons",
-         "rel": {
-          "today": [
-           "Français",
-           "Maths"
-          ],
-          "tomorrow": [
-           "SVT",
-           "Physique-Chimie",
-           "Maths"
-          ],
-          "idp": "sarah|2026-11-16|r"
-         }
-        },
-        {
-         "t": "18h55",
-         "k": "org",
-         "l": "Préparer le sac de demain",
-         "id": "sarah|2026-11-16|org|preparer-le-sac-de-demain"
-        },
-        {
-         "t": "19h05",
-         "k": "ran",
-         "l": "Ranger la chambre (10 min)",
-         "id": "sarah|2026-11-16|ran|ranger-la-chambre-10-min"
-        },
-        {
-         "t": "19h15",
-         "k": "cor",
-         "l": "Aider à préparer le dîner",
-         "id": "sarah|2026-11-16|cor|aider-a-preparer-le-diner"
-        },
-        {
-         "t": "19h30",
-         "k": "repas",
-         "l": "Dîner"
-        },
-        {
-         "t": "20h45",
-         "k": "lec",
-         "l": "Lecture personnelle : 20 pages (au lit)",
-         "d": "Lecture calme avant de dormir.",
-         "id": "sarah|2026-11-16|lec|lecture-personnelle-20-pages-au-lit"
-        },
-        {
-         "t": "21h30",
-         "k": "dodo",
-         "l": "Coucher"
-        }
-       ],
-       "2026-11-17": [
-        {
-         "t": "15h45",
-         "k": "rep",
-         "l": "Goûter + pause sans écran",
-         "d": "Souffler 30 minutes avant de s’y mettre."
-        },
-        {
-         "t": "16h15",
-         "k": "rev",
-         "l": "Maths : faire la fiche de révision",
-         "d": "Éval jeudi 19. Évaluation d'automatismes sur les fiches 1 à 4",
-         "id": "sarah|2026-11-17|rev|maths-faire-la-fiche-de-revision"
-        },
-        {
-         "t": "17h00",
-         "k": "rep",
-         "l": "Pause 10 min"
-        },
-        {
-         "t": "17h10",
-         "k": "rev",
-         "l": "SES : faire la fiche de révision",
-         "d": "Éval jeudi 19. DS de 2h sur les chapitres 1 et 3",
-         "id": "sarah|2026-11-17|rev|ses-faire-la-fiche-de-revision"
-        },
-        {
-         "t": "17h55",
-         "k": "rep",
-         "l": "Pause 10 min"
-        },
-        {
-         "t": "18h05",
-         "k": "app",
-         "l": "Anglais : Apprendre le vocabulaire de la leçon 5",
-         "d": "Pour mercredi 18. Lire 2 fois, cacher, redire à voix haute.",
-         "id": "sarah|2026-11-17|app|anglais-apprendre-le-vocabulaire-de-la-l"
-        },
-        {
-         "t": "18h40",
-         "k": "rel",
-         "l": "Relire les leçons",
-         "rel": {
-          "today": [
-           "SVT",
-           "Physique-Chimie",
-           "Maths"
-          ],
-          "tomorrow": [
-           "Anglais",
-           "Maths"
-          ],
-          "idp": "sarah|2026-11-17|r"
-         }
-        },
-        {
-         "t": "18h55",
-         "k": "org",
-         "l": "Préparer le sac de demain",
-         "id": "sarah|2026-11-17|org|preparer-le-sac-de-demain"
-        },
-        {
-         "t": "19h05",
-         "k": "ran",
-         "l": "Ranger la chambre (10 min)",
-         "id": "sarah|2026-11-17|ran|ranger-la-chambre-10-min"
-        },
-        {
-         "t": "19h15",
-         "k": "cor",
-         "l": "Mettre la table",
-         "id": "sarah|2026-11-17|cor|mettre-la-table"
-        },
-        {
-         "t": "19h30",
-         "k": "repas",
-         "l": "Dîner"
-        },
-        {
-         "t": "20h45",
-         "k": "lec",
-         "l": "Lecture personnelle : 20 pages (au lit)",
-         "d": "Lecture calme avant de dormir.",
-         "id": "sarah|2026-11-17|lec|lecture-personnelle-20-pages-au-lit"
-        },
-        {
-         "t": "21h30",
-         "k": "dodo",
-         "l": "Coucher"
-        }
-       ],
-       "2026-11-18": [
-        {
-         "t": "7h20",
-         "k": "app",
-         "l": "Réciter : Anglais, le vocabulaire de la leçon 5",
-         "d": "5 minutes au petit-déjeuner.",
-         "id": "sarah|2026-11-18|app|reciter-anglais-le-vocabulaire-de-la-lec"
-        },
-        {
-         "t": "12h00",
-         "k": "repas",
-         "l": "Déjeuner"
-        },
-        {
-         "t": "12h45",
-         "k": "rep",
-         "l": "Repos"
-        },
-        {
-         "t": "13h45",
-         "k": "rev",
-         "l": "SES : préparer le DS (plan + fiche)",
-         "d": "Éval jeudi 19. DS de 2h sur les chapitres 1 et 3",
-         "id": "sarah|2026-11-18|rev|ses-preparer-le-ds-plan-fiche"
-        },
-        {
-         "t": "14h30",
-         "k": "rep",
-         "l": "Pause 10 min"
-        },
-        {
-         "t": "14h40",
-         "k": "rev",
-         "l": "Maths : s’entraîner (exercices)",
-         "d": "Éval jeudi 19. Refaire des exercices sans la correction, puis corriger.",
-         "id": "sarah|2026-11-18|rev|maths-sentrainer-exercices"
-        },
-        {
-         "t": "15h25",
-         "k": "rep",
-         "l": "Pause 10 min"
-        },
-        {
-         "t": "15h35",
-         "k": "rev",
-         "l": "SES : s’entraîner (exercices)",
-         "d": "Éval jeudi 19. Refaire des exercices sans la correction, puis corriger.",
-         "id": "sarah|2026-11-18|rev|ses-sentrainer-exercices"
-        },
-        {
-         "t": "16h20",
-         "k": "rep",
-         "l": "Pause 10 min"
-        },
-        {
-         "t": "16h30",
-         "k": "rev",
-         "l": "Maths : se faire interroger",
-         "d": "Éval jeudi 19. Un parent pose 10 questions à partir de la fiche.",
-         "id": "sarah|2026-11-18|rev|maths-se-faire-interroger"
-        },
-        {
-         "t": "16h50",
-         "k": "rep",
-         "l": "Pause 5 min"
-        },
-        {
-         "t": "16h55",
-         "k": "rev",
-         "l": "SES : se faire interroger",
-         "d": "Éval jeudi 19. Un parent pose 10 questions à partir de la fiche.",
-         "id": "sarah|2026-11-18|rev|ses-se-faire-interroger"
-        },
-        {
-         "t": "17h10",
-         "k": "ran",
-         "l": "Grand rangement de la chambre (30 min)",
-         "d": "Bureau, sol, armoire, linge sale au panier, poubelle vidée.",
-         "id": "sarah|2026-11-18|ran|grand-rangement-de-la-chambre-30-min"
-        },
-        {
-         "t": "17h40",
-         "k": "rel",
-         "l": "Relire les leçons",
-         "rel": {
-          "today": [
-           "Anglais",
-           "Maths"
-          ],
-          "tomorrow": [
-           "Français",
-           "Histoire-Géo"
-          ],
-          "idp": "sarah|2026-11-18|r"
-         }
-        },
-        {
-         "t": "17h55",
-         "k": "org",
-         "l": "Préparer le sac de demain",
-         "id": "sarah|2026-11-18|org|preparer-le-sac-de-demain"
-        },
-        {
-         "t": "18h00",
-         "k": "act",
-         "l": "Théâtre 18h00 – 19h00"
-        },
-        {
-         "t": "19h15",
-         "k": "cor",
-         "l": "Débarrasser + lave-vaisselle",
-         "id": "sarah|2026-11-18|cor|debarrasser-lave-vaisselle"
-        },
-        {
-         "t": "19h30",
-         "k": "repas",
-         "l": "Dîner"
-        },
-        {
-         "t": "20h45",
-         "k": "lec",
-         "l": "Lecture personnelle : 20 pages (au lit)",
-         "d": "Lecture calme avant de dormir.",
-         "id": "sarah|2026-11-18|lec|lecture-personnelle-20-pages-au-lit"
-        },
-        {
-         "t": "21h30",
-         "k": "dodo",
-         "l": "Coucher"
-        }
-       ],
-       "2026-11-19": [
-        {
-         "t": "8h00",
-         "k": "repas",
-         "l": "Petit-déjeuner (cours à 10h05)"
-        },
-        {
-         "t": "8h30",
-         "k": "rev",
-         "l": "Maths : relire la fiche (10 min)",
-         "d": "Éval aujourd’hui : un dernier coup d’œil, rien de nouveau.",
-         "id": "sarah|2026-11-19|rev|maths-relire-la-fiche-10-min"
-        },
-        {
-         "t": "8h40",
-         "k": "rev",
-         "l": "SES : relire la fiche (10 min)",
-         "d": "Éval aujourd’hui : un dernier coup d’œil, rien de nouveau.",
-         "id": "sarah|2026-11-19|rev|ses-relire-la-fiche-10-min"
-        },
-        {
-         "t": "8h50",
-         "k": "dev",
-         "l": "SNT : Préparer le passage oral sur Internet",
-         "d": "Pour vendredi 20.",
-         "id": "sarah|2026-11-19|dev|snt-preparer-le-passage-oral-sur-interne"
-        },
-        {
-         "t": "17h30",
-         "k": "rep",
-         "l": "Goûter + pause sans écran",
-         "d": "Souffler 30 minutes avant de s’y mettre."
-        },
-        {
-         "t": "18h40",
-         "k": "rel",
-         "l": "Relire les leçons",
-         "rel": {
-          "today": [
-           "Français",
-           "Histoire-Géo"
-          ],
-          "tomorrow": [
-           "Allemand",
-           "SES",
-           "SNT"
-          ],
-          "idp": "sarah|2026-11-19|r"
-         }
-        },
-        {
-         "t": "18h55",
-         "k": "org",
-         "l": "Préparer le sac de demain",
-         "id": "sarah|2026-11-19|org|preparer-le-sac-de-demain"
-        },
-        {
-         "t": "19h05",
-         "k": "ran",
-         "l": "Ranger la chambre (10 min)",
-         "id": "sarah|2026-11-19|ran|ranger-la-chambre-10-min"
-        },
-        {
-         "t": "19h15",
-         "k": "cor",
-         "l": "Aider à préparer le dîner",
-         "id": "sarah|2026-11-19|cor|aider-a-preparer-le-diner"
-        },
-        {
-         "t": "19h30",
-         "k": "repas",
-         "l": "Dîner"
-        },
-        {
-         "t": "20h45",
-         "k": "lec",
-         "l": "Lecture personnelle : 20 pages (au lit)",
-         "d": "Lecture calme avant de dormir.",
-         "id": "sarah|2026-11-19|lec|lecture-personnelle-20-pages-au-lit"
-        },
-        {
-         "t": "21h30",
-         "k": "dodo",
-         "l": "Coucher"
-        }
-       ],
-       "2026-11-20": [
-        {
-         "t": "17h30",
-         "k": "rep",
-         "l": "Goûter + pause sans écran",
-         "d": "Souffler 30 minutes avant de s’y mettre."
-        },
-        {
-         "t": "18h40",
-         "k": "rel",
-         "l": "Relire les leçons",
-         "rel": {
-          "today": [
-           "Allemand",
-           "SES",
-           "SNT"
-          ],
-          "tomorrow": [],
-          "idp": "sarah|2026-11-20|r"
-         }
-        },
-        {
-         "t": "18h55",
-         "k": "ran",
-         "l": "Ranger la chambre (10 min)",
-         "id": "sarah|2026-11-20|ran|ranger-la-chambre-10-min"
-        },
-        {
-         "t": "19h15",
-         "k": "cor",
-         "l": "Mettre la table",
-         "id": "sarah|2026-11-20|cor|mettre-la-table"
-        },
-        {
-         "t": "19h30",
-         "k": "repas",
-         "l": "Dîner"
-        },
-        {
-         "t": "20h45",
-         "k": "dodo",
-         "l": "Écrans coupés, temps calme"
-        },
-        {
-         "t": "21h30",
-         "k": "dodo",
-         "l": "Coucher"
-        }
-       ],
-       "2026-11-21": [
-        {
-         "t": "8h45",
-         "k": "repas",
-         "l": "Lever + petit-déjeuner"
-        },
-        {
-         "t": "9h15",
-         "k": "dev",
-         "l": "Français : Fiche d'analyse du texte : analyser les quatre mouvements",
-         "d": "Pour lundi 23.",
-         "id": "sarah|2026-11-21|dev|francais-fiche-d-analyse-du-texte-analys"
-        },
-        {
-         "t": "9h45",
-         "k": "rep",
-         "l": "Pause 5 min"
-        },
-        {
-         "t": "9h50",
-         "k": "cor",
-         "l": "Changer les draps + aspirateur dans la chambre",
-         "id": "sarah|2026-11-21|cor|changer-les-draps-aspirateur-dans-la-cha"
-        },
-        {
-         "t": "12h15",
-         "k": "repas",
-         "l": "Déjeuner"
-        },
-        {
-         "t": "12h45",
-         "k": "cor",
-         "l": "Débarrasser la table + lave-vaisselle",
-         "id": "sarah|2026-11-21|cor|debarrasser-la-table-lave-vaisselle"
-        },
-        {
-         "t": "13h00",
-         "k": "rep",
-         "l": "Temps libre"
-        },
-        {
-         "t": "16h00",
-         "k": "rep",
-         "l": "Goûter"
-        },
-        {
-         "t": "19h15",
-         "k": "cor",
-         "l": "Débarrasser + lave-vaisselle",
-         "id": "sarah|2026-11-21|cor|debarrasser-lave-vaisselle"
-        },
-        {
-         "t": "19h30",
-         "k": "repas",
-         "l": "Dîner"
-        },
-        {
-         "t": "20h45",
-         "k": "dodo",
-         "l": "Écrans coupés, temps calme"
-        },
-        {
-         "t": "21h30",
-         "k": "dodo",
-         "l": "Coucher"
-        }
-       ],
-       "2026-11-22": [
-        {
-         "t": "8h45",
-         "k": "repas",
-         "l": "Lever + petit-déjeuner"
-        },
-        {
-         "t": "12h15",
-         "k": "repas",
-         "l": "Déjeuner"
-        },
-        {
-         "t": "12h45",
-         "k": "cor",
-         "l": "Débarrasser la table + lave-vaisselle",
-         "id": "sarah|2026-11-22|cor|debarrasser-la-table-lave-vaisselle"
-        },
-        {
-         "t": "13h00",
-         "k": "rep",
-         "l": "Temps libre"
-        },
-        {
-         "t": "16h00",
-         "k": "rep",
-         "l": "Goûter"
-        },
-        {
-         "t": "18h40",
-         "k": "rel",
-         "l": "Relire les leçons",
-         "rel": {
-          "today": [],
-          "tomorrow": [
-           "Français",
-           "Maths"
-          ],
-          "idp": "sarah|2026-11-22|r"
-         }
-        },
-        {
-         "t": "18h55",
-         "k": "org",
-         "l": "Préparer la semaine (15 min)",
-         "d": "Agenda EcoleDirecte, devoirs pour lundi, sac prêt.",
-         "id": "sarah|2026-11-22|org|preparer-la-semaine-15-min"
-        },
-        {
-         "t": "19h15",
-         "k": "cor",
-         "l": "Aider à préparer le dîner",
-         "id": "sarah|2026-11-22|cor|aider-a-preparer-le-diner"
-        },
-        {
-         "t": "19h30",
-         "k": "repas",
-         "l": "Dîner"
-        },
-        {
-         "t": "20h45",
-         "k": "dodo",
-         "l": "Écrans coupés, temps calme"
-        },
-        {
-         "t": "21h30",
-         "k": "dodo",
-         "l": "Coucher"
-        }
-       ]
-      },
-      "due": {
-       "2026-11-16": [
-        "Maths : Exercices 7 et 11 du polycopié"
-       ],
-       "2026-11-19": [
-        "Évaluation – Maths : Évaluation d'automatismes sur les fiches 1 à 4",
-        "Évaluation – SES : DS de 2h sur les chapitres 1 et 3"
-       ],
-       "2026-11-20": [
-        "SNT : Préparer le passage oral sur Internet"
-       ],
-       "2026-11-23": [
-        "Français : Fiche d'analyse du texte : analyser les quatre mouvements"
-       ],
-       "2026-11-18": [
-        "Anglais : Apprendre le vocabulaire de la leçon 5"
-       ]
-      },
-      "evals": [
-       [
-        "2026-11-19",
-        "Maths : Évaluation d'automatismes sur les fiches 1 à 4"
-       ],
-       [
-        "2026-11-19",
-        "SES : DS de 2h sur les chapitres 1 et 3"
-       ]
-      ],
-      "school": {
-       "2026-11-16": "Lycée 8h00 – 17h00",
-       "2026-11-17": "Lycée 8h00 – 15h15",
-       "2026-11-18": "Lycée 8h00 – 11h00",
-       "2026-11-19": "Lycée 10h05 – 17h00",
-       "2026-11-20": "Lycée 8h00 – 17h00",
-       "2026-11-21": "Pas de cours",
-       "2026-11-22": "Pas de cours"
-      }
-     }
-    },
-    "notes": []
-   },
-   "source": "auto"
-  },
-  {
    "week_start": "2026-11-23",
    "data": {
     "week_start": "2026-11-23",
@@ -2013,7 +182,50 @@
          "d": "Souffler 30 minutes avant de s’y mettre."
         },
         {
+         "t": "17h25",
+         "k": "rev",
+         "l": "Éducation musicale : faire la fiche de révision",
+         "d": "Éval mardi 24. QCM sur le rythme : apporter la tablette",
+         "id": "leo|2026-11-23|rev|education-musicale-faire-la-fiche-de-rev"
+        },
+        {
+         "t": "18h00",
+         "k": "rep",
+         "l": "Pause 5 min"
+        },
+        {
+         "t": "18h05",
+         "k": "rev",
+         "l": "Éducation musicale : s’entraîner (exercices)",
+         "d": "Éval mardi 24. Refaire des exercices sans la correction, puis corriger.",
+         "id": "leo|2026-11-23|rev|education-musicale-sentrainer-exercices"
+        },
+        {
          "t": "18h40",
+         "k": "rep",
+         "l": "Pause 5 min"
+        },
+        {
+         "t": "18h45",
+         "k": "rev",
+         "l": "Éducation musicale : se faire interroger",
+         "d": "Éval mardi 24. Avec Inès ou un parent : 10 questions sur la fiche.",
+         "id": "leo|2026-11-23|rev|education-musicale-se-faire-interroger"
+        },
+        {
+         "t": "19h00",
+         "k": "dev",
+         "l": "Maths : Exercices n° 12, 14 et 17 page 62",
+         "d": "Pour mardi 24.",
+         "id": "leo|2026-11-23|dev|maths-exercices-n-12-14-et-17-page-62"
+        },
+        {
+         "t": "19h30",
+         "k": "repas",
+         "l": "Dîner"
+        },
+        {
+         "t": "19h40",
          "k": "rel",
          "l": "Relire les leçons",
          "rel": {
@@ -2032,27 +244,16 @@
          }
         },
         {
-         "t": "18h55",
+         "t": "19h55",
          "k": "org",
          "l": "Préparer le sac de demain",
          "id": "leo|2026-11-23|org|preparer-le-sac-de-demain"
         },
         {
-         "t": "19h05",
-         "k": "ran",
-         "l": "Ranger la chambre (10 min)",
-         "id": "leo|2026-11-23|ran|ranger-la-chambre-10-min"
-        },
-        {
-         "t": "19h15",
+         "t": "20h05",
          "k": "cor",
-         "l": "Mettre la table",
-         "id": "leo|2026-11-23|cor|mettre-la-table"
-        },
-        {
-         "t": "19h30",
-         "k": "repas",
-         "l": "Dîner"
+         "l": "Débarrasser + lave-vaisselle",
+         "id": "leo|2026-11-23|cor|debarrasser-lave-vaisselle"
         },
         {
          "t": "20h30",
@@ -2067,13 +268,27 @@
        ],
        "2026-11-24": [
         {
+         "t": "7h20",
+         "k": "rev",
+         "l": "Éducation musicale : relire la fiche (10 min)",
+         "d": "Éval aujourd’hui : un dernier coup d’œil, rien de nouveau.",
+         "id": "leo|2026-11-24|rev|education-musicale-relire-la-fiche-10-mi"
+        },
+        {
          "t": "17h30",
          "k": "rep",
          "l": "Goûter + pause sans écran",
          "d": "Souffler 30 minutes avant de s’y mettre."
         },
         {
-         "t": "18h30",
+         "t": "18h00",
+         "k": "rev",
+         "l": "Physique-Chimie : faire la fiche de révision",
+         "d": "Éval vendredi 27. Évaluation sur les atomes et les molécules",
+         "id": "leo|2026-11-24|rev|physique-chimie-faire-la-fiche-de-revisi"
+        },
+        {
+         "t": "18h35",
          "k": "rel",
          "l": "Relire les leçons",
          "rel": {
@@ -2086,13 +301,13 @@
          }
         },
         {
-         "t": "18h40",
+         "t": "18h45",
          "k": "org",
          "l": "Préparer le sac de sport + sac de demain",
          "id": "leo|2026-11-24|org|preparer-le-sac-de-sport-sac-de-demain"
         },
         {
-         "t": "18h50",
+         "t": "18h55",
          "k": "repas",
          "l": "Dîner léger avant le sport"
         },
@@ -2120,6 +335,25 @@
         },
         {
          "t": "9h15",
+         "k": "rev",
+         "l": "Physique-Chimie : s’entraîner (exercices)",
+         "d": "Éval vendredi 27. Refaire des exercices sans la correction, puis corriger.",
+         "id": "leo|2026-11-25|rev|physique-chimie-sentrainer-exercices"
+        },
+        {
+         "t": "9h50",
+         "k": "rep",
+         "l": "Pause 5 min"
+        },
+        {
+         "t": "9h55",
+         "k": "app",
+         "l": "Français : Apprendre par cœur la leçon sur les propositions subordonnées",
+         "d": "Pour jeudi 26. Lire 2 fois, cacher, redire à voix haute.",
+         "id": "leo|2026-11-25|app|francais-apprendre-par-cur-la-lecon-sur-"
+        },
+        {
+         "t": "10h10",
          "k": "ran",
          "l": "Grand rangement de la chambre (30 min)",
          "d": "Bureau, sol, armoire, linge sale au panier, poubelle vidée.",
@@ -2185,8 +419,10 @@
         },
         {
          "t": "20h30",
-         "k": "dodo",
-         "l": "Écrans coupés, temps calme"
+         "k": "lec",
+         "l": "Français : Lire le chapitre 3 du roman et faire un résumé de 5 lignes (au lit)",
+         "d": "Pour jeudi 26.  Lecture calme avant de dormir.",
+         "id": "leo|2026-11-25|lec|francais-lire-le-chapitre-3-du-roman-et-"
         },
         {
          "t": "21h15",
@@ -2196,10 +432,36 @@
        ],
        "2026-11-26": [
         {
+         "t": "7h20",
+         "k": "app",
+         "l": "Réciter à Inès : Français, par cœur la leçon sur les propositions subordonné…",
+         "d": "5 minutes au petit-déjeuner.",
+         "id": "leo|2026-11-26|app|reciter-a-ines-francais-par-cur-la-lecon"
+        },
+        {
          "t": "16h55",
          "k": "rep",
          "l": "Goûter + pause sans écran",
          "d": "Souffler 30 minutes avant de s’y mettre."
+        },
+        {
+         "t": "17h25",
+         "k": "rev",
+         "l": "Physique-Chimie : se faire interroger",
+         "d": "Éval vendredi 27. Avec Inès ou un parent : 10 questions sur la fiche.",
+         "id": "leo|2026-11-26|rev|physique-chimie-se-faire-interroger"
+        },
+        {
+         "t": "17h45",
+         "k": "rep",
+         "l": "Pause 5 min"
+        },
+        {
+         "t": "17h50",
+         "k": "app",
+         "l": "Histoire-Géo : Apprendre le vocabulaire du chapitre 4",
+         "d": "Pour vendredi 27. Lire 2 fois, cacher, redire à voix haute.",
+         "id": "leo|2026-11-26|app|histoire-geo-apprendre-le-vocabulaire-du"
         },
         {
          "t": "18h40",
@@ -2256,6 +518,20 @@
         }
        ],
        "2026-11-27": [
+        {
+         "t": "7h20",
+         "k": "rev",
+         "l": "Physique-Chimie : relire la fiche (10 min)",
+         "d": "Éval aujourd’hui : un dernier coup d’œil, rien de nouveau.",
+         "id": "leo|2026-11-27|rev|physique-chimie-relire-la-fiche-10-min"
+        },
+        {
+         "t": "7h30",
+         "k": "app",
+         "l": "Réciter à Inès : Histoire-Géo, le vocabulaire du chapitre 4",
+         "d": "5 minutes au petit-déjeuner.",
+         "id": "leo|2026-11-27|app|reciter-a-ines-histoire-geo-le-vocabulai"
+        },
         {
          "t": "16h55",
          "k": "rep",
@@ -2320,9 +596,10 @@
         },
         {
          "t": "9h15",
-         "k": "cor",
-         "l": "Changer les draps + aspirateur dans la chambre",
-         "id": "leo|2026-11-28|cor|changer-les-draps-aspirateur-dans-la-cha"
+         "k": "dev",
+         "l": "Anglais : Rédiger 10 lignes sur votre dernier voyage",
+         "d": "Pour lundi 30.",
+         "id": "leo|2026-11-28|dev|anglais-rediger-10-lignes-sur-votre-dern"
         },
         {
          "t": "9h45",
@@ -2344,6 +621,12 @@
          "t": "13h00",
          "k": "rep",
          "l": "Temps libre"
+        },
+        {
+         "t": "14h30",
+         "k": "cor",
+         "l": "Changer les draps + aspirateur dans la chambre",
+         "id": "leo|2026-11-28|cor|changer-les-draps-aspirateur-dans-la-cha"
         },
         {
          "t": "16h00",
@@ -2401,16 +684,26 @@
         },
         {
          "t": "18h40",
+         "k": "rel",
+         "l": "Relire les leçons",
+         "rel": {
+          "today": [],
+          "tomorrow": [
+           "Technologie",
+           "Histoire-Géo",
+           "Français",
+           "Espagnol",
+           "Anglais"
+          ],
+          "idp": "leo|2026-11-29|r"
+         }
+        },
+        {
+         "t": "18h55",
          "k": "org",
          "l": "Préparer la semaine (15 min)",
          "d": "Agenda EcoleDirecte, devoirs pour lundi, sac prêt.",
          "id": "leo|2026-11-29|org|preparer-la-semaine-15-min"
-        },
-        {
-         "t": "18h55",
-         "k": "ran",
-         "l": "Ranger la chambre (10 min)",
-         "id": "leo|2026-11-29|ran|ranger-la-chambre-10-min"
         },
         {
          "t": "19h15",
@@ -2436,14 +729,35 @@
        ]
       },
       "due": {
-       "2026-11-23": [
+       "2026-11-24": [
+        "Maths : Exercices n° 12, 14 et 17 page 62",
+        "Évaluation – Éducation musicale : QCM sur le rythme : apporter la tablette"
+       ],
+       "2026-11-26": [
+        "Français : Apprendre par cœur la leçon sur les propositions subordonnées",
+        "Français : Lire le chapitre 3 du roman et faire un résumé de 5 lignes"
+       ],
+       "2026-11-27": [
+        "Évaluation – Physique-Chimie : Évaluation sur les atomes et les molécules",
+        "Histoire-Géo : Apprendre le vocabulaire du chapitre 4"
+       ],
+       "2026-11-30": [
         "Anglais : Rédiger 10 lignes sur votre dernier voyage"
        ],
        "2026-11-28": [
         "Piano : travailler le morceau (20 min)"
        ]
       },
-      "evals": [],
+      "evals": [
+       [
+        "2026-11-24",
+        "Éducation musicale : QCM sur le rythme : apporter la tablette"
+       ],
+       [
+        "2026-11-27",
+        "Physique-Chimie : Évaluation sur les atomes et les molécules"
+       ]
+      ],
       "school": {
        "2026-11-23": "Collège 8h00 – 16h25",
        "2026-11-24": "Collège 8h00 – 17h00",
@@ -2464,7 +778,50 @@
          "d": "Souffler 30 minutes avant de s’y mettre."
         },
         {
+         "t": "17h25",
+         "k": "rev",
+         "l": "Éducation musicale : faire la fiche de révision",
+         "d": "Éval mardi 24. QCM sur le rythme : apporter la tablette",
+         "id": "ines|2026-11-23|rev|education-musicale-faire-la-fiche-de-rev"
+        },
+        {
+         "t": "18h00",
+         "k": "rep",
+         "l": "Pause 5 min"
+        },
+        {
+         "t": "18h05",
+         "k": "rev",
+         "l": "Éducation musicale : s’entraîner (exercices)",
+         "d": "Éval mardi 24. Refaire des exercices sans la correction, puis corriger.",
+         "id": "ines|2026-11-23|rev|education-musicale-sentrainer-exercices"
+        },
+        {
          "t": "18h40",
+         "k": "rep",
+         "l": "Pause 5 min"
+        },
+        {
+         "t": "18h45",
+         "k": "rev",
+         "l": "Éducation musicale : se faire interroger",
+         "d": "Éval mardi 24. Avec Léo ou un parent : 10 questions sur la fiche.",
+         "id": "ines|2026-11-23|rev|education-musicale-se-faire-interroger"
+        },
+        {
+         "t": "19h00",
+         "k": "dev",
+         "l": "Maths : Exercices n° 12, 14 et 17 page 62",
+         "d": "Pour mardi 24.",
+         "id": "ines|2026-11-23|dev|maths-exercices-n-12-14-et-17-page-62"
+        },
+        {
+         "t": "19h30",
+         "k": "repas",
+         "l": "Dîner"
+        },
+        {
+         "t": "19h40",
          "k": "rel",
          "l": "Relire les leçons",
          "rel": {
@@ -2483,27 +840,16 @@
          }
         },
         {
-         "t": "18h55",
+         "t": "19h55",
          "k": "org",
          "l": "Préparer le sac de demain",
          "id": "ines|2026-11-23|org|preparer-le-sac-de-demain"
         },
         {
-         "t": "19h05",
-         "k": "ran",
-         "l": "Ranger la chambre (10 min)",
-         "id": "ines|2026-11-23|ran|ranger-la-chambre-10-min"
-        },
-        {
-         "t": "19h15",
+         "t": "20h05",
          "k": "cor",
          "l": "Débarrasser + lave-vaisselle",
          "id": "ines|2026-11-23|cor|debarrasser-lave-vaisselle"
-        },
-        {
-         "t": "19h30",
-         "k": "repas",
-         "l": "Dîner"
         },
         {
          "t": "20h30",
@@ -2517,6 +863,13 @@
         }
        ],
        "2026-11-24": [
+        {
+         "t": "7h20",
+         "k": "rev",
+         "l": "Éducation musicale : relire la fiche (10 min)",
+         "d": "Éval aujourd’hui : un dernier coup d’œil, rien de nouveau.",
+         "id": "ines|2026-11-24|rev|education-musicale-relire-la-fiche-10-mi"
+        },
         {
          "t": "17h30",
          "k": "rep",
@@ -2571,6 +924,37 @@
         },
         {
          "t": "9h15",
+         "k": "rev",
+         "l": "Physique-Chimie : faire la fiche de révision",
+         "d": "Éval vendredi 27. Évaluation sur les atomes et les molécules",
+         "id": "ines|2026-11-25|rev|physique-chimie-faire-la-fiche-de-revisi"
+        },
+        {
+         "t": "9h50",
+         "k": "rep",
+         "l": "Pause 5 min"
+        },
+        {
+         "t": "9h55",
+         "k": "rev",
+         "l": "Physique-Chimie : s’entraîner (exercices)",
+         "d": "Éval vendredi 27. Refaire des exercices sans la correction, puis corriger.",
+         "id": "ines|2026-11-25|rev|physique-chimie-sentrainer-exercices"
+        },
+        {
+         "t": "10h30",
+         "k": "rep",
+         "l": "Pause 5 min"
+        },
+        {
+         "t": "10h35",
+         "k": "app",
+         "l": "Français : Apprendre par cœur la leçon sur les propositions subordonnées",
+         "d": "Pour jeudi 26. Lire 2 fois, cacher, redire à voix haute.",
+         "id": "ines|2026-11-25|app|francais-apprendre-par-cur-la-lecon-sur-"
+        },
+        {
+         "t": "10h50",
          "k": "ran",
          "l": "Grand rangement de la chambre (30 min)",
          "d": "Bureau, sol, armoire, linge sale au panier, poubelle vidée.",
@@ -2631,8 +1015,10 @@
         },
         {
          "t": "20h30",
-         "k": "dodo",
-         "l": "Écrans coupés, temps calme"
+         "k": "lec",
+         "l": "Français : Lire le chapitre 3 du roman et faire un résumé de 5 lignes (au lit)",
+         "d": "Pour jeudi 26.  Lecture calme avant de dormir.",
+         "id": "ines|2026-11-25|lec|francais-lire-le-chapitre-3-du-roman-et-"
         },
         {
          "t": "21h15",
@@ -2642,13 +1028,39 @@
        ],
        "2026-11-26": [
         {
+         "t": "7h20",
+         "k": "app",
+         "l": "Réciter à Léo : Français, par cœur la leçon sur les propositions subordonné…",
+         "d": "5 minutes au petit-déjeuner.",
+         "id": "ines|2026-11-26|app|reciter-a-leo-francais-par-cur-la-lecon-"
+        },
+        {
          "t": "16h55",
          "k": "rep",
          "l": "Goûter + pause sans écran",
          "d": "Souffler 30 minutes avant de s’y mettre."
         },
         {
-         "t": "18h00",
+         "t": "17h25",
+         "k": "rev",
+         "l": "Physique-Chimie : se faire interroger",
+         "d": "Éval vendredi 27. Avec Léo ou un parent : 10 questions sur la fiche.",
+         "id": "ines|2026-11-26|rev|physique-chimie-se-faire-interroger"
+        },
+        {
+         "t": "17h45",
+         "k": "rep",
+         "l": "Pause 5 min"
+        },
+        {
+         "t": "17h50",
+         "k": "app",
+         "l": "Histoire-Géo : Apprendre le vocabulaire du chapitre 4",
+         "d": "Pour vendredi 27. Lire 2 fois, cacher, redire à voix haute.",
+         "id": "ines|2026-11-26|app|histoire-geo-apprendre-le-vocabulaire-du"
+        },
+        {
+         "t": "18h05",
          "k": "rel",
          "l": "Relire les leçons",
          "rel": {
@@ -2668,13 +1080,13 @@
          }
         },
         {
-         "t": "18h10",
+         "t": "18h15",
          "k": "org",
          "l": "Préparer le sac de sport + sac de demain",
          "id": "ines|2026-11-26|org|preparer-le-sac-de-sport-sac-de-demain"
         },
         {
-         "t": "18h20",
+         "t": "18h25",
          "k": "repas",
          "l": "Dîner léger avant le sport"
         },
@@ -2695,6 +1107,20 @@
         }
        ],
        "2026-11-27": [
+        {
+         "t": "7h20",
+         "k": "rev",
+         "l": "Physique-Chimie : relire la fiche (10 min)",
+         "d": "Éval aujourd’hui : un dernier coup d’œil, rien de nouveau.",
+         "id": "ines|2026-11-27|rev|physique-chimie-relire-la-fiche-10-min"
+        },
+        {
+         "t": "7h30",
+         "k": "app",
+         "l": "Réciter à Léo : Histoire-Géo, le vocabulaire du chapitre 4",
+         "d": "5 minutes au petit-déjeuner.",
+         "id": "ines|2026-11-27|app|reciter-a-leo-histoire-geo-le-vocabulair"
+        },
         {
          "t": "16h55",
          "k": "rep",
@@ -2752,6 +1178,18 @@
         },
         {
          "t": "9h15",
+         "k": "dev",
+         "l": "Anglais : Rédiger 10 lignes sur votre dernier voyage",
+         "d": "Pour lundi 30.",
+         "id": "ines|2026-11-28|dev|anglais-rediger-10-lignes-sur-votre-dern"
+        },
+        {
+         "t": "9h40",
+         "k": "rep",
+         "l": "Pause 5 min"
+        },
+        {
+         "t": "9h45",
          "k": "cor",
          "l": "Changer les draps + aspirateur dans la chambre",
          "id": "ines|2026-11-28|cor|changer-les-draps-aspirateur-dans-la-cha"
@@ -2828,16 +1266,26 @@
         },
         {
          "t": "18h40",
+         "k": "rel",
+         "l": "Relire les leçons",
+         "rel": {
+          "today": [],
+          "tomorrow": [
+           "Technologie",
+           "Histoire-Géo",
+           "Français",
+           "Espagnol",
+           "Anglais"
+          ],
+          "idp": "ines|2026-11-29|r"
+         }
+        },
+        {
+         "t": "18h55",
          "k": "org",
          "l": "Préparer la semaine (15 min)",
          "d": "Agenda EcoleDirecte, devoirs pour lundi, sac prêt.",
          "id": "ines|2026-11-29|org|preparer-la-semaine-15-min"
-        },
-        {
-         "t": "18h55",
-         "k": "ran",
-         "l": "Ranger la chambre (10 min)",
-         "id": "ines|2026-11-29|ran|ranger-la-chambre-10-min"
         },
         {
          "t": "19h15",
@@ -2863,11 +1311,32 @@
        ]
       },
       "due": {
-       "2026-11-23": [
+       "2026-11-24": [
+        "Maths : Exercices n° 12, 14 et 17 page 62",
+        "Évaluation – Éducation musicale : QCM sur le rythme : apporter la tablette"
+       ],
+       "2026-11-26": [
+        "Français : Apprendre par cœur la leçon sur les propositions subordonnées",
+        "Français : Lire le chapitre 3 du roman et faire un résumé de 5 lignes"
+       ],
+       "2026-11-27": [
+        "Évaluation – Physique-Chimie : Évaluation sur les atomes et les molécules",
+        "Histoire-Géo : Apprendre le vocabulaire du chapitre 4"
+       ],
+       "2026-11-30": [
         "Anglais : Rédiger 10 lignes sur votre dernier voyage"
        ]
       },
-      "evals": [],
+      "evals": [
+       [
+        "2026-11-24",
+        "Éducation musicale : QCM sur le rythme : apporter la tablette"
+       ],
+       [
+        "2026-11-27",
+        "Physique-Chimie : Évaluation sur les atomes et les molécules"
+       ]
+      ],
       "school": {
        "2026-11-23": "Collège 8h00 – 16h25",
        "2026-11-24": "Collège 8h00 – 17h00",
@@ -2886,6 +1355,13 @@
          "k": "rep",
          "l": "Goûter + pause sans écran",
          "d": "Souffler 30 minutes avant de s’y mettre."
+        },
+        {
+         "t": "18h00",
+         "k": "dev",
+         "l": "Maths : Exercices 7 et 11 du polycopié",
+         "d": "Pour lundi 23.",
+         "id": "sarah|2026-11-23|dev|maths-exercices-7-et-11-du-polycopie"
         },
         {
          "t": "18h40",
@@ -2948,6 +1424,38 @@
          "d": "Souffler 30 minutes avant de s’y mettre."
         },
         {
+         "t": "16h15",
+         "k": "rev",
+         "l": "Maths : faire la fiche de révision",
+         "d": "Éval jeudi 26. Évaluation d'automatismes sur les fiches 1 à 4",
+         "id": "sarah|2026-11-24|rev|maths-faire-la-fiche-de-revision"
+        },
+        {
+         "t": "17h00",
+         "k": "rep",
+         "l": "Pause 10 min"
+        },
+        {
+         "t": "17h10",
+         "k": "rev",
+         "l": "SES : faire la fiche de révision",
+         "d": "Éval jeudi 26. DS de 2h sur les chapitres 1 et 3",
+         "id": "sarah|2026-11-24|rev|ses-faire-la-fiche-de-revision"
+        },
+        {
+         "t": "17h55",
+         "k": "rep",
+         "l": "Pause 10 min"
+        },
+        {
+         "t": "18h05",
+         "k": "app",
+         "l": "Anglais : Apprendre le vocabulaire de la leçon 5",
+         "d": "Pour mercredi 25. Lire 2 fois, cacher, redire à voix haute.",
+         "id": "sarah|2026-11-24|app|anglais-apprendre-le-vocabulaire-de-la-l",
+         "x": 1
+        },
+        {
          "t": "18h40",
          "k": "rel",
          "l": "Relire les leçons",
@@ -3002,6 +1510,14 @@
        ],
        "2026-11-25": [
         {
+         "t": "7h20",
+         "k": "app",
+         "l": "Réciter : Anglais, le vocabulaire de la leçon 5",
+         "d": "5 minutes au petit-déjeuner.",
+         "id": "sarah|2026-11-25|app|reciter-anglais-le-vocabulaire-de-la-lec",
+         "x": 1
+        },
+        {
          "t": "12h00",
          "k": "repas",
          "l": "Déjeuner"
@@ -3013,13 +1529,68 @@
         },
         {
          "t": "13h45",
+         "k": "rev",
+         "l": "SES : préparer le DS (plan + fiche)",
+         "d": "Éval jeudi 26. DS de 2h sur les chapitres 1 et 3",
+         "id": "sarah|2026-11-25|rev|ses-preparer-le-ds-plan-fiche"
+        },
+        {
+         "t": "14h30",
+         "k": "rep",
+         "l": "Pause 10 min"
+        },
+        {
+         "t": "14h40",
+         "k": "rev",
+         "l": "Maths : s’entraîner (exercices)",
+         "d": "Éval jeudi 26. Refaire des exercices sans la correction, puis corriger.",
+         "id": "sarah|2026-11-25|rev|maths-sentrainer-exercices"
+        },
+        {
+         "t": "15h25",
+         "k": "rep",
+         "l": "Pause 10 min"
+        },
+        {
+         "t": "15h35",
+         "k": "rev",
+         "l": "SES : s’entraîner (exercices)",
+         "d": "Éval jeudi 26. Refaire des exercices sans la correction, puis corriger.",
+         "id": "sarah|2026-11-25|rev|ses-sentrainer-exercices"
+        },
+        {
+         "t": "16h20",
+         "k": "rep",
+         "l": "Pause 10 min"
+        },
+        {
+         "t": "16h30",
+         "k": "rev",
+         "l": "Maths : se faire interroger",
+         "d": "Éval jeudi 26. Un parent pose 10 questions à partir de la fiche.",
+         "id": "sarah|2026-11-25|rev|maths-se-faire-interroger"
+        },
+        {
+         "t": "16h50",
+         "k": "rep",
+         "l": "Pause 5 min"
+        },
+        {
+         "t": "16h55",
+         "k": "rev",
+         "l": "SES : se faire interroger",
+         "d": "Éval jeudi 26. Un parent pose 10 questions à partir de la fiche.",
+         "id": "sarah|2026-11-25|rev|ses-se-faire-interroger"
+        },
+        {
+         "t": "17h10",
          "k": "ran",
          "l": "Grand rangement de la chambre (30 min)",
          "d": "Bureau, sol, armoire, linge sale au panier, poubelle vidée.",
          "id": "sarah|2026-11-25|ran|grand-rangement-de-la-chambre-30-min"
         },
         {
-         "t": "17h15",
+         "t": "17h40",
          "k": "rel",
          "l": "Relire les leçons",
          "rel": {
@@ -3035,7 +1606,7 @@
          }
         },
         {
-         "t": "17h30",
+         "t": "17h55",
          "k": "org",
          "l": "Préparer le sac de demain",
          "id": "sarah|2026-11-25|org|preparer-le-sac-de-demain"
@@ -3074,6 +1645,27 @@
          "t": "8h00",
          "k": "repas",
          "l": "Petit-déjeuner (cours à 10h05)"
+        },
+        {
+         "t": "8h30",
+         "k": "rev",
+         "l": "Maths : relire la fiche (10 min)",
+         "d": "Éval aujourd’hui : un dernier coup d’œil, rien de nouveau.",
+         "id": "sarah|2026-11-26|rev|maths-relire-la-fiche-10-min"
+        },
+        {
+         "t": "8h40",
+         "k": "rev",
+         "l": "SES : relire la fiche (10 min)",
+         "d": "Éval aujourd’hui : un dernier coup d’œil, rien de nouveau.",
+         "id": "sarah|2026-11-26|rev|ses-relire-la-fiche-10-min"
+        },
+        {
+         "t": "8h50",
+         "k": "dev",
+         "l": "SNT : Préparer le passage oral sur Internet",
+         "d": "Pour vendredi 27.",
+         "id": "sarah|2026-11-26|dev|snt-preparer-le-passage-oral-sur-interne"
         },
         {
          "t": "17h30",
@@ -3191,6 +1783,18 @@
         },
         {
          "t": "9h15",
+         "k": "dev",
+         "l": "Français : Fiche d'analyse du texte : analyser les quatre mouvements",
+         "d": "Pour lundi 30.",
+         "id": "sarah|2026-11-28|dev|francais-fiche-d-analyse-du-texte-analys"
+        },
+        {
+         "t": "9h45",
+         "k": "rep",
+         "l": "Pause 5 min"
+        },
+        {
+         "t": "9h50",
          "k": "cor",
          "l": "Changer les draps + aspirateur dans la chambre",
          "id": "sarah|2026-11-28|cor|changer-les-draps-aspirateur-dans-la-cha"
@@ -3267,16 +1871,23 @@
         },
         {
          "t": "18h40",
+         "k": "rel",
+         "l": "Relire les leçons",
+         "rel": {
+          "today": [],
+          "tomorrow": [
+           "Français",
+           "Maths"
+          ],
+          "idp": "sarah|2026-11-29|r"
+         }
+        },
+        {
+         "t": "18h55",
          "k": "org",
          "l": "Préparer la semaine (15 min)",
          "d": "Agenda EcoleDirecte, devoirs pour lundi, sac prêt.",
          "id": "sarah|2026-11-29|org|preparer-la-semaine-15-min"
-        },
-        {
-         "t": "18h55",
-         "k": "ran",
-         "l": "Ranger la chambre (10 min)",
-         "id": "sarah|2026-11-29|ran|ranger-la-chambre-10-min"
         },
         {
          "t": "19h15",
@@ -3303,10 +1914,32 @@
       },
       "due": {
        "2026-11-23": [
+        "Maths : Exercices 7 et 11 du polycopié"
+       ],
+       "2026-11-26": [
+        "Évaluation – Maths : Évaluation d'automatismes sur les fiches 1 à 4",
+        "Évaluation – SES : DS de 2h sur les chapitres 1 et 3"
+       ],
+       "2026-11-27": [
+        "SNT : Préparer le passage oral sur Internet"
+       ],
+       "2026-11-30": [
         "Français : Fiche d'analyse du texte : analyser les quatre mouvements"
+       ],
+       "2026-11-25": [
+        "Anglais : Apprendre le vocabulaire de la leçon 5"
        ]
       },
-      "evals": [],
+      "evals": [
+       [
+        "2026-11-26",
+        "Maths : Évaluation d'automatismes sur les fiches 1 à 4"
+       ],
+       [
+        "2026-11-26",
+        "SES : DS de 2h sur les chapitres 1 et 3"
+       ]
+      ],
       "school": {
        "2026-11-23": "Lycée 8h00 – 17h00",
        "2026-11-24": "Lycée 8h00 – 15h15",
@@ -3315,6 +1948,1403 @@
        "2026-11-27": "Lycée 8h00 – 17h00",
        "2026-11-28": "Pas de cours",
        "2026-11-29": "Pas de cours"
+      }
+     }
+    },
+    "notes": []
+   },
+   "source": "auto"
+  },
+  {
+   "week_start": "2026-11-30",
+   "data": {
+    "week_start": "2026-11-30",
+    "title": "Du lundi 30 au dimanche 6 décembre 2026",
+    "days": [
+     {
+      "date": "2026-11-30",
+      "wd": 1,
+      "short": "Lun",
+      "num": 30,
+      "long": "Lundi 30 novembre"
+     },
+     {
+      "date": "2026-12-01",
+      "wd": 2,
+      "short": "Mar",
+      "num": 1,
+      "long": "Mardi 1 décembre"
+     },
+     {
+      "date": "2026-12-02",
+      "wd": 3,
+      "short": "Mer",
+      "num": 2,
+      "long": "Mercredi 2 décembre"
+     },
+     {
+      "date": "2026-12-03",
+      "wd": 4,
+      "short": "Jeu",
+      "num": 3,
+      "long": "Jeudi 3 décembre"
+     },
+     {
+      "date": "2026-12-04",
+      "wd": 5,
+      "short": "Ven",
+      "num": 4,
+      "long": "Vendredi 4 décembre"
+     },
+     {
+      "date": "2026-12-05",
+      "wd": 6,
+      "short": "Sam",
+      "num": 5,
+      "long": "Samedi 5 décembre"
+     },
+     {
+      "date": "2026-12-06",
+      "wd": 0,
+      "short": "Dim",
+      "num": 6,
+      "long": "Dimanche 6 décembre"
+     }
+    ],
+    "children": {
+     "leo": {
+      "blocks": {
+       "2026-11-30": [
+        {
+         "t": "16h55",
+         "k": "rep",
+         "l": "Goûter + pause sans écran",
+         "d": "Souffler 30 minutes avant de s’y mettre."
+        },
+        {
+         "t": "17h25",
+         "k": "dev",
+         "l": "Anglais : Rédiger 10 lignes sur votre dernier voyage",
+         "d": "Pour lundi 30.",
+         "id": "leo|2026-11-30|dev|anglais-rediger-10-lignes-sur-votre-dern"
+        },
+        {
+         "t": "18h40",
+         "k": "rel",
+         "l": "Relire les leçons",
+         "rel": {
+          "today": [
+           "Technologie",
+           "Histoire-Géo",
+           "Français",
+           "Espagnol",
+           "Anglais"
+          ],
+          "tomorrow": [
+           "Éducation musicale",
+           "Maths"
+          ],
+          "idp": "leo|2026-11-30|r"
+         }
+        },
+        {
+         "t": "18h55",
+         "k": "org",
+         "l": "Préparer le sac de demain",
+         "id": "leo|2026-11-30|org|preparer-le-sac-de-demain"
+        },
+        {
+         "t": "19h05",
+         "k": "ran",
+         "l": "Ranger la chambre (10 min)",
+         "id": "leo|2026-11-30|ran|ranger-la-chambre-10-min"
+        },
+        {
+         "t": "19h15",
+         "k": "cor",
+         "l": "Mettre la table",
+         "id": "leo|2026-11-30|cor|mettre-la-table"
+        },
+        {
+         "t": "19h30",
+         "k": "repas",
+         "l": "Dîner"
+        },
+        {
+         "t": "20h30",
+         "k": "dodo",
+         "l": "Écrans coupés, temps calme"
+        },
+        {
+         "t": "21h15",
+         "k": "dodo",
+         "l": "Coucher"
+        }
+       ],
+       "2026-12-01": [
+        {
+         "t": "17h30",
+         "k": "rep",
+         "l": "Goûter + pause sans écran",
+         "d": "Souffler 30 minutes avant de s’y mettre."
+        },
+        {
+         "t": "18h30",
+         "k": "rel",
+         "l": "Relire les leçons",
+         "rel": {
+          "today": [
+           "Éducation musicale",
+           "Maths"
+          ],
+          "tomorrow": [],
+          "idp": "leo|2026-12-01|r"
+         }
+        },
+        {
+         "t": "18h40",
+         "k": "org",
+         "l": "Préparer le sac de sport + sac de demain",
+         "id": "leo|2026-12-01|org|preparer-le-sac-de-sport-sac-de-demain"
+        },
+        {
+         "t": "18h50",
+         "k": "repas",
+         "l": "Dîner léger avant le sport"
+        },
+        {
+         "t": "19h15",
+         "k": "act",
+         "l": "Judo 19h30 – 20h30"
+        },
+        {
+         "t": "20h45",
+         "k": "rep",
+         "l": "Douche + collation"
+        },
+        {
+         "t": "21h30",
+         "k": "dodo",
+         "l": "Coucher (22h au plus tard)"
+        }
+       ],
+       "2026-12-02": [
+        {
+         "t": "8h45",
+         "k": "repas",
+         "l": "Lever + petit-déjeuner"
+        },
+        {
+         "t": "9h15",
+         "k": "ran",
+         "l": "Grand rangement de la chambre (30 min)",
+         "d": "Bureau, sol, armoire, linge sale au panier, poubelle vidée.",
+         "id": "leo|2026-12-02|ran|grand-rangement-de-la-chambre-30-min"
+        },
+        {
+         "t": "12h15",
+         "k": "repas",
+         "l": "Déjeuner"
+        },
+        {
+         "t": "12h45",
+         "k": "cor",
+         "l": "Débarrasser la table + lave-vaisselle",
+         "id": "leo|2026-12-02|cor|debarrasser-la-table-lave-vaisselle"
+        },
+        {
+         "t": "13h00",
+         "k": "rep",
+         "l": "Temps libre"
+        },
+        {
+         "t": "16h00",
+         "k": "rep",
+         "l": "Goûter"
+        },
+        {
+         "t": "17h00",
+         "k": "act",
+         "l": "Cours de piano 17h00 – 18h00"
+        },
+        {
+         "t": "18h40",
+         "k": "rel",
+         "l": "Relire les leçons",
+         "rel": {
+          "today": [],
+          "tomorrow": [
+           "Arts plastiques",
+           "Français",
+           "SVT",
+           "Anglais"
+          ],
+          "idp": "leo|2026-12-02|r"
+         }
+        },
+        {
+         "t": "18h55",
+         "k": "org",
+         "l": "Préparer le sac de demain",
+         "id": "leo|2026-12-02|org|preparer-le-sac-de-demain"
+        },
+        {
+         "t": "19h15",
+         "k": "cor",
+         "l": "Aider à préparer le dîner",
+         "id": "leo|2026-12-02|cor|aider-a-preparer-le-diner"
+        },
+        {
+         "t": "19h30",
+         "k": "repas",
+         "l": "Dîner"
+        },
+        {
+         "t": "20h30",
+         "k": "dodo",
+         "l": "Écrans coupés, temps calme"
+        },
+        {
+         "t": "21h15",
+         "k": "dodo",
+         "l": "Coucher"
+        }
+       ],
+       "2026-12-03": [
+        {
+         "t": "16h55",
+         "k": "rep",
+         "l": "Goûter + pause sans écran",
+         "d": "Souffler 30 minutes avant de s’y mettre."
+        },
+        {
+         "t": "18h40",
+         "k": "rel",
+         "l": "Relire les leçons",
+         "rel": {
+          "today": [
+           "Arts plastiques",
+           "Français",
+           "SVT",
+           "Anglais"
+          ],
+          "tomorrow": [
+           "Physique-Chimie",
+           "Histoire-Géo",
+           "Maths",
+           "Anglais"
+          ],
+          "idp": "leo|2026-12-03|r"
+         }
+        },
+        {
+         "t": "18h55",
+         "k": "org",
+         "l": "Préparer le sac de demain",
+         "id": "leo|2026-12-03|org|preparer-le-sac-de-demain"
+        },
+        {
+         "t": "19h05",
+         "k": "ran",
+         "l": "Ranger la chambre (10 min)",
+         "id": "leo|2026-12-03|ran|ranger-la-chambre-10-min"
+        },
+        {
+         "t": "19h15",
+         "k": "cor",
+         "l": "Mettre la table",
+         "id": "leo|2026-12-03|cor|mettre-la-table"
+        },
+        {
+         "t": "19h30",
+         "k": "repas",
+         "l": "Dîner"
+        },
+        {
+         "t": "20h30",
+         "k": "dodo",
+         "l": "Écrans coupés, temps calme"
+        },
+        {
+         "t": "21h15",
+         "k": "dodo",
+         "l": "Coucher"
+        }
+       ],
+       "2026-12-04": [
+        {
+         "t": "16h55",
+         "k": "rep",
+         "l": "Goûter + pause sans écran",
+         "d": "Souffler 30 minutes avant de s’y mettre."
+        },
+        {
+         "t": "17h25",
+         "k": "dev",
+         "l": "Piano : travailler le morceau (20 min)",
+         "d": "Pour samedi 5.",
+         "id": "leo|2026-12-04|dev|piano-travailler-le-morceau-20-min"
+        },
+        {
+         "t": "18h40",
+         "k": "rel",
+         "l": "Relire les leçons",
+         "rel": {
+          "today": [
+           "Physique-Chimie",
+           "Histoire-Géo",
+           "Maths",
+           "Anglais"
+          ],
+          "tomorrow": [],
+          "idp": "leo|2026-12-04|r"
+         }
+        },
+        {
+         "t": "18h55",
+         "k": "ran",
+         "l": "Ranger la chambre (10 min)",
+         "id": "leo|2026-12-04|ran|ranger-la-chambre-10-min"
+        },
+        {
+         "t": "19h15",
+         "k": "cor",
+         "l": "Débarrasser + lave-vaisselle",
+         "id": "leo|2026-12-04|cor|debarrasser-lave-vaisselle"
+        },
+        {
+         "t": "19h30",
+         "k": "repas",
+         "l": "Dîner"
+        },
+        {
+         "t": "20h30",
+         "k": "dodo",
+         "l": "Écrans coupés, temps calme"
+        },
+        {
+         "t": "21h15",
+         "k": "dodo",
+         "l": "Coucher"
+        }
+       ],
+       "2026-12-05": [
+        {
+         "t": "8h45",
+         "k": "repas",
+         "l": "Lever + petit-déjeuner"
+        },
+        {
+         "t": "9h15",
+         "k": "cor",
+         "l": "Changer les draps + aspirateur dans la chambre",
+         "id": "leo|2026-12-05|cor|changer-les-draps-aspirateur-dans-la-cha"
+        },
+        {
+         "t": "9h45",
+         "k": "act",
+         "l": "Football 10h00 – 12h00"
+        },
+        {
+         "t": "12h15",
+         "k": "repas",
+         "l": "Déjeuner"
+        },
+        {
+         "t": "12h45",
+         "k": "cor",
+         "l": "Débarrasser la table + lave-vaisselle",
+         "id": "leo|2026-12-05|cor|debarrasser-la-table-lave-vaisselle"
+        },
+        {
+         "t": "13h00",
+         "k": "rep",
+         "l": "Temps libre"
+        },
+        {
+         "t": "16h00",
+         "k": "rep",
+         "l": "Goûter"
+        },
+        {
+         "t": "19h15",
+         "k": "cor",
+         "l": "Aider à préparer le dîner",
+         "id": "leo|2026-12-05|cor|aider-a-preparer-le-diner"
+        },
+        {
+         "t": "19h30",
+         "k": "repas",
+         "l": "Dîner"
+        },
+        {
+         "t": "20h30",
+         "k": "dodo",
+         "l": "Écrans coupés, temps calme"
+        },
+        {
+         "t": "21h15",
+         "k": "dodo",
+         "l": "Coucher"
+        }
+       ],
+       "2026-12-06": [
+        {
+         "t": "8h45",
+         "k": "repas",
+         "l": "Lever + petit-déjeuner"
+        },
+        {
+         "t": "12h15",
+         "k": "repas",
+         "l": "Déjeuner"
+        },
+        {
+         "t": "12h45",
+         "k": "cor",
+         "l": "Débarrasser la table + lave-vaisselle",
+         "id": "leo|2026-12-06|cor|debarrasser-la-table-lave-vaisselle"
+        },
+        {
+         "t": "13h00",
+         "k": "rep",
+         "l": "Temps libre"
+        },
+        {
+         "t": "16h00",
+         "k": "rep",
+         "l": "Goûter"
+        },
+        {
+         "t": "18h40",
+         "k": "org",
+         "l": "Préparer la semaine (15 min)",
+         "d": "Agenda EcoleDirecte, devoirs pour lundi, sac prêt.",
+         "id": "leo|2026-12-06|org|preparer-la-semaine-15-min"
+        },
+        {
+         "t": "18h55",
+         "k": "ran",
+         "l": "Ranger la chambre (10 min)",
+         "id": "leo|2026-12-06|ran|ranger-la-chambre-10-min"
+        },
+        {
+         "t": "19h15",
+         "k": "cor",
+         "l": "Mettre la table",
+         "id": "leo|2026-12-06|cor|mettre-la-table"
+        },
+        {
+         "t": "19h30",
+         "k": "repas",
+         "l": "Dîner"
+        },
+        {
+         "t": "20h30",
+         "k": "dodo",
+         "l": "Écrans coupés, temps calme"
+        },
+        {
+         "t": "21h15",
+         "k": "dodo",
+         "l": "Coucher"
+        }
+       ]
+      },
+      "due": {
+       "2026-11-30": [
+        "Anglais : Rédiger 10 lignes sur votre dernier voyage"
+       ],
+       "2026-12-05": [
+        "Piano : travailler le morceau (20 min)"
+       ]
+      },
+      "evals": [],
+      "school": {
+       "2026-11-30": "Collège 8h00 – 16h25",
+       "2026-12-01": "Collège 8h00 – 17h00",
+       "2026-12-02": "Pas de cours",
+       "2026-12-03": "Collège 8h00 – 16h25",
+       "2026-12-04": "Collège 8h00 – 16h25",
+       "2026-12-05": "Pas de cours",
+       "2026-12-06": "Pas de cours"
+      }
+     },
+     "ines": {
+      "blocks": {
+       "2026-11-30": [
+        {
+         "t": "16h55",
+         "k": "rep",
+         "l": "Goûter + pause sans écran",
+         "d": "Souffler 30 minutes avant de s’y mettre."
+        },
+        {
+         "t": "17h25",
+         "k": "dev",
+         "l": "Anglais : Rédiger 10 lignes sur votre dernier voyage",
+         "d": "Pour lundi 30.",
+         "id": "ines|2026-11-30|dev|anglais-rediger-10-lignes-sur-votre-dern"
+        },
+        {
+         "t": "18h40",
+         "k": "rel",
+         "l": "Relire les leçons",
+         "rel": {
+          "today": [
+           "Technologie",
+           "Histoire-Géo",
+           "Français",
+           "Espagnol",
+           "Anglais"
+          ],
+          "tomorrow": [
+           "Éducation musicale",
+           "Maths"
+          ],
+          "idp": "ines|2026-11-30|r"
+         }
+        },
+        {
+         "t": "18h55",
+         "k": "org",
+         "l": "Préparer le sac de demain",
+         "id": "ines|2026-11-30|org|preparer-le-sac-de-demain"
+        },
+        {
+         "t": "19h05",
+         "k": "ran",
+         "l": "Ranger la chambre (10 min)",
+         "id": "ines|2026-11-30|ran|ranger-la-chambre-10-min"
+        },
+        {
+         "t": "19h15",
+         "k": "cor",
+         "l": "Débarrasser + lave-vaisselle",
+         "id": "ines|2026-11-30|cor|debarrasser-lave-vaisselle"
+        },
+        {
+         "t": "19h30",
+         "k": "repas",
+         "l": "Dîner"
+        },
+        {
+         "t": "20h30",
+         "k": "dodo",
+         "l": "Écrans coupés, temps calme"
+        },
+        {
+         "t": "21h15",
+         "k": "dodo",
+         "l": "Coucher"
+        }
+       ],
+       "2026-12-01": [
+        {
+         "t": "17h30",
+         "k": "rep",
+         "l": "Goûter + pause sans écran",
+         "d": "Souffler 30 minutes avant de s’y mettre."
+        },
+        {
+         "t": "17h45",
+         "k": "rel",
+         "l": "Relire les leçons",
+         "rel": {
+          "today": [
+           "Éducation musicale",
+           "Maths"
+          ],
+          "tomorrow": [],
+          "idp": "ines|2026-12-01|r"
+         }
+        },
+        {
+         "t": "17h55",
+         "k": "org",
+         "l": "Préparer le sac de sport + sac de demain",
+         "id": "ines|2026-12-01|org|preparer-le-sac-de-sport-sac-de-demain"
+        },
+        {
+         "t": "18h05",
+         "k": "repas",
+         "l": "En-cas avant le sport"
+        },
+        {
+         "t": "18h15",
+         "k": "act",
+         "l": "Basket 18h30 – 20h00"
+        },
+        {
+         "t": "20h15",
+         "k": "repas",
+         "l": "Dîner (préparé à l’avance) + douche"
+        },
+        {
+         "t": "21h30",
+         "k": "dodo",
+         "l": "Coucher (22h au plus tard)"
+        }
+       ],
+       "2026-12-02": [
+        {
+         "t": "8h45",
+         "k": "repas",
+         "l": "Lever + petit-déjeuner"
+        },
+        {
+         "t": "9h15",
+         "k": "ran",
+         "l": "Grand rangement de la chambre (30 min)",
+         "d": "Bureau, sol, armoire, linge sale au panier, poubelle vidée.",
+         "id": "ines|2026-12-02|ran|grand-rangement-de-la-chambre-30-min"
+        },
+        {
+         "t": "12h15",
+         "k": "repas",
+         "l": "Déjeuner"
+        },
+        {
+         "t": "12h45",
+         "k": "cor",
+         "l": "Débarrasser la table + lave-vaisselle",
+         "id": "ines|2026-12-02|cor|debarrasser-la-table-lave-vaisselle"
+        },
+        {
+         "t": "13h00",
+         "k": "rep",
+         "l": "Temps libre"
+        },
+        {
+         "t": "16h00",
+         "k": "rep",
+         "l": "Goûter"
+        },
+        {
+         "t": "18h40",
+         "k": "rel",
+         "l": "Relire les leçons",
+         "rel": {
+          "today": [],
+          "tomorrow": [
+           "Arts plastiques",
+           "Français",
+           "SVT",
+           "Anglais"
+          ],
+          "idp": "ines|2026-12-02|r"
+         }
+        },
+        {
+         "t": "18h55",
+         "k": "org",
+         "l": "Préparer le sac de demain",
+         "id": "ines|2026-12-02|org|preparer-le-sac-de-demain"
+        },
+        {
+         "t": "19h15",
+         "k": "cor",
+         "l": "Mettre la table",
+         "id": "ines|2026-12-02|cor|mettre-la-table"
+        },
+        {
+         "t": "19h30",
+         "k": "repas",
+         "l": "Dîner"
+        },
+        {
+         "t": "20h30",
+         "k": "dodo",
+         "l": "Écrans coupés, temps calme"
+        },
+        {
+         "t": "21h15",
+         "k": "dodo",
+         "l": "Coucher"
+        }
+       ],
+       "2026-12-03": [
+        {
+         "t": "16h55",
+         "k": "rep",
+         "l": "Goûter + pause sans écran",
+         "d": "Souffler 30 minutes avant de s’y mettre."
+        },
+        {
+         "t": "18h00",
+         "k": "rel",
+         "l": "Relire les leçons",
+         "rel": {
+          "today": [
+           "Arts plastiques",
+           "Français",
+           "SVT",
+           "Anglais"
+          ],
+          "tomorrow": [
+           "Physique-Chimie",
+           "Histoire-Géo",
+           "Maths",
+           "Anglais"
+          ],
+          "idp": "ines|2026-12-03|r"
+         }
+        },
+        {
+         "t": "18h10",
+         "k": "org",
+         "l": "Préparer le sac de sport + sac de demain",
+         "id": "ines|2026-12-03|org|preparer-le-sac-de-sport-sac-de-demain"
+        },
+        {
+         "t": "18h20",
+         "k": "repas",
+         "l": "Dîner léger avant le sport"
+        },
+        {
+         "t": "18h45",
+         "k": "act",
+         "l": "Basket 19h00 – 20h30"
+        },
+        {
+         "t": "20h45",
+         "k": "rep",
+         "l": "Douche + collation"
+        },
+        {
+         "t": "21h30",
+         "k": "dodo",
+         "l": "Coucher (22h au plus tard)"
+        }
+       ],
+       "2026-12-04": [
+        {
+         "t": "16h55",
+         "k": "rep",
+         "l": "Goûter + pause sans écran",
+         "d": "Souffler 30 minutes avant de s’y mettre."
+        },
+        {
+         "t": "18h40",
+         "k": "rel",
+         "l": "Relire les leçons",
+         "rel": {
+          "today": [
+           "Physique-Chimie",
+           "Histoire-Géo",
+           "Maths",
+           "Anglais"
+          ],
+          "tomorrow": [],
+          "idp": "ines|2026-12-04|r"
+         }
+        },
+        {
+         "t": "18h55",
+         "k": "ran",
+         "l": "Ranger la chambre (10 min)",
+         "id": "ines|2026-12-04|ran|ranger-la-chambre-10-min"
+        },
+        {
+         "t": "19h15",
+         "k": "cor",
+         "l": "Aider à préparer le dîner",
+         "id": "ines|2026-12-04|cor|aider-a-preparer-le-diner"
+        },
+        {
+         "t": "19h30",
+         "k": "repas",
+         "l": "Dîner"
+        },
+        {
+         "t": "20h30",
+         "k": "dodo",
+         "l": "Écrans coupés, temps calme"
+        },
+        {
+         "t": "21h15",
+         "k": "dodo",
+         "l": "Coucher"
+        }
+       ],
+       "2026-12-05": [
+        {
+         "t": "8h45",
+         "k": "repas",
+         "l": "Lever + petit-déjeuner"
+        },
+        {
+         "t": "9h15",
+         "k": "cor",
+         "l": "Changer les draps + aspirateur dans la chambre",
+         "id": "ines|2026-12-05|cor|changer-les-draps-aspirateur-dans-la-cha"
+        },
+        {
+         "t": "12h15",
+         "k": "repas",
+         "l": "Déjeuner"
+        },
+        {
+         "t": "12h45",
+         "k": "cor",
+         "l": "Débarrasser la table + lave-vaisselle",
+         "id": "ines|2026-12-05|cor|debarrasser-la-table-lave-vaisselle"
+        },
+        {
+         "t": "13h00",
+         "k": "rep",
+         "l": "Temps libre"
+        },
+        {
+         "t": "16h00",
+         "k": "rep",
+         "l": "Goûter"
+        },
+        {
+         "t": "19h15",
+         "k": "cor",
+         "l": "Mettre la table",
+         "id": "ines|2026-12-05|cor|mettre-la-table"
+        },
+        {
+         "t": "19h30",
+         "k": "repas",
+         "l": "Dîner"
+        },
+        {
+         "t": "20h30",
+         "k": "dodo",
+         "l": "Écrans coupés, temps calme"
+        },
+        {
+         "t": "21h15",
+         "k": "dodo",
+         "l": "Coucher"
+        }
+       ],
+       "2026-12-06": [
+        {
+         "t": "8h45",
+         "k": "repas",
+         "l": "Lever + petit-déjeuner"
+        },
+        {
+         "t": "12h15",
+         "k": "repas",
+         "l": "Déjeuner"
+        },
+        {
+         "t": "12h45",
+         "k": "cor",
+         "l": "Débarrasser la table + lave-vaisselle",
+         "id": "ines|2026-12-06|cor|debarrasser-la-table-lave-vaisselle"
+        },
+        {
+         "t": "13h00",
+         "k": "rep",
+         "l": "Temps libre"
+        },
+        {
+         "t": "16h00",
+         "k": "rep",
+         "l": "Goûter"
+        },
+        {
+         "t": "18h40",
+         "k": "org",
+         "l": "Préparer la semaine (15 min)",
+         "d": "Agenda EcoleDirecte, devoirs pour lundi, sac prêt.",
+         "id": "ines|2026-12-06|org|preparer-la-semaine-15-min"
+        },
+        {
+         "t": "18h55",
+         "k": "ran",
+         "l": "Ranger la chambre (10 min)",
+         "id": "ines|2026-12-06|ran|ranger-la-chambre-10-min"
+        },
+        {
+         "t": "19h15",
+         "k": "cor",
+         "l": "Débarrasser + lave-vaisselle",
+         "id": "ines|2026-12-06|cor|debarrasser-lave-vaisselle"
+        },
+        {
+         "t": "19h30",
+         "k": "repas",
+         "l": "Dîner"
+        },
+        {
+         "t": "20h30",
+         "k": "dodo",
+         "l": "Écrans coupés, temps calme"
+        },
+        {
+         "t": "21h15",
+         "k": "dodo",
+         "l": "Coucher"
+        }
+       ]
+      },
+      "due": {
+       "2026-11-30": [
+        "Anglais : Rédiger 10 lignes sur votre dernier voyage"
+       ]
+      },
+      "evals": [],
+      "school": {
+       "2026-11-30": "Collège 8h00 – 16h25",
+       "2026-12-01": "Collège 8h00 – 17h00",
+       "2026-12-02": "Pas de cours",
+       "2026-12-03": "Collège 8h00 – 16h25",
+       "2026-12-04": "Collège 8h00 – 16h25",
+       "2026-12-05": "Pas de cours",
+       "2026-12-06": "Pas de cours"
+      }
+     },
+     "sarah": {
+      "blocks": {
+       "2026-11-30": [
+        {
+         "t": "17h30",
+         "k": "rep",
+         "l": "Goûter + pause sans écran",
+         "d": "Souffler 30 minutes avant de s’y mettre."
+        },
+        {
+         "t": "18h00",
+         "k": "dev",
+         "l": "Français : Fiche d'analyse du texte : analyser les quatre mouvements",
+         "d": "Pour lundi 30.",
+         "id": "sarah|2026-11-30|dev|francais-fiche-d-analyse-du-texte-analys"
+        },
+        {
+         "t": "18h40",
+         "k": "rel",
+         "l": "Relire les leçons",
+         "rel": {
+          "today": [
+           "Français",
+           "Maths"
+          ],
+          "tomorrow": [
+           "SVT",
+           "Physique-Chimie",
+           "Maths"
+          ],
+          "idp": "sarah|2026-11-30|r"
+         }
+        },
+        {
+         "t": "18h55",
+         "k": "org",
+         "l": "Préparer le sac de demain",
+         "id": "sarah|2026-11-30|org|preparer-le-sac-de-demain"
+        },
+        {
+         "t": "19h05",
+         "k": "ran",
+         "l": "Ranger la chambre (10 min)",
+         "id": "sarah|2026-11-30|ran|ranger-la-chambre-10-min"
+        },
+        {
+         "t": "19h15",
+         "k": "cor",
+         "l": "Aider à préparer le dîner",
+         "id": "sarah|2026-11-30|cor|aider-a-preparer-le-diner"
+        },
+        {
+         "t": "19h30",
+         "k": "repas",
+         "l": "Dîner"
+        },
+        {
+         "t": "20h45",
+         "k": "lec",
+         "l": "Lecture personnelle : 20 pages (au lit)",
+         "d": "Lecture calme avant de dormir.",
+         "id": "sarah|2026-11-30|lec|lecture-personnelle-20-pages-au-lit"
+        },
+        {
+         "t": "21h30",
+         "k": "dodo",
+         "l": "Coucher"
+        }
+       ],
+       "2026-12-01": [
+        {
+         "t": "15h45",
+         "k": "rep",
+         "l": "Goûter + pause sans écran",
+         "d": "Souffler 30 minutes avant de s’y mettre."
+        },
+        {
+         "t": "18h40",
+         "k": "rel",
+         "l": "Relire les leçons",
+         "rel": {
+          "today": [
+           "SVT",
+           "Physique-Chimie",
+           "Maths"
+          ],
+          "tomorrow": [
+           "Anglais",
+           "Maths"
+          ],
+          "idp": "sarah|2026-12-01|r"
+         }
+        },
+        {
+         "t": "18h55",
+         "k": "org",
+         "l": "Préparer le sac de demain",
+         "id": "sarah|2026-12-01|org|preparer-le-sac-de-demain"
+        },
+        {
+         "t": "19h05",
+         "k": "ran",
+         "l": "Ranger la chambre (10 min)",
+         "id": "sarah|2026-12-01|ran|ranger-la-chambre-10-min"
+        },
+        {
+         "t": "19h15",
+         "k": "cor",
+         "l": "Mettre la table",
+         "id": "sarah|2026-12-01|cor|mettre-la-table"
+        },
+        {
+         "t": "19h30",
+         "k": "repas",
+         "l": "Dîner"
+        },
+        {
+         "t": "20h45",
+         "k": "lec",
+         "l": "Lecture personnelle : 20 pages (au lit)",
+         "d": "Lecture calme avant de dormir.",
+         "id": "sarah|2026-12-01|lec|lecture-personnelle-20-pages-au-lit"
+        },
+        {
+         "t": "21h30",
+         "k": "dodo",
+         "l": "Coucher"
+        }
+       ],
+       "2026-12-02": [
+        {
+         "t": "12h00",
+         "k": "repas",
+         "l": "Déjeuner"
+        },
+        {
+         "t": "12h45",
+         "k": "rep",
+         "l": "Repos"
+        },
+        {
+         "t": "13h45",
+         "k": "ran",
+         "l": "Grand rangement de la chambre (30 min)",
+         "d": "Bureau, sol, armoire, linge sale au panier, poubelle vidée.",
+         "id": "sarah|2026-12-02|ran|grand-rangement-de-la-chambre-30-min"
+        },
+        {
+         "t": "17h15",
+         "k": "rel",
+         "l": "Relire les leçons",
+         "rel": {
+          "today": [
+           "Anglais",
+           "Maths"
+          ],
+          "tomorrow": [
+           "Français",
+           "Histoire-Géo"
+          ],
+          "idp": "sarah|2026-12-02|r"
+         }
+        },
+        {
+         "t": "17h30",
+         "k": "org",
+         "l": "Préparer le sac de demain",
+         "id": "sarah|2026-12-02|org|preparer-le-sac-de-demain"
+        },
+        {
+         "t": "18h00",
+         "k": "act",
+         "l": "Théâtre 18h00 – 19h00"
+        },
+        {
+         "t": "19h15",
+         "k": "cor",
+         "l": "Débarrasser + lave-vaisselle",
+         "id": "sarah|2026-12-02|cor|debarrasser-lave-vaisselle"
+        },
+        {
+         "t": "19h30",
+         "k": "repas",
+         "l": "Dîner"
+        },
+        {
+         "t": "20h45",
+         "k": "lec",
+         "l": "Lecture personnelle : 20 pages (au lit)",
+         "d": "Lecture calme avant de dormir.",
+         "id": "sarah|2026-12-02|lec|lecture-personnelle-20-pages-au-lit"
+        },
+        {
+         "t": "21h30",
+         "k": "dodo",
+         "l": "Coucher"
+        }
+       ],
+       "2026-12-03": [
+        {
+         "t": "8h00",
+         "k": "repas",
+         "l": "Petit-déjeuner (cours à 10h05)"
+        },
+        {
+         "t": "17h30",
+         "k": "rep",
+         "l": "Goûter + pause sans écran",
+         "d": "Souffler 30 minutes avant de s’y mettre."
+        },
+        {
+         "t": "18h40",
+         "k": "rel",
+         "l": "Relire les leçons",
+         "rel": {
+          "today": [
+           "Français",
+           "Histoire-Géo"
+          ],
+          "tomorrow": [
+           "Allemand",
+           "SES",
+           "SNT"
+          ],
+          "idp": "sarah|2026-12-03|r"
+         }
+        },
+        {
+         "t": "18h55",
+         "k": "org",
+         "l": "Préparer le sac de demain",
+         "id": "sarah|2026-12-03|org|preparer-le-sac-de-demain"
+        },
+        {
+         "t": "19h05",
+         "k": "ran",
+         "l": "Ranger la chambre (10 min)",
+         "id": "sarah|2026-12-03|ran|ranger-la-chambre-10-min"
+        },
+        {
+         "t": "19h15",
+         "k": "cor",
+         "l": "Aider à préparer le dîner",
+         "id": "sarah|2026-12-03|cor|aider-a-preparer-le-diner"
+        },
+        {
+         "t": "19h30",
+         "k": "repas",
+         "l": "Dîner"
+        },
+        {
+         "t": "20h45",
+         "k": "lec",
+         "l": "Lecture personnelle : 20 pages (au lit)",
+         "d": "Lecture calme avant de dormir.",
+         "id": "sarah|2026-12-03|lec|lecture-personnelle-20-pages-au-lit"
+        },
+        {
+         "t": "21h30",
+         "k": "dodo",
+         "l": "Coucher"
+        }
+       ],
+       "2026-12-04": [
+        {
+         "t": "17h30",
+         "k": "rep",
+         "l": "Goûter + pause sans écran",
+         "d": "Souffler 30 minutes avant de s’y mettre."
+        },
+        {
+         "t": "18h40",
+         "k": "rel",
+         "l": "Relire les leçons",
+         "rel": {
+          "today": [
+           "Allemand",
+           "SES",
+           "SNT"
+          ],
+          "tomorrow": [],
+          "idp": "sarah|2026-12-04|r"
+         }
+        },
+        {
+         "t": "18h55",
+         "k": "ran",
+         "l": "Ranger la chambre (10 min)",
+         "id": "sarah|2026-12-04|ran|ranger-la-chambre-10-min"
+        },
+        {
+         "t": "19h15",
+         "k": "cor",
+         "l": "Mettre la table",
+         "id": "sarah|2026-12-04|cor|mettre-la-table"
+        },
+        {
+         "t": "19h30",
+         "k": "repas",
+         "l": "Dîner"
+        },
+        {
+         "t": "20h45",
+         "k": "dodo",
+         "l": "Écrans coupés, temps calme"
+        },
+        {
+         "t": "21h30",
+         "k": "dodo",
+         "l": "Coucher"
+        }
+       ],
+       "2026-12-05": [
+        {
+         "t": "8h45",
+         "k": "repas",
+         "l": "Lever + petit-déjeuner"
+        },
+        {
+         "t": "9h15",
+         "k": "cor",
+         "l": "Changer les draps + aspirateur dans la chambre",
+         "id": "sarah|2026-12-05|cor|changer-les-draps-aspirateur-dans-la-cha"
+        },
+        {
+         "t": "12h15",
+         "k": "repas",
+         "l": "Déjeuner"
+        },
+        {
+         "t": "12h45",
+         "k": "cor",
+         "l": "Débarrasser la table + lave-vaisselle",
+         "id": "sarah|2026-12-05|cor|debarrasser-la-table-lave-vaisselle"
+        },
+        {
+         "t": "13h00",
+         "k": "rep",
+         "l": "Temps libre"
+        },
+        {
+         "t": "16h00",
+         "k": "rep",
+         "l": "Goûter"
+        },
+        {
+         "t": "19h15",
+         "k": "cor",
+         "l": "Débarrasser + lave-vaisselle",
+         "id": "sarah|2026-12-05|cor|debarrasser-lave-vaisselle"
+        },
+        {
+         "t": "19h30",
+         "k": "repas",
+         "l": "Dîner"
+        },
+        {
+         "t": "20h45",
+         "k": "dodo",
+         "l": "Écrans coupés, temps calme"
+        },
+        {
+         "t": "21h30",
+         "k": "dodo",
+         "l": "Coucher"
+        }
+       ],
+       "2026-12-06": [
+        {
+         "t": "8h45",
+         "k": "repas",
+         "l": "Lever + petit-déjeuner"
+        },
+        {
+         "t": "12h15",
+         "k": "repas",
+         "l": "Déjeuner"
+        },
+        {
+         "t": "12h45",
+         "k": "cor",
+         "l": "Débarrasser la table + lave-vaisselle",
+         "id": "sarah|2026-12-06|cor|debarrasser-la-table-lave-vaisselle"
+        },
+        {
+         "t": "13h00",
+         "k": "rep",
+         "l": "Temps libre"
+        },
+        {
+         "t": "16h00",
+         "k": "rep",
+         "l": "Goûter"
+        },
+        {
+         "t": "18h40",
+         "k": "org",
+         "l": "Préparer la semaine (15 min)",
+         "d": "Agenda EcoleDirecte, devoirs pour lundi, sac prêt.",
+         "id": "sarah|2026-12-06|org|preparer-la-semaine-15-min"
+        },
+        {
+         "t": "18h55",
+         "k": "ran",
+         "l": "Ranger la chambre (10 min)",
+         "id": "sarah|2026-12-06|ran|ranger-la-chambre-10-min"
+        },
+        {
+         "t": "19h15",
+         "k": "cor",
+         "l": "Aider à préparer le dîner",
+         "id": "sarah|2026-12-06|cor|aider-a-preparer-le-diner"
+        },
+        {
+         "t": "19h30",
+         "k": "repas",
+         "l": "Dîner"
+        },
+        {
+         "t": "20h45",
+         "k": "dodo",
+         "l": "Écrans coupés, temps calme"
+        },
+        {
+         "t": "21h30",
+         "k": "dodo",
+         "l": "Coucher"
+        }
+       ]
+      },
+      "due": {
+       "2026-11-30": [
+        "Français : Fiche d'analyse du texte : analyser les quatre mouvements"
+       ]
+      },
+      "evals": [],
+      "school": {
+       "2026-11-30": "Lycée 8h00 – 17h00",
+       "2026-12-01": "Lycée 8h00 – 15h15",
+       "2026-12-02": "Lycée 8h00 – 11h00",
+       "2026-12-03": "Lycée 10h05 – 17h00",
+       "2026-12-04": "Lycée 8h00 – 17h00",
+       "2026-12-05": "Pas de cours",
+       "2026-12-06": "Pas de cours"
       }
      }
     },
@@ -3339,7 +3369,7 @@
  "checks": {},
  "sync": {
   "status": "ok",
-  "ran_at": "2026-11-22T17:05:00",
+  "ran_at": "2026-11-23T17:05:00",
   "message": "Démo : données fictives."
  },
  "ideas": [
@@ -3349,7 +3379,7 @@
    "kind": "sortie",
    "title": "Cinéma entre amis",
    "detail": "Séance de l’après-midi",
-   "date": "2026-11-21",
+   "date": "2026-11-28",
    "time": "15h00"
   },
   {

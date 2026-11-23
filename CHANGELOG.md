@@ -5,6 +5,15 @@ Numérotation : `MAJEUR.MINEUR.CORRECTIF` (ex. 0.2.1).
 - **mineur** (0.**2**.0) : une nouveauté (un réglage, un écran, une règle de planning) ;
 - **majeur** (**1**.0.0) : la version jugée stable après plusieurs semaines d'usage réel.
 
+## [0.2.1] – 23 novembre 2026
+
+- Les devoirs ajoutés à la main sont aussi placés dans les semaines verrouillées (faites à la main),
+  sans toucher au reste de la journée.
+- Choix « jour où le faire / jour où le rendre » dans « Ajouter un devoir » et dans la saisie rapide
+  (par défaut : jour où le faire), et bouton pour décaler d'un jour les devoirs déjà saisis.
+- Un devoir dont l'échéance est aujourd'hui est placé le jour même ; une durée écrite (« 15 mins ») est respectée.
+- Sans matière, le libellé n'affiche plus « Devoir : ».
+
 ## [0.2.0] – 22 novembre 2026
 
 - **Vue à 3 semaines** : boutons « Semaine dernière », « Cette semaine », « Semaine prochaine » ;

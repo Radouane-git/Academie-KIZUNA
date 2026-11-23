@@ -261,24 +261,24 @@ function renderParents(noFam){
   var nd=addDays(TODAY,1);
   h+='<form class="card f" id="addhw"><h3>Ajouter un devoir</h3><p>Pour un devoir absent d’EcoleDirecte (cours de soutien, cours de langue…). Il apparaît tout de suite dans « Pour demain » et sera placé dans le planning à la prochaine synchronisation.</p>';
   h+='<label for="x-child">Enfant<select id="x-child">'+children().map(function(c){return '<option value="'+esc(c.id)+'">'+esc(c.name)+'</option>';}).join("")+'<option value="tous">Tous</option></select></label>';
-  h+='<label for="x-due">À rendre le<input id="x-due" type="date" value="'+nd+'" required></label>';
+  h+='<div class="cols" style="grid-template-columns:1fr 1fr"><label for="x-due">Date<input id="x-due" type="date" value="'+nd+'" required></label><label for="x-sem">Cette date est<select id="x-sem"><option value="faire">le jour où le faire</option><option value="rendre">le jour où le rendre</option></select></label></div>';
   h+='<label for="x-subj">Matière<input id="x-subj" type="text" placeholder="ex. Français"></label>';
   h+='<label for="x-text">Consigne<textarea id="x-text" required placeholder="ex. Lire 20 pages et faire un résumé de 10 lignes"></textarea></label>';
   h+='<label for="x-kind">Type<select id="x-kind"><option value="dev">Devoir à faire</option><option value="app">Leçon à apprendre</option><option value="lec">Lecture</option><option value="rev">Évaluation</option></select></label>';
   h+='<button class="btn" type="submit">Ajouter</button>'+msgHtml("addhw")+'</form>';
   // liste des ajouts
   var up=S.extras.filter(function(e){return e.due>=TODAY;});
-  h+='<div class="card"><h3>Devoirs ajoutés à la main</h3>'+(up.length?up.map(function(e){var c=child(e.child);return '<div class="xl"><span><b>'+esc(c?c.name:"Tous")+'</b> · '+esc(fmtDate(e.due))+'<br>'+esc((e.subject?e.subject+" : ":"")+e.text)+'</span><button class="btn sec" data-del="'+esc(e.id)+'">Supprimer</button></div>';}).join(""):'<p class="none">Aucun pour le moment.</p>')+'</div>';
+  h+='<div class="card"><h3>Devoirs ajoutés à la main</h3>'+(up.length?'<p>La date affichée est le jour de <b>rendu</b> : le devoir est placé avant, en général la veille.</p><button class="btn sec" type="button" id="shift-extras">Mes dates étaient des jours « à faire » : tout décaler d’un jour</button>'+msgHtml("shift"):'')+(up.length?up.map(function(e){var c=child(e.child);return '<div class="xl"><span><b>'+esc(c?c.name:"Tous")+'</b> · à rendre le '+esc(fmtDate(e.due))+'<br>'+esc((e.subject?e.subject+" : ":"")+e.text)+'</span><button class="btn sec" data-del="'+esc(e.id)+'">Supprimer</button></div>';}).join(""):'<p class="none">Aucun pour le moment.</p>')+'</div>';
   // saisie rapide
   h+='<form class="card f" id="bulk" style="grid-column:1/-1"><h3>Saisie rapide de devoirs</h3><p>Collez ou tapez les devoirs comme vous les recevez (M. Viste, mosquée…). Une ligne avec le prénom (ou « tous »), puis une ligne par date et un devoir par ligne. Le planificateur les répartit à la prochaine synchronisation.</p>';
   h+='<label for="bulk-text">Devoirs<textarea id="bulk-text" spellcheck="true" style="min-height:200px" placeholder="Aliya&#10;lundi 30/11 :&#10;  * lire 20 pages et faire un résumé de 10 lignes&#10;  * apprendre le vocabulaire&#10;dimanche 06/12 :&#10;  * Allemand : Bled page 12&#10;&#10;Imrane, Nahila&#10;samedi 05/12 : arabe, lecture + vocabulaire">'+esc(S.bulk.text)+'</textarea></label>';
-  h+='<div class="cols" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr))"><label for="bulk-child">Enfant si aucun prénom n’est écrit<select id="bulk-child"><option value="">—</option>'+children().map(function(c){return '<option value="'+esc(c.id)+'">'+esc(c.name)+'</option>';}).join("")+'<option value="tous">Tous</option></select></label><label for="bulk-subj">Matière par défaut<input id="bulk-subj" type="text" placeholder="ex. M. Viste"></label></div>';
+  h+='<div class="cols" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr))"><label for="bulk-child">Enfant si aucun prénom n’est écrit<select id="bulk-child"><option value="">—</option>'+children().map(function(c){return '<option value="'+esc(c.id)+'">'+esc(c.name)+'</option>';}).join("")+'<option value="tous">Tous</option></select></label><label for="bulk-subj">Matière par défaut<input id="bulk-subj" type="text" placeholder="ex. M. Viste"></label><label for="bulk-sem">Les dates indiquent<select id="bulk-sem"><option value="faire"'+(S.bulk.sem!=="rendre"?" selected":"")+'>le jour où le faire</option><option value="rendre"'+(S.bulk.sem==="rendre"?" selected":"")+'>le jour où le rendre</option></select></label></div>';
   h+='<button class="btn sec" type="submit">Voir l’aperçu</button>';
   if(S.bulk.items){
    if(!S.bulk.items.length)h+='<p class="msg err">Aucun devoir reconnu : vérifiez qu’il y a un prénom et des dates (ex. « lundi 30/11 »).</p>';
    else{
-    h+='<div class="ovwrap"><table class="ov" style="min-width:640px"><thead><tr><th>Garder</th><th>Enfant</th><th>Pour le</th><th style="text-align:left">Devoir</th><th>Type</th></tr></thead><tbody>';
-    S.bulk.items.forEach(function(it,i){var c=child(it.child);h+='<tr><td><input type="checkbox" class="bulk-keep" data-i="'+i+'" checked aria-label="Garder"></td><td>'+esc(c?c.name:"Tous")+'</td><td>'+esc(fmtDate(it.due))+'</td><td style="text-align:left">'+esc((it.subject?it.subject+" : ":"")+it.text)+'</td><td><select class="bulk-kind" data-i="'+i+'">'+[["dev","Devoir"],["app","À apprendre"],["lec","Lecture"],["rev","Évaluation"]].map(function(k){return '<option value="'+k[0]+'"'+(k[0]===it.kind?" selected":"")+'>'+k[1]+'</option>';}).join("")+'</select></td></tr>';});
+    h+='<div class="ovwrap"><table class="ov" style="min-width:640px"><thead><tr><th>Garder</th><th>Enfant</th><th>'+(S.bulk.sem==="faire"?"À faire le":"À rendre le")+'</th><th style="text-align:left">Devoir</th><th>Type</th></tr></thead><tbody>';
+    S.bulk.items.forEach(function(it,i){var c=child(it.child);h+='<tr><td><input type="checkbox" class="bulk-keep" data-i="'+i+'" checked aria-label="Garder"></td><td>'+esc(c?c.name:"Tous")+'</td><td>'+esc(fmtDate(it.doDay||it.due))+'</td><td style="text-align:left">'+esc((it.subject?it.subject+" : ":"")+it.text)+'</td><td><select class="bulk-kind" data-i="'+i+'">'+[["dev","Devoir"],["app","À apprendre"],["lec","Lecture"],["rev","Évaluation"]].map(function(k){return '<option value="'+k[0]+'"'+(k[0]===it.kind?" selected":"")+'>'+k[1]+'</option>';}).join("")+'</select></td></tr>';});
     h+='</tbody></table></div><button class="btn" type="button" id="bulk-save">Enregistrer '+S.bulk.items.length+' devoir'+(S.bulk.items.length>1?"s":"")+'</button>';
    }
   }
@@ -365,7 +365,7 @@ function bindForms(){
  var f;
  if((f=document.getElementById("addhw")))f.addEventListener("submit",function(e){
   e.preventDefault();
-  var row={child:val("x-child"),due:val("x-due"),subject:val("x-subj")||null,text:val("x-text"),kind:val("x-kind")};
+  var dd=val("x-due");var row={child:val("x-child"),due:val("x-sem")==="faire"?addDays(dd,1):dd,subject:val("x-subj")||null,text:val("x-text"),kind:val("x-kind")};
   if(DEMO){row.id="demo-"+Date.now();S.extras.push(row);flash("addhw","Ajouté (démo).");return;}
   sb.from("extras").insert(row).select().then(function(r){if(r.error)flash("addhw","Erreur : "+r.error.message,true);else{S.extras.push(r.data[0]);flash("addhw","Devoir ajouté.");}});
  });
@@ -396,16 +396,26 @@ function bindForms(){
  });
  if((f=document.getElementById("bulk"))){
   var ta=document.getElementById("bulk-text");ta.addEventListener("input",function(){S.bulk.text=ta.value;});
-  f.addEventListener("submit",function(e){e.preventDefault();S.bulk.text=ta.value;S.bulk.items=parseBulk(ta.value,val("bulk-child"),val("bulk-subj"));render();var p=document.getElementById("bulk");if(p)p.scrollIntoView({block:"start"});});
+  f.addEventListener("submit",function(e){e.preventDefault();S.bulk.text=ta.value;S.bulk.sem=val("bulk-sem");S.bulk.items=parseBulk(ta.value,val("bulk-child"),val("bulk-subj"));if(S.bulk.sem==="faire")S.bulk.items.forEach(function(it){it.due=addDays(it.due,1);it.doDay=addDays(it.due,-1);});render();var p=document.getElementById("bulk");if(p)p.scrollIntoView({block:"start"});});
   var sv=document.getElementById("bulk-save");
   if(sv)sv.addEventListener("click",function(){
    var rows=S.bulk.items.map(function(it,i){var k=document.querySelector('.bulk-keep[data-i="'+i+'"]');var t=document.querySelector('.bulk-kind[data-i="'+i+'"]');return k&&k.checked?{child:it.child,due:it.due,subject:it.subject||null,text:it.text,kind:t?t.value:it.kind}:null;}).filter(Boolean);
    if(!rows.length){flash("bulk","Aucun devoir coché.",true);return;}
-   var done=function(data){S.extras=S.extras.concat(data);S.bulk={text:"",items:null};flash("bulk",rows.length+" devoir"+(rows.length>1?"s":"")+" enregistré"+(rows.length>1?"s":"")+". Ils seront placés dans le planning à la prochaine synchronisation.");};
+   var done=function(data){S.extras=S.extras.concat(data);S.bulk={text:"",items:null,sem:S.bulk.sem};flash("bulk",rows.length+" devoir"+(rows.length>1?"s":"")+" enregistré"+(rows.length>1?"s":"")+". Ils seront placés dans le planning à la prochaine synchronisation.");};
    if(DEMO){done(rows.map(function(r,i){r.id="demo-"+Date.now()+i;return r;}));return;}
    sb.from("extras").insert(rows).select().then(function(r){if(r.error)flash("bulk","Erreur : "+r.error.message,true);else done(r.data);});
   });
  }
+ var shb=document.getElementById("shift-extras");
+ if(shb)shb.addEventListener("click",function(){
+  if(!shb.dataset.ok){shb.dataset.ok="1";shb.textContent="Confirmer : décaler "+S.extras.filter(function(e){return e.due>=TODAY;}).length+" devoirs d’un jour";return;}
+  var up=S.extras.filter(function(e){return e.due>=TODAY;});
+  if(DEMO){up.forEach(function(e){e.due=addDays(e.due,1);});flash("shift","Dates décalées (démo).");return;}
+  Promise.all(up.map(function(e){return sb.from("extras").update({due:addDays(e.due,1)}).eq("id",e.id);})).then(function(rs){
+   var bad=rs.filter(function(r){return r.error;})[0];
+   if(bad)flash("shift","Erreur : "+bad.error.message,true);else{up.forEach(function(e){e.due=addDays(e.due,1);});flash("shift","C’est corrigé : relancez « Synchro planning » sur le PC pour mettre le planning à jour.");}
+  });
+ });
  if((f=document.getElementById("idea")))f.addEventListener("submit",function(e){
   e.preventDefault();
   var tm=val("i-time");var row={child:val("i-child"),kind:val("i-kind"),title:val("i-title"),detail:val("i-detail")||null,link:val("i-link")||null,date:val("i-date")||null,time:tm?tm.replace(":","h"):null};

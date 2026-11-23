@@ -188,7 +188,10 @@ def make_tasks(child: dict, homework: list[dict], week_days: list[date], horizon
         kind = classify(h)
         subj = h.get("subject") or "Devoir"
         short = short_text(h["text"])
-        label_core = short if short.lower().startswith(subj.lower()) else f"{subj} : {short}"
+        if not h.get("subject"):
+            label_core = short[:1].upper() + short[1:]
+        else:
+            label_core = short if short.lower().startswith(subj.lower()) else f"{subj} : {short}"
         more = h["text"][:300] if len(h["text"]) > len(short) + 3 else ""
         jd = jour_fr(due)
         monday = due.weekday() == 0
@@ -258,7 +261,7 @@ def build_week(cfg: dict, monday: date, data_by_child: dict, extras: list[dict],
         child = dict(child, sibling_name=names.get(child.get("sibling")))
         data = data_by_child.get(cid, {"homework": [], "schedule": []})
         schedule = data.get("schedule", [])
-        extra_hw = [{"due": e["due"], "subject": e.get("subject") or "", "text": e["text"], "eval": e.get("kind") == "rev", "kind": e.get("kind")}
+        extra_hw = [{"due": e["due"], "subject": e.get("subject") or "", "text": e["text"], "eval": e.get("kind") == "rev", "kind": e.get("kind"), "extra": True}
                     for e in extras if e["child"] in (cid, "tous")]
         rec_tasks, rec_hw = recurring_tasks(child, week_days)
         homework = data.get("homework", []) + extra_hw + rec_hw
@@ -273,6 +276,8 @@ def build_week(cfg: dict, monday: date, data_by_child: dict, extras: list[dict],
                 spare = [days[k] for k in sorted(days) if today <= days[k].d < due_d]
                 spare.sort(key=lambda dd: dd.used - dd.capacity)
                 cands = [dd.d for dd in spare[:1]]
+                if not cands and due_d.isoformat() in days and due_d >= today:
+                    cands = [due_d]   # plus de jour avant l'échéance : on le place le jour même
             chosen = None
             for p in cands:
                 day = days[p.isoformat()]
@@ -290,7 +295,8 @@ def build_week(cfg: dict, monday: date, data_by_child: dict, extras: list[dict],
             if chosen is None and cands:
                 fallback = [p for p in cands if t.get("slot") != "morning" or days[p.isoformat()].morning_flash]
                 if fallback:
-                    chosen = days[fallback[0].isoformat()]
+                    # le jour le moins chargé parmi les possibles
+                    chosen = max((days[p.isoformat()] for p in fallback), key=lambda dd: dd.capacity - dd.used)
                     if t.get("short_ok"):
                         t = dict(t, min=15)
             if chosen is None:
@@ -379,7 +385,7 @@ def layout_day(day: Day, cid: str, cfg: dict, chore: str, tomorrow_subjects: lis
     if day.school and day.morning_flash and morning:
         t = m("7h20")
         for x in morning:
-            add(t, x["k"], x["l"], x.get("d", ""))
+            add(t, x["k"], x["l"], x.get("d", ""), {"x": 1} if (x.get("src") or {}).get("extra") else None)
             t += max(5, x["min"])
     if day.school and day.school[0] >= m("9h30"):
         add(m("8h00"), "repas", f"Petit-déjeuner (cours à {fmt(day.school[0])})")
@@ -421,7 +427,7 @@ def layout_day(day: Day, cid: str, cfg: dict, chore: str, tomorrow_subjects: lis
         jump = free_at(cur, x["min"])
         if jump:
             cur = jump
-        add(cur, x["k"], x["l"], x.get("d", ""))
+        add(cur, x["k"], x["l"], x.get("d", ""), {"x": 1} if (x.get("src") or {}).get("extra") else None)
         cur += x["min"]
         nxt = normal[n + 1] if n < len(normal) - 1 else None
         if nxt and x["min"] >= 20 and not (wi < len(day.windows) - 1 and cur + nxt["min"] > day.windows[wi][1]):
@@ -478,7 +484,8 @@ def layout_day(day: Day, cid: str, cfg: dict, chore: str, tomorrow_subjects: lis
     # coucher
     if bedtime:
         x = bedtime[0]
-        add(day.bedtime - 45, "lec", x["l"] + " (au lit)", (x.get("d", "") + " Lecture calme avant de dormir.").strip())
+        add(day.bedtime - 45, "lec", x["l"] + " (au lit)", (x.get("d", "") + " Lecture calme avant de dormir.").strip(),
+            {"x": 1} if (x.get("src") or {}).get("extra") else None)
     elif not day.sport_evening:
         add(day.bedtime - 45, "dodo", "Écrans coupés, temps calme")
     add(day.bedtime, "dodo", "Coucher" + (" (22h au plus tard)" if day.sport_evening else ""))
