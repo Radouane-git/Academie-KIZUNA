@@ -202,7 +202,7 @@ function booksFor(cid){return S.books.filter(function(x){return x.child===cid;})
 function pagesOf(list){return list.reduce(function(n,b){return n+(+b.pages||0);},0);}
 function fmtN(n){return n.toLocaleString("fr-FR");}
 function bookForm(cid){
- return '<form class="f bookf" id="bookf" data-child="'+esc(cid)+'"><label for="b-title">Titre<input id="b-title" type="text" required placeholder="ex. Le Petit Prince"></label><label for="b-author">Auteur (facultatif)<input id="b-author" type="text"></label><div class="cols two"><label for="b-pages">Pages<input id="b-pages" type="number" min="1" max="5000" inputmode="numeric" placeholder="96"></label><label for="b-date">Fini le<input id="b-date" type="date" value="'+TODAY+'"></label></div><button class="btn" type="submit">Ajouter à ma bibliothèque</button>'+msgHtml("book")+(S.booksMissing?'<p class="msg err">Exécutez le bloc SQL « livres » dans Supabase.</p>':'')+'</form>';}
+ return '<form class="f bookf" id="bookf" data-child="'+esc(cid)+'"><label for="b-title">Titre<input id="b-title" type="text" required placeholder="ex. Le Petit Prince"></label><label for="b-author">Auteur (facultatif)<input id="b-author" type="text"></label><div class="cols two"><label for="b-pages">Pages<input id="b-pages" type="number" min="1" max="5000" inputmode="numeric" placeholder="96"></label><label for="b-date">Fini le<input id="b-date" type="date" value="'+TODAY+'"></label></div><div class="btnrow"><button class="btn" type="submit">Ajouter à ma bibliothèque</button><button class="btn sec" type="button" data-act="book-close">Annuler</button></div>'+msgHtml("book")+(S.booksMissing?'<p class="msg err">Exécutez le bloc SQL « livres » dans Supabase.</p>':'')+'</form>';}
 function senseiFor(cid){var m=S.sensei.filter(function(x){return x.child===cid||x.child==="tous";}).sort(function(a,b){return a.created_at<b.created_at?1:-1;});return m[0]||null;}
 
 /* --- écrans --- */
@@ -576,6 +576,7 @@ root.addEventListener("click",function(e){
   var aftb=function(){S.books=S.books.filter(function(x){return String(x.id)!==bid;});render();};
   if(DEMO)aftb();else sb.from("books").delete().eq("id",bid).then(function(r){if(!r.error)aftb();});return;}
  if(t.getAttribute("data-act")==="book-open"){S.bookOpen=true;render();var bi=document.getElementById("b-title");if(bi)bi.focus();return;}
+ if(t.getAttribute("data-act")==="book-close"){S.bookOpen=false;render();var ob=document.querySelector('[data-act="book-open"]');if(ob)ob.focus();return;}
  if(t.getAttribute("data-act")==="books-all"){S.bookAll=true;render();return;}
  if(t.hasAttribute("data-act")){sb.auth.signOut().then(function(){location.reload();});return;}
  if(t.hasAttribute("data-del")){var id=t.getAttribute("data-del");
@@ -587,7 +588,8 @@ root.addEventListener("click",function(e){
  if(t.hasAttribute("data-day")){setDay(t.getAttribute("data-day"));return;}
  if(t.hasAttribute("data-id")){var i=t.getAttribute("data-id");setDone(i,!S.done[i]);}
 });
-window.addEventListener("hashchange",function(){render();window.scrollTo(0,0);});
+root.addEventListener("keydown",function(e){if(e.key==="Escape"&&S.bookOpen&&e.target.closest&&e.target.closest("#bookf")){S.bookOpen=false;render();var ob=document.querySelector('[data-act="book-open"]');if(ob)ob.focus();}});
+window.addEventListener("hashchange",function(){S.bookOpen=false;render();window.scrollTo(0,0);});
 
 /* ------------------------------------------------------------ démarrage */
 if(DEMO){loadAll();}
