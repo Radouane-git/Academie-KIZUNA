@@ -124,14 +124,17 @@ function subscribe(){
  if(DEMO)return;
  try{
   sb.channel("checks").on("postgres_changes",{event:"*",schema:"public",table:"checks"},function(p){
-   if(p.eventType==="DELETE"){delete S.done[p.old.id];delete S.diff[p.old.id];}else if(p.new&&p.new.id){S.done[p.new.id]=1;if(p.new.difficulty)S.diff[p.new.id]=p.new.difficulty;else delete S.diff[p.new.id];}
+   if(p.eventType==="DELETE"){delete S.done[p.old.id];delete S.diff[p.old.id];}else if(p.new&&p.new.id){S.done[p.new.id]=1;if(p.new.difficulty)S.diff[p.new.id]=p.new.difficulty;}
    softRender();
   }).subscribe();
  }catch(e){}
  document.addEventListener("visibilitychange",function(){if(!document.hidden)refreshChecks();});
  setInterval(refreshChecks,60000);
 }
-function refreshChecks(){sb.from("checks").select(S.diffMissing?"id":"id,difficulty").then(function(r){if(!r.error){S.done={};S.diff={};r.data.forEach(function(x){S.done[x.id]=1;if(x.difficulty)S.diff[x.id]=x.difficulty;});softRender();}});}
+function refreshChecks(){
+ sb.from("checks").select("id,difficulty").then(function(r){
+  if(r.error){S.diffMissing=true;return sb.from("checks").select("id").then(function(r2){if(!r2.error){S.done={};r2.data.forEach(function(x){S.done[x.id]=1;});softRender();}});}
+  S.diffMissing=false;S.done={};S.diff={};r.data.forEach(function(x){S.done[x.id]=1;if(x.difficulty)S.diff[x.id]=x.difficulty;});softRender();});}
 function softRender(){var a=document.activeElement;if(a&&root.contains(a)&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName)&&!a.classList.contains("chk"))return;render();}
 
 /* ------------------------------------------------------------ navigation */
@@ -168,7 +171,7 @@ function rateRow(id,label){return '<div class="raterow" role="group" aria-label=
 function setDiff(id,n){
  if(n)S.diff[id]=n;else delete S.diff[id];
  if(DEMO){lsSet("planning-demo-diff",JSON.stringify(S.diff));return;}
- sb.from("checks").upsert({id:id,done:true,difficulty:n||null,updated_at:new Date().toISOString()}).then(function(r){if(r.error){S.diffMissing=true;flash("global","Note non enregistrée : exécutez le bloc SQL « v0.9.0 » dans Supabase.",true);}});
+ sb.from("checks").upsert({id:id,done:true,difficulty:n||null,updated_at:new Date().toISOString()}).then(function(r){if(r.error){S.diffMissing=true;S.diffMissing=true;render();}});
 }
 function lumHex(h){h=h.replace("#","");var c=[0,2,4].map(function(i){var v=parseInt(h.substr(i,2),16)/255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4);});return .2126*c[0]+.7152*c[1]+.0722*c[2];}
 function shieldFg(t){return lumHex(t.acc)<.25?"#FFE58A":"#0D3B45";}
@@ -379,7 +382,7 @@ function renderChild(c,plan){
   if(sm0)h+='<div class="m-sensei"><b>Le mot du sensei</b><span>'+esc(sm0.text)+'</span></div>';
   h+='</div>';}
  h+=renderEdt(c,S.day);
- h+='<section class="card pathcard"><div class="pc-head"><h2>Le chemin du jour</h2><span>'+p.n+' sur '+p.t+'</span></div>'+(lsGet("kizuna-hint-check")?'':'<p class="hint">Touche le <b>rond</b> quand une mission est faite. Touche son <b>nom</b> pour l’ouvrir en grand. <button class="linkbtn" data-act="hint-ok">Compris</button></p>')+'<ol class="path">';
+ h+='<section class="card pathcard"><div class="pc-head"><h2>Le chemin du jour</h2><span>'+p.n+' sur '+p.t+'</span></div>'+(S.diffMissing&&!DEMO?'<p class="msg err">Les notes de difficulté ne sont pas encore enregistrées : un parent doit exécuter le bloc SQL « v0.9.0 » dans Supabase.</p>':'')+(lsGet("kizuna-hint-check")?'':'<p class="hint">Touche le <b>rond</b> quand une mission est faite. Touche son <b>nom</b> pour l’ouvrir en grand. <button class="linkbtn" data-act="hint-ok">Compris</button></p>')+'<ol class="path">';
  var all=blocksOf(c.id,S.day);var bl=all.filter(function(b){return !b.over;});var over=all.filter(function(b){return b.over;});
  var nk=nt?keyOf(nt):null;
  bl.forEach(function(b){h+=stepHtml(b,nk);});
