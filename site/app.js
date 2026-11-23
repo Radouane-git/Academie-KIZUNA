@@ -20,7 +20,7 @@ var TIPS = [
 ];
 
 /* ------------------------------------------------------------ état */
-var S = {fam:null, plans:[], done:{}, extras:[], ideas:[], ideasMissing:false, stamps:[], sensei:[], stampsMissing:false, books:[], booksMissing:false, cancels:[], cancelsMissing:false, edtOpen:false, focus:null, installEvt:null, standalone:false, bookOpen:false, sync:null, mfa:null, view:null, day:null, msg:{}, bulk:{text:"",items:null}};
+var S = {fam:null, plans:[], done:{}, extras:[], ideas:[], ideasMissing:false, stamps:[], sensei:[], stampsMissing:false, books:[], booksMissing:false, cancels:[], cancelsMissing:false, edtOpen:false, focus:null, installEvt:null, standalone:false, diff:{}, rate:null, diffMissing:false, bookOpen:false, sync:null, mfa:null, view:null, day:null, msg:{}, bulk:{text:"",items:null}};
 function lsGet(k){try{return localStorage.getItem(k);}catch(e){return null;}}
 function lsSet(k,v){try{localStorage.setItem(k,v);}catch(e){}}
 function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
@@ -73,12 +73,14 @@ function evalsFor(cid){
 /* ------------------------------------------------------------ persistance */
 function setDone(id,val){
  if(val)S.done[id]=1;else delete S.done[id];
+ if(!val)delete S.diff[id];
+ if(val&&!S.focus){var bk=null;var cv0=child(curView());if(cv0)blocksOf(cv0.id,S.day).forEach(function(x){if(x.id===id)bk=x;});if(bk&&RATEABLE[bk.k])S.rate=id;}
  if(val){S.pop=id;try{if(navigator.vibrate)navigator.vibrate(15);}catch(e){}
   var vc=child(curView());if(vc&&!S.focus){var mp=mprog(vc.id,S.day),left=mp.t-mp.n;
    if(mp.t&&left===0)cheer("Mission accomplie ! Tout est fait pour "+(S.day===TODAY?"aujourd’hui":"ce jour-là")+".");
    else if(mp.n&&mp.n%3===0)cheer("Bien joué ! Encore "+left+" mission"+(left>1?"s":"")+".");}}
  render();S.pop=null;
- if(DEMO){lsSet("planning-demo-done",JSON.stringify(S.done));return;}
+ if(DEMO){lsSet("planning-demo-done",JSON.stringify(S.done));lsSet("planning-demo-diff",JSON.stringify(S.diff));return;}
  var q=val?sb.from("checks").upsert({id:id,done:true,updated_at:new Date().toISOString()}):sb.from("checks").delete().eq("id",id);
  q.then(function(r){if(r.error){flash("global","Coche non enregistrée : "+r.error.message,true);}});
 }
@@ -89,14 +91,14 @@ function loadAll(){
  if(DEMO){
   return fetch("demo.json").then(function(r){return r.json();}).then(function(d){
    S.fam=d.settings.famille;S.plans=d.plans.sort(function(a,b){return a.week_start<b.week_start?-1:1;});
-   try{S.done=JSON.parse(lsGet("planning-demo-done")||"{}");}catch(e){S.done={};}
+   try{S.done=JSON.parse(lsGet("planning-demo-done")||"{}");}catch(e){S.done={};}try{S.diff=JSON.parse(lsGet("planning-demo-diff")||"{}");}catch(e){S.diff={};}
    S.sync=d.sync;S.ideas=d.ideas||[];S.stamps=d.stamps||[];S.sensei=d.sensei||[];S.books=d.books||[];S.cancels=d.cancellations||[];start();
   });
  }
  return Promise.all([
   sb.from("settings").select("*"),
   sb.from("plans").select("*").order("week_start"),
-  sb.from("checks").select("id"),
+  sb.from("checks").select("id,difficulty").then(function(r){if(r.error){S.diffMissing=true;return sb.from("checks").select("id");}return r;}),
   sb.from("extras").select("*").order("due"),
   sb.from("sync_log").select("*").order("ran_at",{ascending:false}).limit(1),
   sb.from("ideas").select("*").order("created_at"),
@@ -113,7 +115,7 @@ function loadAll(){
   if(err){renderError("Lecture impossible : "+err.error.message);return;}
   var set={};r[0].data.forEach(function(x){set[x.key]=x.value;});
   S.fam=set.famille||null;S.plans=r[1].data||[];
-  S.done={};r[2].data.forEach(function(x){S.done[x.id]=1;});
+  S.done={};S.diff={};r[2].data.forEach(function(x){S.done[x.id]=1;if(x.difficulty)S.diff[x.id]=x.difficulty;});
   S.extras=r[3].data||[];S.sync=r[4].data[0]||null;
   start();
  });
@@ -122,14 +124,17 @@ function subscribe(){
  if(DEMO)return;
  try{
   sb.channel("checks").on("postgres_changes",{event:"*",schema:"public",table:"checks"},function(p){
-   if(p.eventType==="DELETE"){delete S.done[p.old.id];}else if(p.new&&p.new.id){S.done[p.new.id]=1;}
+   if(p.eventType==="DELETE"){delete S.done[p.old.id];delete S.diff[p.old.id];}else if(p.new&&p.new.id){S.done[p.new.id]=1;if(p.new.difficulty)S.diff[p.new.id]=p.new.difficulty;}
    softRender();
   }).subscribe();
  }catch(e){}
  document.addEventListener("visibilitychange",function(){if(!document.hidden)refreshChecks();});
  setInterval(refreshChecks,60000);
 }
-function refreshChecks(){sb.from("checks").select("id").then(function(r){if(!r.error){S.done={};r.data.forEach(function(x){S.done[x.id]=1;});softRender();}});}
+function refreshChecks(){
+ sb.from("checks").select("id,difficulty").then(function(r){
+  if(r.error){S.diffMissing=true;return sb.from("checks").select("id").then(function(r2){if(!r2.error){S.done={};r2.data.forEach(function(x){S.done[x.id]=1;});softRender();}});}
+  S.diffMissing=false;S.done={};S.diff={};r.data.forEach(function(x){S.done[x.id]=1;if(x.difficulty)S.diff[x.id]=x.difficulty;});softRender();});}
 function softRender(){var a=document.activeElement;if(a&&root.contains(a)&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName)&&!a.classList.contains("chk"))return;render();}
 
 /* ------------------------------------------------------------ navigation */
@@ -159,6 +164,15 @@ var THEMES={
  "Émeraude":{bg:"#1E7A4E",acc:"#F2C94C",txt:"#FFFFFF"},
  "Éclair":{bg:"#F2B705",acc:"#16181D",txt:"#2B2100"}
 };
+var DIFF=[null,["Très facile","#2E9E6B","#fff"],["Facile","#6FA83A","#fff"],["Moyen","#F2B705","#2B2100"],["Difficile","#E8792A","#fff"],["Très difficile","#D63A3A","#fff"]];
+var RATEABLE={dev:1,app:1,rev:1,lec:1};
+function diffBadge(n,big){var d=DIFF[n];if(!d)return "";return '<span class="dbadge'+(big?" big":"")+'" style="background:'+d[1]+';color:'+d[2]+'" title="Difficulté : '+n+'/5 ('+d[0]+')" aria-label="Difficulté '+n+' sur 5">'+n+'</span>';}
+function rateRow(id,label){return '<div class="raterow" role="group" aria-label="Difficulté"><span class="rr-q">'+(label||"C’était comment ?")+'</span><div class="rr-btns">'+[1,2,3,4,5].map(function(n){var d=DIFF[n];return '<button class="rr" data-rate="'+esc(id)+'" data-n="'+n+'" style="--dc:'+d[1]+';--dt:'+d[2]+'" aria-pressed="'+(S.diff[id]===n)+'"><b>'+n+'</b><small>'+d[0]+'</small></button>';}).join("")+'</div><button class="linkbtn rr-skip" data-rate="'+esc(id)+'" data-n="0">Passer</button></div>';}
+function setDiff(id,n){
+ if(n)S.diff[id]=n;else delete S.diff[id];
+ if(DEMO){lsSet("planning-demo-diff",JSON.stringify(S.diff));return;}
+ sb.from("checks").upsert({id:id,done:true,difficulty:n||null,updated_at:new Date().toISOString()}).then(function(r){if(r.error){S.diffMissing=true;S.diffMissing=true;render();}});
+}
 function lumHex(h){h=h.replace("#","");var c=[0,2,4].map(function(i){var v=parseInt(h.substr(i,2),16)/255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4);});return .2126*c[0]+.7152*c[1]+.0722*c[2];}
 function shieldFg(t){return lumHex(t.acc)<.25?"#FFE58A":"#0D3B45";}
 var DEFAULT_THEMES=["Lagon","Sakura","Améthyste","Émeraude","Brasier","Éclair"];
@@ -301,6 +315,7 @@ function renderHome(){
  var tp=THEMES[themeName(null)];
  h+='</div><div class="home-more"><a class="home-small" href="#parents" style="--tc:'+tp.bg+'"><span class="av" style="background:'+tp.bg+';color:#fff">P</span>Vue parents</a><a class="home-small" href="#conseils"><span class="av" style="background:#0D3B45;color:#fff">?</span>Conseils</a></div></div>';
  return h;}
+function hardOf(cid,plan){var out=[];if(!plan)return out;var ch=plan.data.children[cid];if(!ch||!ch.blocks)return out;Object.keys(ch.blocks).sort().forEach(function(d){ch.blocks[d].forEach(function(b){if(b.id&&S.diff[b.id]>=4&&S.done[b.id])out.push({l:b.l,date:d,n:S.diff[b.id]});});});return out;}
 function footer(){return '<footer class="foot">'+syncLine()+'<a href="#conseils">Conseils</a></footer>';}
 function render(){
  if(!S.fam){root.innerHTML='<div class="wrap">'+topbar("parents")+renderParents(true)+footer()+'</div>';bindForms();return;}
@@ -367,7 +382,7 @@ function renderChild(c,plan){
   if(sm0)h+='<div class="m-sensei"><b>Le mot du sensei</b><span>'+esc(sm0.text)+'</span></div>';
   h+='</div>';}
  h+=renderEdt(c,S.day);
- h+='<section class="card pathcard"><div class="pc-head"><h2>Le chemin du jour</h2><span>'+p.n+' sur '+p.t+'</span></div>'+(lsGet("kizuna-hint-check")?'':'<p class="hint">Touche le <b>rond</b> quand une mission est faite. Touche son <b>nom</b> pour l’ouvrir en grand. <button class="linkbtn" data-act="hint-ok">Compris</button></p>')+'<ol class="path">';
+ h+='<section class="card pathcard"><div class="pc-head"><h2>Le chemin du jour</h2><span>'+p.n+' sur '+p.t+'</span></div>'+(S.diffMissing&&!DEMO?'<p class="msg err">Les notes de difficulté ne sont pas encore enregistrées : un parent doit exécuter le bloc SQL « v0.9.0 » dans Supabase.</p>':'')+(lsGet("kizuna-hint-check")?'':'<p class="hint">Touche le <b>rond</b> quand une mission est faite. Touche son <b>nom</b> pour l’ouvrir en grand. <button class="linkbtn" data-act="hint-ok">Compris</button></p>')+'<ol class="path">';
  var all=blocksOf(c.id,S.day);var bl=all.filter(function(b){return !b.over;});var over=all.filter(function(b){return b.over;});
  var nk=nt?keyOf(nt):null;
  bl.forEach(function(b){h+=stepHtml(b,nk);});
@@ -382,12 +397,13 @@ function stepHtml(b,nk){
  if(!task)return '<li class="step calm"><span class="node-col"><span class="dot"></span></span><div class="st-txt"><span class="st-t">'+esc(b.t)+'</span><span class="st-l">'+esc(b.l)+'</span></div></li>';
  var node;
  if(b.k==="rel")node='<span class="node rel'+(done?" done":"")+'">'+(done?'':'<span class="np">'+svgPic(pn)+'</span>')+'</span>';
- else node='<span class="node-wrap"><input type="checkbox" class="chk node'+(now?" now":"")+(S.pop===b.id?" pop":"")+'" data-id="'+esc(b.id)+'" aria-label="Fait : '+esc(b.l)+'"'+(done?" checked":"")+'>'+(done?'':'<span class="np" aria-hidden="true">'+svgPic(pn)+'</span>')+'</span>';
+ else node='<span class="node-wrap"><input type="checkbox" class="chk node'+(now?" now":"")+(S.pop===b.id?" pop":"")+'" data-id="'+esc(b.id)+'" aria-label="Fait : '+esc(b.l)+'"'+(done?" checked":"")+'>'+(done?'':'<span class="np" aria-hidden="true">'+svgPic(pn)+'</span>')+(done&&S.diff[b.id]?diffBadge(S.diff[b.id]):'')+'</span>';
  var h='<li class="step'+(done?" done":"")+(now?" now":"")+(b.k==="loi"?" loi":"")+'"><span class="node-col">'+node+'</span><div class="st-txt">';
  h+=(now?'<span class="st-t acc">En cours · '+esc(b.over?"sans horaire":b.t)+'</span>':'<span class="st-t">'+esc(b.over?"Sans horaire":b.t)+'</span>');
  h+='<button class="st-l link" data-focus="'+esc(keyOf(b))+'">'+esc(b.l)+'</button>';
  if(b.d)h+='<span class="st-d">'+esc(b.d)+'</span>';
  if(b.k==="rel"&&b.rel)h+=renderRel(b.rel);
+ if(done&&RATEABLE[b.k]){if(S.rate===b.id)h+=rateRow(b.id);else h+='<button class="linkbtn diff-link" data-rateopen="'+esc(b.id)+'">'+(S.diff[b.id]?"Difficulté "+S.diff[b.id]+"/5 · "+DIFF[S.diff[b.id]][0].toLowerCase()+" · modifier":"Noter la difficulté")+'</button>';}
  return h+'</div></li>';
 }
 function svgPic(name){return name&&PICTOS[name]?'<svg width="30" height="30" viewBox="0 0 48 48">'+PICTOS[name]+'</svg>':'';}
@@ -446,7 +462,9 @@ function renderFocus(c){
  else if(b.k==="dev")h+='<div class="tipbox">'+stampHtml(34)+'<span>Bloqué ? Note ta question pour la poser au professeur.</span></div>';
  h+='</div><footer>';
  if(b.k==="rel")h+='<button class="cta" data-fnext="1">'+(done?"Suivante":"Continuer")+'</button>';
- else h+=done?'<button class="cta sec" data-fundo="'+esc(b.id)+'">Pas encore fait</button><button class="cta" data-fnext="1">Suivante</button>':'<button class="cta" data-fdone="'+esc(b.id)+'">C’est fait</button>';
+ else if(done)h+=(RATEABLE[b.k]?rateRow(b.id,S.diff[b.id]?"Difficulté notée : tu peux la changer":"C’était comment ?"):'')+'<button class="cta sec" data-fundo="'+esc(b.id)+'">Pas encore fait</button><button class="cta" data-fnext="1">Suivante</button>';
+ else if(RATEABLE[b.k])h+='<div class="raterow fdone" role="group" aria-label="C’est fait : difficulté"><span class="rr-q">C’est fait ! C’était comment ?</span><div class="rr-btns">'+[1,2,3,4,5].map(function(n){var d=DIFF[n];return '<button class="rr" data-fdone="'+esc(b.id)+'" data-n="'+n+'" style="--dc:'+d[1]+';--dt:'+d[2]+'"><b>'+n+'</b><small>'+d[0]+'</small></button>';}).join("")+'</div></div><button class="cta" data-fdone="'+esc(b.id)+'">C’est fait (sans noter)</button>';
+ else h+='<button class="cta" data-fdone="'+esc(b.id)+'">C’est fait</button>';
  return h+'<button class="linkbtn" data-fclose="1">Plus tard</button></footer></div>';
 }
 function msgHtml(k){var m=S.msg[k];return m?'<p class="msg'+(m.e?" err":"")+'">'+esc(m.t)+'</p>':"";}
@@ -461,10 +479,12 @@ function renderParents(noFam){
   var evc=0;children().forEach(function(c){evc+=evalsFor(c.id).filter(function(e){return e[0]>=TODAY&&dDiff(e[0],TODAY)<=7;}).length;});
   h+='<section class="hero" style="background-color:'+tp.bg+';color:'+tp.txt+'"><div class="hero-id"><div><span class="over">Bureau du sensei</span><h1>'+esc(plan?plan.data.title.replace(/^Du /,"Semaine du "):"Semaine")+'</h1></div></div><div class="hero-stats parents"><div><b>'+pct(tot)+' %</b><small>de la semaine</small></div><div><b style="color:'+tp.acc+'">'+evc+'</b><small>évaluations à 7 jours</small></div><div><b>'+S.stamps.length+'</b><small>tampons</small></div></div></section>';
   h+='<div class="kidcards">'+children().map(function(c){var t=theme(c),mp=mprog(c.id,TODAY),w=weekProg(c.id,plan),ev=evalsFor(c.id).filter(function(e){return e[0]>=TODAY;})[0];
-   return '<button class="kidcard" data-go="'+esc(c.id)+'" data-day="'+TODAY+'" style="--child:'+t.bg+'">'+ring(mp.t?mp.n/mp.t:0,58,7,mp.t?mp.n+"/"+mp.t:"–")+'<span class="kc-txt"><b>'+esc(c.name)+'</b><small>Aujourd’hui : '+(mp.t?(mp.t-mp.n?(mp.t-mp.n)+" mission"+(mp.t-mp.n>1?"s":"")+" à faire":"tout est fait"):"rien de prévu")+' · semaine '+pct(w)+' %</small>'+(ev?'<small class="evtxt">'+esc(fmtDate(ev[0]))+' : '+esc(ev[1])+'</small>':'')+'</span><span class="chev" aria-hidden="true">›</span></button>';}).join("")+'</div>';
+   return '<button class="kidcard" data-go="'+esc(c.id)+'" data-day="'+TODAY+'" style="--child:'+t.bg+'">'+ring(mp.t?mp.n/mp.t:0,58,7,mp.t?mp.n+"/"+mp.t:"–")+'<span class="kc-txt"><b>'+esc(c.name)+'</b><small>Aujourd’hui : '+(mp.t?(mp.t-mp.n?(mp.t-mp.n)+" mission"+(mp.t-mp.n>1?"s":"")+" à faire":"tout est fait"):"rien de prévu")+' · semaine '+pct(w)+' %</small>'+(ev?'<small class="evtxt">'+esc(fmtDate(ev[0]))+' : '+esc(ev[1])+'</small>':'')+(hardOf(c.id,plan).length?'<small class="hardtxt">'+hardOf(c.id,plan).length+' mission'+(hardOf(c.id,plan).length>1?"s":"")+' notée'+(hardOf(c.id,plan).length>1?"s":"")+' difficile'+(hardOf(c.id,plan).length>1?"s":"")+' cette semaine</small>':'')+'</span><span class="chev" aria-hidden="true">›</span></button>';}).join("")+'</div>';
   h+=weeksNav();
   if(plan){
    var days=plan.data.days;
+   var hardAll=children().map(function(c){return [c,hardOf(c.id,plan)];}).filter(function(x){return x[1].length;});
+   h+='<section class="card hardcard"><h2>Points difficiles de la semaine</h2>'+(hardAll.length?hardAll.map(function(x){return '<div class="hard-kid"><b>'+esc(x[0].name)+'</b><ul>'+x[1].map(function(m){return '<li>'+diffBadge(m.n)+'<span>'+esc(m.l)+'<small>'+esc(fmtDate(m.date))+' · '+DIFF[m.n][0]+'</small></span></li>';}).join("")+'</ul></div>';}).join(""):'<p class="none">Aucune mission notée 4 ou 5 cette semaine. Les enfants notent la difficulté quand ils cochent un devoir, une leçon, une révision ou une lecture.</p>')+(S.diffMissing&&!DEMO?'<p class="msg err">Exécutez le bloc SQL « v0.9.0 » dans Supabase pour enregistrer les notes.</p>':'')+'</section>';
    h+='<section class="card ovcard"><h2>Avancement de la semaine</h2><div class="ovwrap"><table class="ov"><thead><tr><th></th>';
    days.forEach(function(d){h+='<th>'+esc(d.short)+' '+d.num+'</th>';});
    h+='<th>Semaine</th></tr></thead><tbody>';
@@ -703,7 +723,7 @@ function val(id){return (document.getElementById(id).value||"").trim();}
 function pickWeek(idx){var p=S.plans[idx];if(!p)return;var has=p.data.days.some(function(d){return d.date===TODAY;});setDay(has?TODAY:(p.data.days[1]||p.data.days[0]).date);}
 
 root.addEventListener("click",function(e){
- var t=e.target.closest("[data-focus],[data-fclose],[data-fdone],[data-fundo],[data-fnext],[data-cancel],[data-uncancel],[data-delbook],[data-view],[data-day],[data-id],[data-go],[data-week],[data-del],[data-act],[data-delidea]");if(!t)return;
+ var t=e.target.closest("[data-rate],[data-rateopen],[data-focus],[data-fclose],[data-fdone],[data-fundo],[data-fnext],[data-cancel],[data-uncancel],[data-delbook],[data-view],[data-day],[data-id],[data-go],[data-week],[data-del],[data-act],[data-delidea]");if(!t)return;
  if(t.hasAttribute("data-delidea")){var di=t.getAttribute("data-delidea");var aft=function(){S.ideas=S.ideas.filter(function(x){return String(x.id)!==di;});render();};
   if(DEMO)aft();else sb.from("ideas").delete().eq("id",di).then(function(r){if(!r.error)aft();});return;}
  if(t.matches("input.chk")){setDone(t.getAttribute("data-id"),t.checked);return;}
@@ -711,11 +731,13 @@ root.addEventListener("click",function(e){
   var aftb=function(){S.books=S.books.filter(function(x){return String(x.id)!==bid;});render();};
   if(DEMO)aftb();else sb.from("books").delete().eq("id",bid).then(function(r){if(!r.error)aftb();});return;}
  if(t.getAttribute("data-act")==="book-open"){S.bookOpen=true;render();var bi=document.getElementById("b-title");if(bi)bi.focus();return;}
+ if(t.hasAttribute("data-rate")){var rid=t.getAttribute("data-rate"),rn=+t.getAttribute("data-n");if(rn)setDiff(rid,rn);S.rate=null;render();return;}
+ if(t.hasAttribute("data-rateopen")){S.rate=t.getAttribute("data-rateopen");render();return;}
  if(t.hasAttribute("data-focus")){S.focus=t.getAttribute("data-focus");render();return;}
  if(t.hasAttribute("data-fclose")){var fk=S.focus;S.focus=null;render();var back=document.querySelector('[data-focus="'+(fk||"").replace(/"/g,'\\"')+'"]');if(back)back.focus();return;}
  if(t.hasAttribute("data-fundo")){setDone(t.getAttribute("data-fundo"),false);return;}
  if(t.hasAttribute("data-fdone")||t.hasAttribute("data-fnext")){
-  var fc=child(curView());if(t.hasAttribute("data-fdone"))S.done[t.getAttribute("data-fdone")]=1;
+  var fc=child(curView());if(t.hasAttribute("data-fdone")){S.done[t.getAttribute("data-fdone")]=1;var fn=+t.getAttribute("data-n")||0;if(fn){S.diff[t.getAttribute("data-fdone")]=fn;var fid=t.getAttribute("data-fdone");setTimeout(function(){setDiff(fid,fn);},400);}}
   var nx=fc?nextTask(fc.id,S.day):null;
   if(t.hasAttribute("data-fnext")&&nx&&keyOf(nx)===S.focus){var tl=tasksOf(fc.id,S.day),ix=-1;tl.forEach(function(x,j){if(keyOf(x)===S.focus)ix=j;});nx=tl.slice(ix+1).filter(function(x){return !isDoneB(x);})[0]||null;}
   S.focus=nx?keyOf(nx):null;

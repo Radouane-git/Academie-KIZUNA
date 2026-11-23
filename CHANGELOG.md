@@ -5,9 +5,9 @@ Numérotation : `MAJEUR.MINEUR.CORRECTIF` (ex. 0.2.1).
 - **mineur** (0.**2**.0) : une nouveauté (un réglage, un écran, une règle de planning) ;
 - **majeur** (**1**.0.0) : la version jugée stable après plusieurs semaines d'usage réel.
 
-## [0.9.0] – préversion (non publiée)
+## [0.9.0] – 23 novembre 2026
 
-Visible uniquement sur `/preview/`.
+Validée le 23/11 et publiée.
 - Difficulté ressentie : quand un enfant coche un devoir, une leçon, une révision ou une lecture, il note
   de 1 (très facile) à 5 (très difficile), ou passe. La note s'affiche dans une pastille colorée sur le rond coché,
   et se modifie d'un toucher (« Difficulté 4/5 · modifier »).

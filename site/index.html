@@ -478,6 +478,27 @@ a{color:var(--child)}
   .prof .pn{font-size:.85rem}
 }
 
+/* ===== 0.9.0 : difficulté ===== */
+.node-wrap .dbadge{position:absolute;right:-6px;top:-6px;z-index:2}
+.dbadge{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;font-family:var(--display);font-weight:800;font-size:.8rem;box-shadow:0 0 0 2px #fff;flex:none}
+.dbadge.big{width:32px;height:32px;font-size:1rem}
+.raterow{display:flex;flex-direction:column;gap:8px;background:var(--soft);border-radius:16px;padding:12px;margin-top:8px}
+.rr-q{font-weight:700;font-size:.95rem}
+.rr-btns{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.rr{display:flex;flex-direction:column;align-items:center;gap:2px;border:2px solid var(--line);background:#fff;border-radius:12px;padding:6px 2px;cursor:pointer;min-height:56px}
+.rr b{font-family:var(--display);font-weight:800;font-size:1.1rem;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--dc);color:var(--dt)}
+.rr small{font-size:.68rem;color:var(--muted);text-align:center;line-height:1.15}
+.rr:hover,.rr[aria-pressed="true"]{border-color:var(--dc)}
+.rr[aria-pressed="true"]{background:color-mix(in srgb,var(--dc) 12%,#fff)}
+.rr-skip{align-self:flex-start;padding:6px 2px;font-weight:700}
+.diff-link{font-size:.85rem;padding:6px 0;text-align:left;align-self:flex-start;min-height:32px}
+.focus footer .raterow{margin:0 0 4px;text-align:left}
+.hardtxt{color:#D63A3A!important;font-weight:700}
+.hardcard .hard-kid{margin-top:8px}
+.hardcard ul{list-style:none;margin:6px 0 0;padding:0}
+.hardcard li{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--soft)}
+.hardcard li span:not(.dbadge){display:flex;flex-direction:column}
+
 @media (max-width:900px){
   .profiles{display:none}
   .pmenu{display:block}
@@ -504,8 +525,8 @@ a{color:var(--child)}
 </head>
 <body>
 <div id="root"><p style="padding:2rem;font-family:sans-serif">Chargement de l’Académie…</p></div>
-<script src="config.js?v=0.8.2"></script>
+<script src="config.js?v=0.9.0"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script src="app.js?v=0.8.2"></script>
+<script src="app.js?v=0.9.0"></script>
 </body>
 </html>
