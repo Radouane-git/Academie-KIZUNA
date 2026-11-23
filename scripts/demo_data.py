@@ -90,7 +90,9 @@ def main():
            "checks": {}, "sync": {"status": "ok", "ran_at": today.isoformat() + "T17:05:00", "message": "Démo : données fictives."},
            "ideas": [{"id": "d1", "child": "tous", "kind": "sortie", "title": "Cinéma entre amis", "detail": "Séance de l’après-midi", "date": (monday + timedelta(days=5)).isoformat(), "time": "15h00"},
                      {"id": "d2", "child": "leo", "kind": "echecs", "title": "Partie d’échecs avec papa", "detail": "Ouverture italienne"},
-                     {"id": "d3", "child": "sarah", "kind": "lecture", "title": "Lire « Le Petit Prince »", "detail": "Lecture plaisir, sans résumé"}]}
+                     {"id": "d3", "child": "sarah", "kind": "lecture", "title": "Lire « Le Petit Prince »", "detail": "Lecture plaisir, sans résumé"}],
+           "stamps": [{"id": "s1", "child": "leo", "title": "SVT : la digestion", "note": "17/20", "message": "Tes révisions ont payé !", "date": (monday - timedelta(days=3)).isoformat(), "created_at": (monday - timedelta(days=3)).isoformat() + "T19:00:00"}],
+           "sensei": [{"id": "m1", "child": "tous", "text": "Belle semaine à tous ! Les évaluations se préparent sur 3 jours : on commence ce soir.", "created_at": monday.isoformat() + "T07:30:00"}]}
     target = os.path.join(os.path.dirname(__file__), "..", "site", "demo.json")
     with open(target, "w", encoding="utf-8") as f:
         json.dump(out, f, ensure_ascii=False, indent=1)

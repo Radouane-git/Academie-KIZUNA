@@ -128,3 +128,27 @@ drop policy if exists "famille ideas" on ideas;
 create policy "famille ideas" on ideas for all to authenticated using (public.is_family()) with check (public.is_family());
 grant select, insert, update, delete on ideas to authenticated;
 grant all on ideas to service_role;
+
+-- ============================================================ v0.3.0 : tampons de l'Académie et mot du sensei
+create table if not exists public.stamps (
+  id uuid primary key default gen_random_uuid(),
+  child text not null,
+  title text not null,
+  note text,
+  message text,
+  date date default current_date,
+  created_at timestamptz default now()
+);
+create table if not exists public.sensei_messages (
+  id uuid primary key default gen_random_uuid(),
+  child text not null,
+  text text not null,
+  created_at timestamptz default now()
+);
+alter table public.stamps enable row level security;
+alter table public.sensei_messages enable row level security;
+drop policy if exists "famille stamps" on public.stamps;
+create policy "famille stamps" on public.stamps for all to authenticated using (public.is_family()) with check (public.is_family());
+drop policy if exists "famille sensei" on public.sensei_messages;
+create policy "famille sensei" on public.sensei_messages for all to authenticated using (public.is_family()) with check (public.is_family());
+grant select, insert, update, delete on public.stamps, public.sensei_messages to authenticated;

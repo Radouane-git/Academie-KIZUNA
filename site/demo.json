@@ -3396,5 +3396,24 @@
    "title": "Lire « Le Petit Prince »",
    "detail": "Lecture plaisir, sans résumé"
   }
+ ],
+ "stamps": [
+  {
+   "id": "s1",
+   "child": "leo",
+   "title": "SVT : la digestion",
+   "note": "17/20",
+   "message": "Tes révisions ont payé !",
+   "date": "2026-11-20",
+   "created_at": "2026-11-20T19:00:00"
+  }
+ ],
+ "sensei": [
+  {
+   "id": "m1",
+   "child": "tous",
+   "text": "Belle semaine à tous ! Les évaluations se préparent sur 3 jours : on commence ce soir.",
+   "created_at": "2026-11-23T07:30:00"
+  }
  ]
 }
