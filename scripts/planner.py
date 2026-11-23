@@ -344,6 +344,7 @@ def build_week(cfg: dict, monday: date, data_by_child: dict, extras: list[dict],
             if dup:
                 week["notes"].append([f"{child['name']} : devoirs identiques à la semaine passée",
                                       "À vérifier sur EcoleDirecte (copier-coller du professeur ?) : " + " ; ".join(dup[:4])])
+    overflow_notes(week, names)
     return week
 
 
@@ -421,17 +422,26 @@ def layout_day(day: Day, cid: str, cfg: dict, chore: str, tomorrow_subjects: lis
     # devoirs dans les créneaux
     wi = 0
     cur = day.windows[0][0] if day.windows else (day.home or m("17h00")) + 30
+    last_end = day.windows[-1][1] if day.windows else day.evening_anchor()
+    # marge : si besoin, on peut travailler jusqu'à 25 min avant le dîner (relire + sac juste avant),
+    # la corvée passe alors après le dîner ; jamais au-delà d'une activité qui suit
+    if not [a for a in day.acts if a[0] >= last_end - 10 and a[0] < day.dinner]:
+        last_end = max(last_end, day.dinner - 35)
+    overflow: list[dict] = []
     for n, x in enumerate(normal):
         while wi < len(day.windows) - 1 and cur + x["min"] > day.windows[wi][1]:
             wi += 1
             cur = max(cur, day.windows[wi][0])
         jump = free_at(cur, x["min"])
-        if jump:
-            cur = jump
+        start = jump or cur
+        if start + x["min"] > last_end + 10:
+            overflow.append(x)      # ne rentre plus avant le dîner : placé après, ou signalé
+            continue
+        cur = start
         add(cur, x["k"], x["l"], x.get("d", ""), {"x": 1} if (x.get("src") or {}).get("extra") else None)
         cur += x["min"]
-        nxt = normal[n + 1] if n < len(normal) - 1 else None
-        if nxt and x["min"] >= 20 and not (wi < len(day.windows) - 1 and cur + nxt["min"] > day.windows[wi][1]):
+        nxt = next((y for y in normal[n + 1:] if y not in overflow), None)
+        if nxt and x["min"] >= 20 and cur + 5 + nxt["min"] <= last_end + 10 and not (wi < len(day.windows) - 1 and cur + nxt["min"] > day.windows[wi][1]):
             p = 10 if x["min"] >= 40 else 5
             add(cur, "rep", f"Pause {p} min")
             cur += p
@@ -441,7 +451,7 @@ def layout_day(day: Day, cid: str, cfg: dict, chore: str, tomorrow_subjects: lis
     # soirée
     rel_extra = {"rel": {"today": day.subjects, "tomorrow": tomorrow_subjects, "idp": f"{cid}|{key}|r"}}
     has_rel = bool(day.subjects or tomorrow_subjects)
-    tasks_end = cur if normal else 0
+    tasks_end = min(cur, last_end + 10) if normal else 0
     if sport_pre:
         a0, a1 = sport_pre[0][0], sport_pre[0][1]
         anchor = a0 - 40
@@ -482,6 +492,20 @@ def layout_day(day: Day, cid: str, cfg: dict, chore: str, tomorrow_subjects: lis
             add(dn - 15, "cor", chore)
         add(dn, "repas", "Dîner")
 
+    # après le dîner : seulement les jours sans sport le soir, et fini avant « écrans coupés »
+    if overflow:
+        calm = day.bedtime - 45
+        t = max(dn + 45, max((m(b["t"]) for b in B if b["k"] in ("repas", "cor") and m(b["t"]) >= dn), default=dn) + 15)
+        for x in sorted(overflow, key=lambda y: y["min"]):
+            if day.sport_evening or any(a0 <= t < a1 + 15 for a0, a1, _, _ in day.acts):
+                break
+            if t + x["min"] > calm:
+                continue
+            add(t, x["k"], x["l"], x.get("d", ""), {"x": 1} if (x.get("src") or {}).get("extra") else None)
+            t += x["min"]
+            overflow.remove(x)
+        for x in overflow:   # aucune place ce jour-là : affiché à part, sans horaire
+            add(calm, x["k"], x["l"], x.get("d", ""), dict({"over": 1}, **({"x": 1} if (x.get("src") or {}).get("extra") else {})))
     # coucher
     if bedtime:
         x = bedtime[0]
@@ -492,3 +516,13 @@ def layout_day(day: Day, cid: str, cfg: dict, chore: str, tomorrow_subjects: lis
     add(day.bedtime, "dodo", "Coucher" + (" (22h au plus tard)" if day.sport_evening else ""))
     B.sort(key=lambda b: m(b["t"]))
     return B
+
+
+def overflow_notes(week: dict, names: dict) -> None:
+    """Prévient les parents quand une journée déborde."""
+    for cid, ch in week["children"].items():
+        for day_key, bl in (ch.get("blocks") or {}).items():
+            over = [b["l"] for b in bl if b.get("over")]
+            if over:
+                week["notes"].append([f"{names.get(cid, cid)} : journée trop chargée le {long_fr(date.fromisoformat(day_key)).lower()}",
+                                      "Pas de place avant le coucher pour : " + " ; ".join(over[:4]) + ". À faire plus tôt ou à décaler."])

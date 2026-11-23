@@ -5,6 +5,15 @@ Numérotation : `MAJEUR.MINEUR.CORRECTIF` (ex. 0.2.1).
 - **mineur** (0.**2**.0) : une nouveauté (un réglage, un écran, une règle de planning) ;
 - **majeur** (**1**.0.0) : la version jugée stable après plusieurs semaines d'usage réel.
 
+## [0.3.1] – 23 novembre 2026
+
+- Plus aucune mission après « écrans coupés » : quand la journée déborde, le travail peut aller jusqu'à 25 min
+  avant le dîner, puis après le dîner (jamais après le sport) ; ce qui ne rentre toujours pas s'affiche
+  dans un encadré « Pas de place avant le coucher », et une remarque prévient les parents.
+- Semaines verrouillées : les jours à venir sont recalculés en entier à chaque synchronisation
+  (les jours passés et leurs coches ne bougent pas), pour que les devoirs ajoutés trouvent une vraie place.
+- Pictogrammes tous à la même taille (les moments calmes sont juste plus pâles).
+
 ## [0.3.0] – 23 novembre 2026
 
 Validée le 23/11 : la préversion devient le site principal (l'adresse `/preview/` renvoie vers l'accueil).

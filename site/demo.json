@@ -214,18 +214,6 @@
         },
         {
          "t": "19h00",
-         "k": "dev",
-         "l": "Maths : Exercices n° 12, 14 et 17 page 62",
-         "d": "Pour mardi 24.",
-         "id": "leo|2026-11-23|dev|maths-exercices-n-12-14-et-17-page-62"
-        },
-        {
-         "t": "19h30",
-         "k": "repas",
-         "l": "Dîner"
-        },
-        {
-         "t": "19h40",
          "k": "rel",
          "l": "Relire les leçons",
          "rel": {
@@ -244,16 +232,29 @@
          }
         },
         {
-         "t": "19h55",
+         "t": "19h15",
          "k": "org",
          "l": "Préparer le sac de demain",
          "id": "leo|2026-11-23|org|preparer-le-sac-de-demain"
+        },
+        {
+         "t": "19h30",
+         "k": "repas",
+         "l": "Dîner"
         },
         {
          "t": "20h05",
          "k": "cor",
          "l": "Débarrasser + lave-vaisselle",
          "id": "leo|2026-11-23|cor|debarrasser-lave-vaisselle"
+        },
+        {
+         "t": "20h30",
+         "k": "dev",
+         "l": "Maths : Exercices n° 12, 14 et 17 page 62",
+         "d": "Pour mardi 24.",
+         "id": "leo|2026-11-23|dev|maths-exercices-n-12-14-et-17-page-62",
+         "over": 1
         },
         {
          "t": "20h30",
@@ -810,18 +811,6 @@
         },
         {
          "t": "19h00",
-         "k": "dev",
-         "l": "Maths : Exercices n° 12, 14 et 17 page 62",
-         "d": "Pour mardi 24.",
-         "id": "ines|2026-11-23|dev|maths-exercices-n-12-14-et-17-page-62"
-        },
-        {
-         "t": "19h30",
-         "k": "repas",
-         "l": "Dîner"
-        },
-        {
-         "t": "19h40",
          "k": "rel",
          "l": "Relire les leçons",
          "rel": {
@@ -840,16 +829,29 @@
          }
         },
         {
-         "t": "19h55",
+         "t": "19h15",
          "k": "org",
          "l": "Préparer le sac de demain",
          "id": "ines|2026-11-23|org|preparer-le-sac-de-demain"
+        },
+        {
+         "t": "19h30",
+         "k": "repas",
+         "l": "Dîner"
         },
         {
          "t": "20h05",
          "k": "cor",
          "l": "Débarrasser + lave-vaisselle",
          "id": "ines|2026-11-23|cor|debarrasser-lave-vaisselle"
+        },
+        {
+         "t": "20h30",
+         "k": "dev",
+         "l": "Maths : Exercices n° 12, 14 et 17 page 62",
+         "d": "Pour mardi 24.",
+         "id": "ines|2026-11-23|dev|maths-exercices-n-12-14-et-17-page-62",
+         "over": 1
         },
         {
          "t": "20h30",
@@ -1583,14 +1585,7 @@
          "id": "sarah|2026-11-25|rev|ses-se-faire-interroger"
         },
         {
-         "t": "17h10",
-         "k": "ran",
-         "l": "Grand rangement de la chambre (30 min)",
-         "d": "Bureau, sol, armoire, linge sale au panier, poubelle vidée.",
-         "id": "sarah|2026-11-25|ran|grand-rangement-de-la-chambre-30-min"
-        },
-        {
-         "t": "17h40",
+         "t": "17h15",
          "k": "rel",
          "l": "Relire les leçons",
          "rel": {
@@ -1606,7 +1601,7 @@
          }
         },
         {
-         "t": "17h55",
+         "t": "17h30",
          "k": "org",
          "l": "Préparer le sac de demain",
          "id": "sarah|2026-11-25|org|preparer-le-sac-de-demain"
@@ -1626,6 +1621,13 @@
          "t": "19h30",
          "k": "repas",
          "l": "Dîner"
+        },
+        {
+         "t": "20h15",
+         "k": "ran",
+         "l": "Grand rangement de la chambre (30 min)",
+         "d": "Bureau, sol, armoire, linge sale au panier, poubelle vidée.",
+         "id": "sarah|2026-11-25|ran|grand-rangement-de-la-chambre-30-min"
         },
         {
          "t": "20h45",
@@ -1951,7 +1953,16 @@
       }
      }
     },
-    "notes": []
+    "notes": [
+     [
+      "Léo : journée trop chargée le lundi 23 novembre",
+      "Pas de place avant le coucher pour : Maths : Exercices n° 12, 14 et 17 page 62. À faire plus tôt ou à décaler."
+     ],
+     [
+      "Inès : journée trop chargée le lundi 23 novembre",
+      "Pas de place avant le coucher pour : Maths : Exercices n° 12, 14 et 17 page 62. À faire plus tôt ou à décaler."
+     ]
+    ]
    },
    "source": "auto"
   },

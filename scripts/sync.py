@@ -215,8 +215,9 @@ def main() -> int:
                                   frozen=cur and cur["data"])
         if cur and cur["source"] != "auto":
             # semaine verrouillée (faite à la main) : seuls « à rendre » et évaluations sont mis à jour
-            # + les devoirs ajoutés à la main (blocs marqués « x ») sont insérés dans les jours à venir
+            # + les jours à venir sont recalculés (les jours passés et leurs coches restent tels quels)
             data = cur["data"]
+            data["notes"] = week["notes"]
             for cid, ch in week["children"].items():
                 tgt = data.setdefault("children", {}).setdefault(cid, {})
                 tgt["due_ed"] = ch["due"]
@@ -225,10 +226,10 @@ def main() -> int:
                 for day_key, fresh_blocks in ch["blocks"].items():
                     if day_key < today.isoformat():
                         continue
-                    kept = [b for b in blocks.get(day_key, []) if not b.get("x")]
-                    added = [b for b in fresh_blocks if b.get("x")]
-                    if kept or added:
-                        blocks[day_key] = kept + added
+                    # à partir d'aujourd'hui, la journée est recalculée en entier : les devoirs ajoutés
+                    # trouvent une vraie place avant le coucher (au lieu d'être collés à la fin)
+                    blocks[day_key] = fresh_blocks
+                    tgt.setdefault("school", {})[day_key] = ch.get("school", {}).get(day_key, "")
             db.upsert("plans", [{"week_start": wk.isoformat(), "data": data, "source": cur["source"]}])
             written.append(f"{wk.isoformat()} (verrouillée)")
             continue

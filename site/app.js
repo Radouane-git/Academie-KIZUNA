@@ -282,17 +282,21 @@ function renderChild(c,plan){
  h+='<div class="track big"><i style="width:'+pct(p)+'%"></i></div>';
  if(full)h+='<div class="boom"><span>MISSION ACCOMPLIE !</span></div>';
  h+='<ol class="tl">';
- var bl=blocksOf(c.id,S.day);
+ var all=blocksOf(c.id,S.day);var bl=all.filter(function(b){return !b.over;});var over=all.filter(function(b){return b.over;});
  if(!bl.length)h+='<li class="none">Rien de prévu ce jour-là.</li>';
  bl.forEach(function(b){
   var kd=KINDS[b.k]||KINDS.rep;var check=kd[2]&&b.id;var isDone=check&&S.done[b.id];var r=rankOf(b,S.day);
   var calm=!check&&b.k!=="rel";
-  h+='<li class="m'+(calm?" calm":"")+(isDone?" done":"")+(b.k==="loi"?" loi":"")+'"><span class="t">'+esc(b.t)+'</span>'+picto(pictoName(b),calm?36:46)+'<div class="mtext"><span class="lab">'+esc(b.l)+'</span>';
+  h+='<li class="m'+(calm?" calm":"")+(isDone?" done":"")+(b.k==="loi"?" loi":"")+'"><span class="t">'+esc(b.t)+'</span>'+picto(pictoName(b),46)+'<div class="mtext"><span class="lab">'+esc(b.l)+'</span>';
   if(b.d&&!calm)h+='<span class="det">'+esc(b.d)+'</span>';
   if(b.k==="rel"&&b.rel)h+=renderRel(b.rel);
   h+='</div>'+rankHtml(r)+(check?'<input type="checkbox" class="chk" data-id="'+esc(b.id)+'" aria-label="Fait : '+esc(b.l)+'"'+(isDone?" checked":"")+'>':'')+'</li>';
  });
- h+='</ol></main>'+renderSide(c)+'</div>';
+ h+='</ol>';
+ if(over.length){h+='<div class="overbox"><h3>Pas de place avant le coucher</h3><p>Trop de travail pour ce jour-là : voyez avec un parent pour le faire plus tôt, le matin ou en version courte.</p><ol class="tl">';
+  over.forEach(function(b){var kd=KINDS[b.k]||KINDS.dev;var isDone=b.id&&S.done[b.id];h+='<li class="m'+(isDone?" done":"")+'"><span class="t">—</span>'+picto(pictoName(b),46)+'<div class="mtext"><span class="lab">'+esc(b.l)+'</span>'+(b.d?'<span class="det">'+esc(b.d)+'</span>':'')+'</div>'+rankHtml(rankOf(b,S.day))+(b.id?'<input type="checkbox" class="chk" data-id="'+esc(b.id)+'" aria-label="Fait : '+esc(b.l)+'"'+(isDone?" checked":"")+'>':'')+'</li>';});
+  h+='</ol></div>';}
+ h+='</main>'+renderSide(c)+'</div>';
  h+='<div class="legend">'+rankHtml("S")+'<span>Évaluation du jour</span>'+rankHtml("A")+'<span>Révision</span>'+rankHtml("B")+'<span>Devoir</span>'+rankHtml("C")+'<span>Lecture, leçon</span>'+rankHtml("D")+'<span>Maison, sac</span></div>';
  return h;
 }
