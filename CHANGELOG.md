@@ -5,6 +5,20 @@ Numérotation : `MAJEUR.MINEUR.CORRECTIF` (ex. 0.2.1).
 - **mineur** (0.**2**.0) : une nouveauté (un réglage, un écran, une règle de planning) ;
 - **majeur** (**1**.0.0) : la version jugée stable après plusieurs semaines d'usage réel.
 
+## [0.5.0] – préversion (non publiée)
+
+Visible uniquement sur `/preview/` ; le site principal ne change pas tant qu'elle n'est pas validée.
+Navigation inspirée de Brilliant, polices inchangées (Unbounded, Atkinson Hyperlegible, Dela Gothic One).
+- Quatre sections par enfant : Aujourd'hui, Ma semaine, Bibliothèque, Tampons (en haut sur ordinateur,
+  barre en bas sur téléphone) ; changement de profil par pastilles en haut à droite.
+- Aujourd'hui : salutation, bande des 7 jours, carte « Prochaine mission » avec un bouton « Commencer »,
+  « Le chemin du jour » (on coche en touchant le rond), colonne avec avancement, mot du sensei,
+  « Pour demain » et prochaine évaluation.
+- Écran « mission en cours » : barre de progression, consigne, « C'est fait » passe à la mission suivante,
+  « Plus tard » referme (touche Échap aussi).
+- Ma semaine : un jour par ligne avec son avancement et ses évaluations, puis évaluations et idées.
+- Compteurs par mission (« Relire les leçons » compte pour une mission).
+
 ## [0.4.1] – 23 novembre 2026
 
 - « Relire les leçons » : message « Pas de leçon à relire pour demain » quand le lendemain n'a pas cours
