@@ -487,7 +487,8 @@ def layout_day(day: Day, cid: str, cfg: dict, chore: str, tomorrow_subjects: lis
         add(m("16h00"), "rep", "Goûter")
 
     # soirée
-    rel_extra = {"rel": {"today": day.subjects, "tomorrow": tomorrow_subjects, "idp": f"{cid}|{key}|r"}}
+    tomorrow_subjects = [x for x in tomorrow_subjects if x and x.strip()]
+    rel_extra = {"rel": {"today": [x for x in day.subjects if x and x.strip()], "tomorrow": tomorrow_subjects, "idp": f"{cid}|{key}|r"}}
     has_rel = bool(day.subjects or tomorrow_subjects)
     tasks_end = min(cur, last_end + 10) if normal else 0
     if sport_pre:

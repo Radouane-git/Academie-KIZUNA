@@ -179,6 +179,9 @@ a{color:var(--child)}
 .btnrow{display:flex;flex-wrap:wrap;gap:8px}
 .bookf{margin-top:8px;border-top:1px solid var(--soft);padding-top:6px}
 /* parents */
+.scrollbox{max-height:340px;overflow-y:auto;margin-top:8px;padding-right:6px;border-top:1px solid var(--soft);border-bottom:1px solid var(--soft);overscroll-behavior:contain}
+.scrollbox:focus-visible{outline:3px solid var(--acc)}
+.xl-h{display:block}
 .cols{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;margin-top:16px}
 .cols.two{grid-template-columns:1fr 1fr;margin:0;gap:10px}
 .cols.three{grid-template-columns:repeat(auto-fit,minmax(190px,1fr));margin:0;gap:10px}
@@ -239,8 +242,8 @@ a{color:var(--child)}
 </head>
 <body>
 <div id="root"><p style="padding:2rem;font-family:sans-serif">Chargement de l’Académie…</p></div>
-<script src="config.js?v=0.4.0"></script>
+<script src="config.js?v=0.4.1"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script src="app.js?v=0.4.0"></script>
+<script src="app.js?v=0.4.1"></script>
 </body>
 </html>

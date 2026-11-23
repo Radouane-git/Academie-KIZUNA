@@ -42,10 +42,11 @@ function ideasFor(cid){return S.ideas.filter(function(x){return x.child===cid||x
 function blocksOf(cid,date){var p=planOf(date);var ch=p&&p.data.children[cid];var bl=((ch&&ch.blocks&&ch.blocks[date])||[]).slice();
  ideasFor(cid).forEach(function(x){if(x.date===date)bl.push({t:x.time||"16h00",k:"loi",l:x.title,d:[x.detail,x.link].filter(Boolean).join(" · "),id:"idea|"+x.id});});
  return bl.sort(function(a,b){return mins(a.t)-mins(b.t);});}
+function subs(a){return (a||[]).filter(function(x){return x&&String(x).trim();});}
 function taskIds(cid,date){
  var ids=[];
  blocksOf(cid,date).forEach(function(b){
-  if(b.k==="rel"&&b.rel){(b.rel.today||[]).forEach(function(s){ids.push(b.rel.idp+"|t|"+s);});(b.rel.tomorrow||[]).forEach(function(s){ids.push(b.rel.idp+"|d|"+s);});}
+  if(b.k==="rel"&&b.rel){subs(b.rel.today).forEach(function(s){ids.push(b.rel.idp+"|t|"+s);});subs(b.rel.tomorrow).forEach(function(s){ids.push(b.rel.idp+"|d|"+s);});}
   else if(KINDS[b.k]&&KINDS[b.k][2]&&b.id)ids.push(b.id);
  });
  return ids;
@@ -313,8 +314,8 @@ function renderChild(c,plan){
  return h;
 }
 function renderRel(r){
- function row(lab,arr,code){if(!arr||!arr.length)return "";var s='<div class="row"><em>'+lab+'</em>';arr.forEach(function(sub){var id=r.idp+"|"+code+"|"+sub;s+='<button class="chip" data-id="'+esc(id)+'" aria-pressed="'+(!!S.done[id])+'">'+esc(sub)+'</button>';});return s+'</div>';}
- return '<div class="rel">'+row("Du jour",r.today,"t")+row("De demain",r.tomorrow,"d")+'</div>';
+ function row(lab,arr,code,empty){arr=subs(arr);if(!arr.length)return empty?'<div class="row"><em>'+lab+'</em><span class="none">'+empty+'</span></div>':"";var s='<div class="row"><em>'+lab+'</em>';arr.forEach(function(sub){var id=r.idp+"|"+code+"|"+sub;s+='<button class="chip" data-id="'+esc(id)+'" aria-pressed="'+(!!S.done[id])+'">'+esc(sub)+'</button>';});return s+'</div>';}
+ return '<div class="rel">'+row("Du jour",r.today,"t")+row("De demain",r.tomorrow,"d","Pas de leçon à relire pour demain : profites-en pour avancer ou lire.")+'</div>';
 }
 function side(title,inner,cls){return '<section class="card side-card'+(cls?" "+cls:"")+'"><h2>'+title+'</h2>'+inner+'</section>';}
 function renderSide(c){
@@ -405,7 +406,7 @@ function renderParents(noFam){
   h+='<section class="card"><div class="ftitle">'+picto("Lecture",44)+'<h2>Bibliothèque des enfants</h2></div>'+children().map(function(c){var bk=booksFor(c.id);return '<div class="xl"><span><b>'+esc(c.name)+'</b><small>'+bk.length+' livre'+(bk.length>1?"s":"")+' · '+fmtN(pagesOf(bk))+' pages'+(bk[0]?' · dernier : '+esc(bk[0].title):'')+'</small></span><button class="btn sec" data-go="'+esc(c.id)+'" data-day="'+esc(S.day)+'">Voir</button></div>';}).join("")+'</section>';
   // liste des ajouts
   var up=S.extras.filter(function(e){return e.due>=TODAY;});
-  h+='<section class="card"><h2>Missions ajoutées à la main</h2>'+(up.length?'<p>Date affichée : jour de <b>rendu</b>.</p><button class="btn sec" type="button" id="shift-extras">Mes dates étaient des jours « à faire » : tout décaler d’un jour</button>'+msgHtml("shift"):'')+(up.length?up.map(function(e){var c=child(e.child);return '<div class="xl"><span><b>'+esc(c?c.name:"Tous")+'</b> · à rendre le '+esc(fmtDate(e.due))+'<small>'+esc((e.subject?e.subject+" : ":"")+e.text)+'</small></span><button class="btn sec" data-del="'+esc(e.id)+'">Supprimer</button></div>';}).join(""):'<p class="none">Aucune pour le moment.</p>')+'</section>';
+  h+='<section class="card"><h2>Missions ajoutées à la main</h2>'+(up.length?'<p>Date affichée : jour de <b>rendu</b>.</p><button class="btn sec" type="button" id="shift-extras">Mes dates étaient des jours « à faire » : tout décaler d’un jour</button>'+msgHtml("shift"):'')+(up.length?'<div class="scrollbox" tabindex="0" role="region" aria-label="Liste des missions ajoutées ('+up.length+')">'+up.map(function(e){var c=child(e.child);return '<div class="xl"><span><span class="xl-h"><b>'+esc(c?c.name:"Tous")+'</b> · à rendre le '+esc(fmtDate(e.due))+'</span><small>'+esc((e.subject?e.subject+" : ":"")+e.text)+'</small></span><button class="btn sec mini" data-del="'+esc(e.id)+'">Supprimer</button></div>';}).join("")+'</div>'+(up.length>5?'<p class="det">'+up.length+' missions : faites défiler la liste.</p>':''):'<p class="none">Aucune pour le moment.</p>')+'</section>';
   // idées
   h+='<form class="card f" id="idea"><div class="ftitle">'+picto("Loisir",44)+'<h2>Idée de loisir ou de sortie</h2></div><p>Lecture plaisir, sortie, défi construction, échecs… Affichée dans l’onglet de l’enfant, et dans sa journée si elle est datée.</p>';
   h+='<label for="i-child">Pour<select id="i-child">'+kidOptions(true)+'</select></label>';

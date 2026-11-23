@@ -5,6 +5,12 @@ Numérotation : `MAJEUR.MINEUR.CORRECTIF` (ex. 0.2.1).
 - **mineur** (0.**2**.0) : une nouveauté (un réglage, un écran, une règle de planning) ;
 - **majeur** (**1**.0.0) : la version jugée stable après plusieurs semaines d'usage réel.
 
+## [0.4.1] – 23 novembre 2026
+
+- « Relire les leçons » : message « Pas de leçon à relire pour demain » quand le lendemain n'a pas cours
+  (au lieu d'une pastille vide, qui empêchait aussi d'atteindre 100 %).
+- Vue parents : la liste « Missions ajoutées à la main » a une hauteur fixe (environ 5 missions) avec défilement.
+
 ## [0.4.0] – 23 novembre 2026
 
 - Emploi du temps du jour (lu sur EcoleDirecte) affiché en haut des missions, avec les salles.
