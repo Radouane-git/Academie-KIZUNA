@@ -20,7 +20,7 @@ var TIPS = [
 ];
 
 /* ------------------------------------------------------------ état */
-var S = {fam:null, plans:[], done:{}, extras:[], ideas:[], ideasMissing:false, stamps:[], sensei:[], stampsMissing:false, books:[], booksMissing:false, cancels:[], cancelsMissing:false, edtOpen:false, focus:null, bookOpen:false, sync:null, mfa:null, view:null, day:null, msg:{}, bulk:{text:"",items:null}};
+var S = {fam:null, plans:[], done:{}, extras:[], ideas:[], ideasMissing:false, stamps:[], sensei:[], stampsMissing:false, books:[], booksMissing:false, cancels:[], cancelsMissing:false, edtOpen:false, focus:null, installEvt:null, standalone:false, bookOpen:false, sync:null, mfa:null, view:null, day:null, msg:{}, bulk:{text:"",items:null}};
 function lsGet(k){try{return localStorage.getItem(k);}catch(e){return null;}}
 function lsSet(k,v){try{localStorage.setItem(k,v);}catch(e){}}
 function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
@@ -134,7 +134,7 @@ function defaultDay(){
  var last=S.plans[S.plans.length-1].data.days;var first=S.plans[0].data.days;
  return TODAY<first[0].date?first[0].date:last[last.length-1].date;
 }
-function curView(){var h=(location.hash||"").replace("#","").split("/")[0];var ok=children().map(function(c){return c.id;}).concat(["parents","conseils","parametres"]);return ok.indexOf(h)>=0?h:(children()[0]?children()[0].id:"parents");}
+function curView(){var h=(location.hash||"").replace("#","").split("/")[0];var ok=children().map(function(c){return c.id;}).concat(["parents","conseils","parametres"]);if(!h){var last=lsGet("kizuna-view");if(last&&ok.indexOf(last)>=0)h=last;}return ok.indexOf(h)>=0?h:(children()[0]?children()[0].id:"parents");}
 function start(){
  var saved=null;try{saved=sessionStorage.getItem("planning-day");}catch(e){}
  S.day=(saved&&planOf(saved))?saved:defaultDay();
@@ -279,7 +279,7 @@ function weeksNav(){
 function footer(){return '<footer class="foot">'+syncLine()+'<a href="#conseils">Conseils</a></footer>';}
 function render(){
  if(!S.fam){root.innerHTML='<div class="wrap">'+topbar("parents")+renderParents(true)+footer()+'</div>';bindForms();return;}
- var v=curView();var c=child(v);var t=theme(c);
+ var v=curView();if(v!=="parametres"&&v!=="conseils")lsSet("kizuna-view",v);var c=child(v);var t=theme(c);
  var plan=planOf(S.day);
  var h='<div class="wrap'+(c?" kid":"")+'" style="--child:'+t.bg+';--acc:'+t.acc+';--ctxt:'+t.txt+'">';
  h+=topbar(v);
@@ -510,6 +510,7 @@ function renderSettings(noFam){
   h+='<label for="th-parents">Parents<select id="th-parents" data-theme-for="__parents">'+Object.keys(THEMES).map(function(n){return '<option'+(n===themeName(null)?" selected":"")+'>'+n+'</option>';}).join("")+'</select></label>';
   h+='<button class="btn" type="submit">Enregistrer les couleurs</button>'+msgHtml("themes")+'</form>';
  }
+ h+='<section class="card"><h2>Installer sur un téléphone</h2>'+(S.installEvt?'<p>Ce téléphone peut installer l’Académie comme une appli.</p><button class="btn" type="button" data-act="install">Installer l’appli</button>':S.standalone?'<p class="msg">L’Académie est déjà installée sur cet appareil.</p>':'')+'<p><b>iPhone (Safari)</b> : bouton Partager, puis « Sur l’écran d’accueil ».</p><p><b>Android (Chrome)</b> : menu ⋮, puis « Installer l’application » (ou « Ajouter à l’écran d’accueil »).</p><p class="det">Le mot de passe familial est demandé une seule fois par appareil.</p></section>';
  h+='<form class="card f" id="import"><h2>Importer un historique</h2><p>Fichier JSON fourni par Claude : réglages, semaines et coches.</p><label for="imp-file">Fichier<input id="imp-file" type="file" accept="application/json,.json" required></label><button class="btn" type="submit">Importer</button>'+msgHtml("import")+'</form>';
  if(!noFam&&!DEMO){
   h+='<form class="card f wide" id="settings"><h2>Réglages (avancé)</h2><p>Enfants, activités, heures de coucher, tâches récurrentes. Format JSON : modifiez avec précaution.</p><label for="set-json">Réglages<textarea id="set-json" spellcheck="false" style="min-height:220px;font-family:ui-monospace,monospace;font-size:.8rem">'+esc(JSON.stringify(S.fam,null,2))+'</textarea></label><button class="btn" type="submit">Enregistrer les réglages</button>'+msgHtml("settings")+'</form>';
@@ -693,6 +694,7 @@ root.addEventListener("click",function(e){
   sb.from("cancellations").insert(row).select().then(function(r){if(r.error)flash("global","Erreur : "+r.error.message,true);else okc(r.data[0]);});return;}
  if(t.hasAttribute("data-uncancel")){var uid=t.getAttribute("data-uncancel");var aftu=function(){S.cancels=S.cancels.filter(function(x){return String(x.id)!==uid;});render();};
   if(DEMO)aftu();else sb.from("cancellations").delete().eq("id",uid).then(function(r){if(!r.error)aftu();});return;}
+ if(t.getAttribute("data-act")==="install"){var ev=S.installEvt;if(ev){ev.prompt();ev.userChoice.then(function(){S.installEvt=null;render();});}return;}
  if(t.getAttribute("data-act")==="book-close"){S.bookOpen=false;render();var ob=document.querySelector('[data-act="book-open"]');if(ob)ob.focus();return;}
  if(t.getAttribute("data-act")==="books-all"){S.bookAll=true;render();return;}
  if(t.hasAttribute("data-act")){sb.auth.signOut().then(function(){location.reload();});return;}
@@ -706,8 +708,11 @@ root.addEventListener("click",function(e){
  if(t.hasAttribute("data-id")){var i=t.getAttribute("data-id");setDone(i,!S.done[i]);}
 });
 root.addEventListener("toggle",function(e){if(e.target.classList&&e.target.classList.contains("edt"))S.edtOpen=e.target.open;},true);
+ try{S.standalone=window.matchMedia("(display-mode: standalone)").matches||navigator.standalone===true;}catch(e){}
+window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();S.installEvt=e;if(curView()==="parametres")softRender();});
+window.addEventListener("appinstalled",function(){S.installEvt=null;S.standalone=true;flash("global","L’Académie est installée : retrouvez l’icône 絆 sur l’écran d’accueil.");});
 root.addEventListener("keydown",function(e){if(e.key==="Escape"&&S.focus){S.focus=null;render();return;}if(e.key==="Escape"&&S.bookOpen&&e.target.closest&&e.target.closest("#bookf")){S.bookOpen=false;render();var ob=document.querySelector('[data-act="book-open"]');if(ob)ob.focus();}});
-window.addEventListener("hashchange",function(){S.bookOpen=false;S.focus=null;render();window.scrollTo(0,0);});
+window.addEventListener("hashchange",function(){var hv=(location.hash||"").replace("#","").split("/")[0];if(hv&&hv!=="parametres"&&hv!=="conseils")lsSet("kizuna-view",hv);S.bookOpen=false;S.focus=null;render();window.scrollTo(0,0);});
 
 /* ------------------------------------------------------------ démarrage */
 if(DEMO){loadAll();}

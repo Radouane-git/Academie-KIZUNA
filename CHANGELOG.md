@@ -5,6 +5,14 @@ Numérotation : `MAJEUR.MINEUR.CORRECTIF` (ex. 0.2.1).
 - **mineur** (0.**2**.0) : une nouveauté (un réglage, un écran, une règle de planning) ;
 - **majeur** (**1**.0.0) : la version jugée stable après plusieurs semaines d'usage réel.
 
+## [0.6.0] – 23 novembre 2026
+
+- L'Académie s'installe comme une appli (icône 絆 sur l'écran d'accueil, ouverture en plein écran,
+  nom « Kizuna ») : manifeste web, icônes iPhone et Android.
+- Paramètres : encadré « Installer sur un téléphone » (bouton direct sur Android quand c'est possible,
+  marche à suivre pour iPhone et Android).
+- Chaque appareil rouvre directement le dernier profil utilisé (le téléphone d'Imrane s'ouvre sur Imrane).
+
 ## [0.5.2] – 23 novembre 2026
 
 - Nouvelle page « Paramètres » (roue dentée en haut à droite, ou lien en bas de la Vue parents) :
