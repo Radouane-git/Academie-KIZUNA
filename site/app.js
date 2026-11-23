@@ -242,7 +242,12 @@ function syncLine(){
 function curSection(){var h=(location.hash||"").replace("#","").split("/");return ["semaine","livres","tampons"].indexOf(h[1])>=0?h[1]:"jour";}
 var SECTIONS=[["jour","Aujourd’hui","Devoir"],["semaine","Ma semaine","Sac"],["livres","Bibliothèque","Lecture"],["tampons","Tampons","Loisir"]];
 var FLAME='<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c1 4 5 5.5 5 11a5 5 0 0 1-10 0c0-3 2-4.5 2-7 2 1.2 3 2.6 3 4 1-2 .5-5 0-8z" fill="#FF6B4A"/></svg>';
-function ring(p,size,stroke,label){var r=(size-stroke)/2,c=2*Math.PI*r;return '<span class="ring" style="width:'+size+'px;height:'+size+'px"><svg width="'+size+'" height="'+size+'" viewBox="0 0 '+size+' '+size+'" aria-hidden="true"><circle cx="'+size/2+'" cy="'+size/2+'" r="'+r+'" stroke="var(--line)" stroke-width="'+stroke+'" fill="none"/><circle cx="'+size/2+'" cy="'+size/2+'" r="'+r+'" stroke="var(--child)" stroke-width="'+stroke+'" fill="none" stroke-linecap="round" stroke-dasharray="'+(c*p).toFixed(1)+' '+c.toFixed(1)+'" transform="rotate(-90 '+size/2+' '+size/2+')"/></svg><b style="font-size:'+Math.round(size/4.2)+'px">'+(label||Math.round(p*100)+"%")+'</b></span>';}
+function ring(p,size,stroke,label,col,track,txt){var r=(size-stroke)/2,c=2*Math.PI*r;return '<span class="ring" style="width:'+size+'px;height:'+size+'px"><svg width="'+size+'" height="'+size+'" viewBox="0 0 '+size+' '+size+'" aria-hidden="true"><circle cx="'+size/2+'" cy="'+size/2+'" r="'+r+'" stroke="'+(track||"var(--line)")+'" stroke-width="'+stroke+'" fill="none"/><circle cx="'+size/2+'" cy="'+size/2+'" r="'+r+'" stroke="'+(col||"var(--child)")+'" stroke-width="'+stroke+'" fill="none" stroke-linecap="round" stroke-dasharray="'+(c*p).toFixed(1)+' '+c.toFixed(1)+'" transform="rotate(-90 '+size/2+' '+size/2+')"/></svg><b style="font-size:'+Math.round(size/4.2)+'px'+(txt?';color:'+txt:'')+'">'+(label||Math.round(p*100)+"%")+'</b></span>';}
+function banner(c,kicker,title,sub,right,withCard){
+ var t=theme(c),k=card(c.id);
+ var h='<section class="hero kid-hero" style="background-color:'+t.bg+';color:'+t.txt+'"><div class="hero-id">'+(withCard?'<span class="shield" style="background:'+t.acc+';color:'+t.bg+'" aria-label="Niveau '+k.level+'">'+k.level+'</span>':'')+'<div><span class="over">'+kicker+'</span><h1>'+esc(title)+'</h1>'+(sub?'<p class="hsub">'+esc(sub)+'</p>':'');
+ if(withCard)h+='<div class="badges">'+(k.badges.length?k.badges.map(function(b){return '<span>'+esc(b)+'</span>';}).join(""):'<span>Encore '+k.next+' missions pour le niveau '+(k.level+1)+'</span>')+'</div>';
+ return h+'</div></div>'+(right?'<div class="hero-stats">'+right+'</div>':'')+'</section>';}
 
 function topbar(v){
  var c=child(v),sec=curSection();
@@ -320,7 +325,9 @@ function renderChild(c,plan){
  var lastT=left.length?left[left.length-1].t:null;
  var sub=!tasks.length?"Rien de prévu ce jour-là.":full?"Tout est fait. Bravo !":(tasks.length-left.length)+" mission"+(tasks.length-left.length>1?"s":"")+" faite"+(tasks.length-left.length>1?"s":"")+", encore "+left.length+"."+(lastT&&!left[left.length-1].over?" Dernière prévue à "+lastT+".":"");
  var h='<div class="today"><section class="main-col">';
- h+='<div class="greet"><span class="kicker">'+esc(S.day===TODAY?di.long:(S.day<TODAY?"Journée passée":"À venir"))+(sc?' · '+esc(sc):'')+'</span><h1>'+esc(title)+'</h1><p>'+esc(sub)+'</p></div>';
+ var t0=theme(c),st0=stampsFor(c.id);
+ h+=banner(c,esc(S.day===TODAY?di.long:(S.day<TODAY?"Journée passée":di.long))+(sc?' · '+esc(sc):''),title,sub,
+  '<div class="hero-ring">'+ring(p.t?p.n/p.t:0,76,8,p.t?p.n+"/"+p.t:"–",t0.acc,"rgba(255,255,255,.25)",t0.txt)+'<small>missions<br>du jour</small></div><div class="hero-stamps">'+stampHtml(54)+'<div><b>'+st0.length+'</b><small>tampon'+(st0.length>1?"s":"")+'</small></div></div>',true);
  h+='<div class="dstrip" role="group" aria-label="Jours de la semaine">'+days.map(function(d){return dayChip(c,d);}).join("")+'</div>';
  var nt=nextTask(c.id,S.day);
  if(nt){h+='<div class="nextcard">'+'<span class="nc-pic">'+picto(pictoName(nt)||"Devoir",64)+'</span><div class="nc-txt"><span class="kicker acc">'+(S.day===TODAY?"Prochaine mission":"Première mission")+(nt.over?"":" · "+esc(nt.t))+'</span><h2>'+esc(nt.l)+'</h2>'+(nt.d?'<p>'+esc(nt.d)+'</p>':'')+'</div><button class="cta" data-focus="'+esc(keyOf(nt))+'">Commencer</button></div>';}
@@ -358,7 +365,6 @@ function side(title,inner,cls){return '<section class="card side-card'+(cls?" "+
 function renderSide(c,plan){
  var h='<aside class="side">';
  var p=mprog(c.id,S.day),w=weekProg(c.id,plan);
- h+='<section class="card side-card prog-card">'+ring(p.t?p.n/p.t:0,76,8)+'<div><b>'+(S.day===TODAY?"Aujourd’hui":esc(fmtDate(S.day,{weekday:"long"})))+'</b><small>'+p.n+' mission'+(p.n>1?"s":"")+' sur '+p.t+'</small><small>Semaine : '+pct(w)+' %</small></div></section>';
  var m=senseiFor(c.id);
  if(m)h+=side('<span class="sensei-t">Le mot du sensei</span>','<p class="sensei-msg">'+esc(m.text)+'</p><small class="muted">'+esc(fmtDate(m.created_at.slice(0,10),{weekday:"long",day:"numeric",month:"long"}))+'</small>','sensei');
  var nd=addDays(S.day,1);var due=dueFor(c.id,nd);
@@ -369,7 +375,7 @@ function renderSide(c,plan){
  return h+'</aside>';
 }
 function renderWeek(c,plan){
- var h='<div class="narrow"><div class="greet"><span class="kicker">'+esc(plan.data.title)+'</span><h1>Ma semaine</h1></div>'+weeksNav();
+ var wp=weekProg(c.id,plan);var h='<div class="narrow">'+banner(c,esc(plan.data.title),"Ma semaine","",'<div class="hero-ring">'+ring(wp.t?wp.n/wp.t:0,72,8,pct(wp)+"%",theme(c).acc,"rgba(255,255,255,.25)",theme(c).txt)+'</div>')+weeksNav();
  h+='<section class="card"><ol class="weeklist">';
  plan.data.days.forEach(function(d){var p=mprog(c.id,d.date);var sc=((plan.data.children[c.id]||{}).school||{})[d.date]||"";var ev=evalsFor(c.id).filter(function(e){return e[0]===d.date;});
   h+='<li><button class="wrow'+(d.date===TODAY?" today":"")+'" data-day="'+d.date+'" data-sec="jour">'+ring(p.t?p.n/p.t:0,52,6,p.t?p.n+"/"+p.t:"–")+'<span class="wr-txt"><b>'+esc(d.date===TODAY?"Aujourd’hui · "+d.long:d.long)+'</b><small>'+esc(sc)+'</small>'+(ev.length?'<small class="evtxt">Évaluation : '+esc(ev.map(function(e){return e[1];}).join(" ; "))+'</small>':'')+'</span><span class="chev" aria-hidden="true">›</span></button></li>';});
@@ -383,7 +389,7 @@ function renderWeek(c,plan){
 }
 function renderLibrary(c){
  var bk=booksFor(c.id);
- var h='<div class="narrow"><div class="greet"><span class="kicker">'+bk.length+' livre'+(bk.length>1?"s":"")+' · '+fmtN(pagesOf(bk))+' pages</span><h1>Ma bibliothèque</h1></div>';
+ var h='<div class="narrow">'+banner(c,"Bibliothèque de l’Académie","Ma bibliothèque","",'<div class="hero-num"><b>'+bk.length+'</b><small>livre'+(bk.length>1?"s":"")+'</small></div><div class="hero-num"><b>'+fmtN(pagesOf(bk))+'</b><small>pages</small></div>');
  h+='<section class="card side-card">'+(S.bookOpen?bookForm(c.id):'<button class="cta" type="button" data-act="book-open">J’ai fini un livre</button>')+'</section>';
  h+='<section class="card side-card">'+(bk.length?'<ul class="books">'+bk.map(function(b){return '<li>'+picto("Lecture",40)+'<span><b>'+esc(b.title)+'</b>'+(b.author?' · '+esc(b.author):'')+'<small>'+(b.pages?fmtN(+b.pages)+' pages · ':'')+(b.finished?esc(fmtDate(b.finished,{day:"numeric",month:"short",year:"numeric"})):'')+'</small></span><button class="linkbtn" data-delbook="'+esc(b.id)+'" aria-label="Retirer '+esc(b.title)+'">Retirer</button></li>';}).join("")+'</ul>':'<p class="none">Note ici chaque livre terminé, même pour le plaisir.</p>')+'</section>';
  return h+'</div>';

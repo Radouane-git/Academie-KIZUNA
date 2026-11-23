@@ -5,6 +5,12 @@ Numérotation : `MAJEUR.MINEUR.CORRECTIF` (ex. 0.2.1).
 - **mineur** (0.**2**.0) : une nouveauté (un réglage, un écran, une règle de planning) ;
 - **majeur** (**1**.0.0) : la version jugée stable après plusieurs semaines d'usage réel.
 
+## [0.5.1] – 23 novembre 2026
+
+- Retour de la carte à lignes de vitesse aux couleurs de chaque enfant en haut des sections
+  Aujourd'hui (niveau, badges, missions du jour, tampons), Ma semaine et Bibliothèque.
+  Polices inchangées (titre en Unbounded très gras, comme avant).
+
 ## [0.5.0] – 23 novembre 2026
 
 Validée le 23/11 : la préversion devient le site principal (`/preview/` renvoie vers l'accueil).
