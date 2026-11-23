@@ -139,7 +139,7 @@ function defaultDay(){
  var last=S.plans[S.plans.length-1].data.days;var first=S.plans[0].data.days;
  return TODAY<first[0].date?first[0].date:last[last.length-1].date;
 }
-function curView(){var h=(location.hash||"").replace("#","").split("/")[0];var ok=children().map(function(c){return c.id;}).concat(["parents","conseils","parametres"]);if(!h){var last=lsGet("kizuna-view");if(last&&ok.indexOf(last)>=0)h=last;}return ok.indexOf(h)>=0?h:(children()[0]?children()[0].id:"parents");}
+function curView(){var h=(location.hash||"").replace("#","").split("/")[0];var ok=children().map(function(c){return c.id;}).concat(["parents","conseils","parametres","accueil"]);return ok.indexOf(h)>=0?h:"accueil";}
 function start(){
  var saved=null;try{saved=sessionStorage.getItem("planning-day");}catch(e){}
  S.day=(saved&&planOf(saved))?saved:defaultDay();
@@ -258,11 +258,11 @@ function banner(c,kicker,title,sub,right,withCard){
 
 function topbar(v){
  var c=child(v),sec=curSection();
- var h='<header class="topbar"><a class="brand" href="#'+esc(children()[0]?children()[0].id:"parents")+'">'+logo(40)+'<span class="wordmark"><span>ACADÉMIE</span><b>KIZUNA</b></span></a>';
+ var h='<header class="topbar"><a class="brand" href="#accueil" aria-label="Accueil de l’Académie">'+logo(40)+'<span class="wordmark"><span>ACADÉMIE</span><b>KIZUNA</b></span></a>';
  if(c){h+='<nav class="secnav" aria-label="Sections">'+SECTIONS.map(function(s){return '<a href="#'+esc(c.id)+(s[0]==="jour"?"":"/"+s[0])+'" class="sec" aria-current="'+(sec===s[0]?"page":"false")+'">'+'<span class="secpic">'+picto(s[2],30)+'</span><span>'+s[1]+'</span></a>';}).join("")+'</nav>';}
  h+='<div class="who">';
  var cur=c||null,ct=cur?theme(cur):THEMES[themeName(null)];
- h+='<details class="pmenu"'+(S.pmenu?" open":"")+'><summary aria-label="Changer de profil"><span class="av" style="background:'+ct.bg+';color:'+ct.txt+'">'+esc(cur?cur.name.charAt(0):(v==="parents"?"P":"·"))+'</span><span class="pm-name">'+esc(cur?cur.name:v==="parents"?"Parents":v==="parametres"?"Paramètres":"Conseils")+'</span><span class="caret" aria-hidden="true">▾</span></summary><div class="pm-list">';
+ h+='<details class="pmenu"'+(S.pmenu?" open":"")+'><summary aria-label="Changer de profil"><span class="av" style="background:'+ct.bg+';color:'+ct.txt+'">'+esc(cur?cur.name.charAt(0):(v==="parents"?"P":"≡"))+'</span><span class="pm-name">'+esc(cur?cur.name:v==="parents"?"Parents":v==="parametres"?"Paramètres":v==="accueil"?"Profils":"Conseils")+'</span><span class="caret" aria-hidden="true">▾</span></summary><div class="pm-list">';
  children().forEach(function(ch){var t2=theme(ch);h+='<button class="pm-item" data-view="'+esc(ch.id)+'" aria-current="'+(v===ch.id?"page":"false")+'"><span class="av" style="background:'+t2.bg+';color:'+t2.txt+'">'+esc(ch.name.charAt(0))+'</span>'+esc(ch.name)+'</button>';});
  h+='<button class="pm-item" data-view="parents" aria-current="'+(v==="parents"?"page":"false")+'"><span class="av" style="background:#3A4250;color:#fff">P</span>Vue parents</button><button class="pm-item" data-view="parametres" aria-current="'+(v==="parametres"?"page":"false")+'"><span class="av" style="background:#E9EEF0;color:#0D3B45">'+GEAR+'</span>Paramètres</button><button class="pm-item" data-view="conseils"><span class="av" style="background:#0D3B45;color:#fff">?</span>Conseils</button></div></details>';
  if(c){var k=card(c.id);h+='<span class="streak" title="Jours de suite">'+FLAME+'<b>'+k.streak+'</b></span>';}
@@ -291,10 +291,18 @@ function foldForms(){FOLDS.forEach(function(f){var el=document.getElementById(f[
  var d=document.createElement("details");d.className="fold"+(f[0]==="bulk"?" wide":"");d.setAttribute("data-fold",f[0]);
  if((S.open||{})[f[0]]||S.msg[f[2]]||(f[0]==="bulk"&&S.bulk.items))d.open=true;
  var sm=document.createElement("summary");sm.textContent="+ "+f[1];d.appendChild(sm);el.parentNode.insertBefore(d,el);d.appendChild(el);});}
+function renderHome(){
+ var hr=new Date().getHours();
+ var h='<div class="home"><div class="home-head">'+logo(72)+'<h1>'+(hr<18?"Bonjour":"Bonsoir")+' !</h1><p>Qui ouvre l’Académie ?</p></div><div class="home-grid">';
+ children().forEach(function(c){var t=theme(c),k=card(c.id),mp=mprog(c.id,TODAY),left=mp.t-mp.n;
+  h+='<a class="home-card" href="#'+esc(c.id)+'" style="background-color:'+t.bg+';color:'+t.txt+'"><span class="shield" style="background:'+t.acc+';color:#0D3B45" aria-hidden="true">'+k.level+'</span><span class="hc-txt"><b>'+esc(c.name)+'</b><small>'+(mp.t?(left?left+" mission"+(left>1?"s":"")+" aujourd’hui":"Tout est fait aujourd’hui !"):"Rien de prévu aujourd’hui")+(k.streak>1?" · "+k.streak+" jours de suite":"")+'</small></span>'+(mp.t?ring(mp.n/mp.t,56,6,mp.n+"/"+mp.t,t.acc,"rgba(255,255,255,.25)",t.txt):'')+'</a>';});
+ var tp=THEMES[themeName(null)];
+ h+='</div><div class="home-more"><a class="home-small" href="#parents" style="--tc:'+tp.bg+'"><span class="av" style="background:'+tp.bg+';color:#fff">P</span>Vue parents</a><a class="home-small" href="#conseils"><span class="av" style="background:#0D3B45;color:#fff">?</span>Conseils</a></div></div>';
+ return h;}
 function footer(){return '<footer class="foot">'+syncLine()+'<a href="#conseils">Conseils</a></footer>';}
 function render(){
  if(!S.fam){root.innerHTML='<div class="wrap">'+topbar("parents")+renderParents(true)+footer()+'</div>';bindForms();return;}
- var v=curView();if(v!=="parametres"&&v!=="conseils")lsSet("kizuna-view",v);var c=child(v);var t=theme(c);
+ var v=curView();var c=child(v);var t=theme(c);
  var plan=planOf(S.day);
  var h='<div class="wrap'+(c?" kid":"")+'" style="--child:'+t.bg+';--acc:'+t.acc+';--ctxt:'+t.txt+'">';
  h+=topbar(v);
@@ -307,6 +315,7 @@ function render(){
   else h+=renderChild(c,plan);}
  else if(v==="parents")h+=renderParents(false);
  else if(v==="parametres")h+=renderSettings(false);
+ else if(v==="accueil")h+=renderHome();
  else h+=renderTips(plan);
  h+=footer();
  if(c&&S.focus)h+=renderFocus(c);

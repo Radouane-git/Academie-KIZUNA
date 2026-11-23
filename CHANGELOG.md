@@ -5,6 +5,13 @@ Numérotation : `MAJEUR.MINEUR.CORRECTIF` (ex. 0.2.1).
 - **mineur** (0.**2**.0) : une nouveauté (un réglage, un écran, une règle de planning) ;
 - **majeur** (**1**.0.0) : la version jugée stable après plusieurs semaines d'usage réel.
 
+## [0.8.0] – 23 novembre 2026
+
+- Page d'accueil « Qui ouvre l'Académie ? » : une grande carte par enfant (couleur, niveau, missions du jour),
+  plus Vue parents et Conseils. L'appli s'ouvre dessus ; le logo y ramène.
+- Ordinateur : le bandeau du haut reste sur une ligne quel que soit l'enfant choisi (menus un peu plus compacts).
+- Tampon de l'Académie entouré de blanc sur les cartes : bien visible sur Sakura et Brasier.
+
 ## [0.7.0] – 23 novembre 2026
 
 Validée le 23/11 et publiée. Corrections issues de l'audit UX du 23/11 :

@@ -450,6 +450,33 @@ a{color:var(--child)}
 .fold>form.card{box-shadow:none;border-top:0;border-radius:0 0 22px 22px}
 .fold.wide{grid-column:1/-1}
 
+/* ===== 0.8.0 : accueil, bandeau sur une ligne, tampon lisible ===== */
+.home{max-width:760px;margin:10px auto 0;display:flex;flex-direction:column;gap:22px}
+.home-head{display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px}
+.home-head h1{font-family:var(--display);font-weight:900;font-size:clamp(1.8rem,4vw,2.4rem)}
+.home-head p{color:var(--muted);font-size:1.1rem;margin:0}
+.home-grid{display:flex;flex-direction:column;gap:14px}
+.home-card{display:flex;align-items:center;gap:18px;border-radius:24px;padding:20px 24px;text-decoration:none;background-image:repeating-conic-gradient(from 0deg at 85% 30%,rgba(255,255,255,.12) 0deg 4deg,transparent 4deg 12deg);box-shadow:0 6px 0 rgba(0,0,0,.18);min-height:96px;transition:transform .12s}
+.home-card:hover{transform:translateY(-2px)}
+.home-card:active{transform:translateY(3px);box-shadow:0 3px 0 rgba(0,0,0,.18)}
+.home-card .shield{width:56px;height:64px;font-size:1.3rem}
+.hc-txt{flex:1;display:flex;flex-direction:column;gap:4px;min-width:0}
+.hc-txt b{font-family:var(--display);font-weight:900;font-size:1.7rem;line-height:1.1}
+.hc-txt small{color:inherit;opacity:.92;font-size:.95rem}
+.home-more{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.home-small{display:inline-flex;align-items:center;gap:10px;padding:6px 16px 6px 6px;border:2px solid var(--line);border-radius:999px;background:#fff;text-decoration:none;color:var(--ink);font-weight:700;min-height:48px}
+.home-small .av{width:34px;height:34px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:800}
+.hero .stamp{box-shadow:inset 0 0 0 4px var(--stamp),inset 0 0 0 6px #fff,0 0 0 3px #fff,0 4px 0 3px rgba(0,0,0,.18)}
+@media (min-width:901px){
+  .topbar{flex-wrap:nowrap;gap:10px 18px}
+  .secnav{gap:2px;min-width:0}
+  .sec{padding:8px 9px;font-size:.93rem;white-space:nowrap}
+  .who{gap:10px;flex:none}
+  .profiles{flex-wrap:nowrap}
+  .prof .pn{font-size:.85rem}
+}
+@media (min-width:901px) and (max-width:1180px){.wordmark span{display:none}}
+
 @media (max-width:900px){
   .profiles{display:none}
   .pmenu{display:block}
@@ -476,8 +503,8 @@ a{color:var(--child)}
 </head>
 <body>
 <div id="root"><p style="padding:2rem;font-family:sans-serif">Chargement de l’Académie…</p></div>
-<script src="config.js?v=0.7.0"></script>
+<script src="config.js?v=0.8.0"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script src="app.js?v=0.7.0"></script>
+<script src="app.js?v=0.8.0"></script>
 </body>
 </html>
