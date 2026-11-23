@@ -152,3 +152,18 @@ create policy "famille stamps" on public.stamps for all to authenticated using (
 drop policy if exists "famille sensei" on public.sensei_messages;
 create policy "famille sensei" on public.sensei_messages for all to authenticated using (public.is_family()) with check (public.is_family());
 grant select, insert, update, delete on public.stamps, public.sensei_messages to authenticated;
+
+-- ============================================================ v0.3.0 (suite) : bibliothèque des livres lus
+create table if not exists public.books (
+  id uuid primary key default gen_random_uuid(),
+  child text not null,
+  title text not null,
+  author text,
+  pages integer check (pages is null or pages between 1 and 5000),
+  finished date default current_date,
+  created_at timestamptz default now()
+);
+alter table public.books enable row level security;
+drop policy if exists "famille books" on public.books;
+create policy "famille books" on public.books for all to authenticated using (public.is_family()) with check (public.is_family());
+grant select, insert, update, delete on public.books to authenticated;

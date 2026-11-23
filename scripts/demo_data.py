@@ -92,6 +92,9 @@ def main():
                      {"id": "d2", "child": "leo", "kind": "echecs", "title": "Partie d’échecs avec papa", "detail": "Ouverture italienne"},
                      {"id": "d3", "child": "sarah", "kind": "lecture", "title": "Lire « Le Petit Prince »", "detail": "Lecture plaisir, sans résumé"}],
            "stamps": [{"id": "s1", "child": "leo", "title": "SVT : la digestion", "note": "17/20", "message": "Tes révisions ont payé !", "date": (monday - timedelta(days=3)).isoformat(), "created_at": (monday - timedelta(days=3)).isoformat() + "T19:00:00"}],
+           "books": [{"id": "b1", "child": "leo", "title": "Le Petit Prince", "author": "Antoine de Saint-Exupéry", "pages": 96, "finished": (monday - timedelta(days=9)).isoformat()},
+                     {"id": "b2", "child": "leo", "title": "L'Île au trésor", "author": "Robert Louis Stevenson", "pages": 320, "finished": (monday - timedelta(days=2)).isoformat()},
+                     {"id": "b3", "child": "sarah", "title": "Antigone", "author": "Jean Anouilh", "pages": 122, "finished": (monday - timedelta(days=5)).isoformat()}],
            "sensei": [{"id": "m1", "child": "tous", "text": "Belle semaine à tous ! Les évaluations se préparent sur 3 jours : on commence ce soir.", "created_at": monday.isoformat() + "T07:30:00"}]}
     target = os.path.join(os.path.dirname(__file__), "..", "site", "demo.json")
     with open(target, "w", encoding="utf-8") as f:

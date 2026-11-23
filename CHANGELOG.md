@@ -5,9 +5,9 @@ Numérotation : `MAJEUR.MINEUR.CORRECTIF` (ex. 0.2.1).
 - **mineur** (0.**2**.0) : une nouveauté (un réglage, un écran, une règle de planning) ;
 - **majeur** (**1**.0.0) : la version jugée stable après plusieurs semaines d'usage réel.
 
-## [0.3.0] – préversion (non publiée)
+## [0.3.0] – 23 novembre 2026
 
-Visible uniquement sur `/preview/` : le site actuel ne change pas tant qu'elle n'est pas validée.
+Validée le 23/11 : la préversion devient le site principal (l'adresse `/preview/` renvoie vers l'accueil).
 - Nouvelle identité « Académie Kizuna » : logo 絆, carte d'élève avec niveau et badges,
   missions classées par rang (S, A, B, C, D), pictos autocollants.
 - Couleurs par profil (Imrane Lagon, Nahila Sakura, Aliya Améthyste, Parents Graphite), modifiables dans la Vue parents.
@@ -15,7 +15,10 @@ Visible uniquement sur `/preview/` : le site actuel ne change pas tant qu'elle n
 - Mot du sensei : message des parents affiché dans la journée de l'enfant.
 - Niveau = 1 + une tranche par 40 missions cochées ; badges « jours de suite » (80 % de la journée faite),
   Lecteur (15 lectures), Stratège (10 révisions), Pilier de la maison (15 tâches de maison), Tamponné.
-- Nouvelles tables Supabase : `stamps` et `sensei_messages` (bloc SQL « v0.3.0 » de schema.sql).
+- Bibliothèque des livres lus : chaque enfant note ses livres terminés (titre, auteur, pages, date),
+  avec le total de livres et de pages ; résumé par enfant dans la Vue parents.
+  Badge Lecteur aussi à partir de 3 livres, badge « 1 000 pages lues » (puis 2 000…).
+- Nouvelles tables Supabase : `stamps`, `sensei_messages` et `books` (blocs SQL « v0.3.0 » de schema.sql).
 
 ## [0.2.1] – 23 novembre 2026
 
