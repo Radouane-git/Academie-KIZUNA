@@ -73,11 +73,16 @@ function evalsFor(cid){
 /* ------------------------------------------------------------ persistance */
 function setDone(id,val){
  if(val)S.done[id]=1;else delete S.done[id];
- render();
+ if(val){S.pop=id;try{if(navigator.vibrate)navigator.vibrate(15);}catch(e){}
+  var vc=child(curView());if(vc&&!S.focus){var mp=mprog(vc.id,S.day),left=mp.t-mp.n;
+   if(mp.t&&left===0)cheer("Mission accomplie ! Tout est fait pour "+(S.day===TODAY?"aujourd’hui":"ce jour-là")+".");
+   else if(mp.n&&mp.n%3===0)cheer("Bien joué ! Encore "+left+" mission"+(left>1?"s":"")+".");}}
+ render();S.pop=null;
  if(DEMO){lsSet("planning-demo-done",JSON.stringify(S.done));return;}
  var q=val?sb.from("checks").upsert({id:id,done:true,updated_at:new Date().toISOString()}):sb.from("checks").delete().eq("id",id);
  q.then(function(r){if(r.error){flash("global","Coche non enregistrée : "+r.error.message,true);}});
 }
+function cheer(t){S.msg.global={t:t,e:false,cheer:true};clearTimeout(S.cheerT);S.cheerT=setTimeout(function(){if(S.msg.global&&S.msg.global.cheer){delete S.msg.global;softRender();}},3500);}
 function flash(k,text,err){S.msg[k]={t:text,e:!!err};render();setTimeout(function(){delete S.msg[k];render();},6000);}
 
 function loadAll(){
@@ -148,6 +153,7 @@ var THEMES={
  "Sakura":{bg:"#C2366C",acc:"#FFD166",txt:"#FFFFFF"},
  "Améthyste":{bg:"#5B3FA8",acc:"#FF8FB1",txt:"#FFFFFF"},
  "Graphite":{bg:"#3A4250",acc:"#FF6B4A",txt:"#FFFFFF"},
+ "Jade":{bg:"#14806D",acc:"#9FF5E1",txt:"#FFFFFF"},
  "Ombre":{bg:"#16181D",acc:"#E9C46A",txt:"#FFFFFF"},
  "Brasier":{bg:"#C62E3A",acc:"#FFC93C",txt:"#FFFFFF"},
  "Émeraude":{bg:"#1E7A4E",acc:"#F2C94C",txt:"#FFFFFF"},
@@ -246,7 +252,7 @@ var FLAME='<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><p
 function ring(p,size,stroke,label,col,track,txt){var r=(size-stroke)/2,c=2*Math.PI*r;return '<span class="ring" style="width:'+size+'px;height:'+size+'px"><svg width="'+size+'" height="'+size+'" viewBox="0 0 '+size+' '+size+'" aria-hidden="true"><circle cx="'+size/2+'" cy="'+size/2+'" r="'+r+'" stroke="'+(track||"var(--line)")+'" stroke-width="'+stroke+'" fill="none"/><circle cx="'+size/2+'" cy="'+size/2+'" r="'+r+'" stroke="'+(col||"var(--child)")+'" stroke-width="'+stroke+'" fill="none" stroke-linecap="round" stroke-dasharray="'+(c*p).toFixed(1)+' '+c.toFixed(1)+'" transform="rotate(-90 '+size/2+' '+size/2+')"/></svg><b style="font-size:'+Math.round(size/4.2)+'px'+(txt?';color:'+txt:'')+'">'+(label||Math.round(p*100)+"%")+'</b></span>';}
 function banner(c,kicker,title,sub,right,withCard){
  var t=theme(c),k=card(c.id);
- var h='<section class="hero kid-hero" style="background-color:'+t.bg+';color:'+t.txt+'"><div class="hero-id">'+(withCard?'<span class="shield" style="background:'+t.acc+';color:'+t.bg+'" aria-label="Niveau '+k.level+'">'+k.level+'</span>':'')+'<div><span class="over">'+kicker+'</span><h1>'+esc(title)+'</h1>'+(sub?'<p class="hsub">'+esc(sub)+'</p>':'');
+ var h='<section class="hero kid-hero" style="background-color:'+t.bg+';color:'+t.txt+'"><div class="hero-id">'+(withCard?'<span class="shield" style="background:'+t.acc+';color:#0D3B45" aria-label="Niveau '+k.level+'">'+k.level+'</span>':'')+'<div><span class="over">'+kicker+'</span><h1>'+esc(title)+'</h1>'+(sub?'<p class="hsub">'+esc(sub)+'</p>':'');
  if(withCard)h+='<div class="badges">'+(k.badges.length?k.badges.map(function(b){return '<span>'+esc(b)+'</span>';}).join(""):'<span>Encore '+k.next+' missions pour le niveau '+(k.level+1)+'</span>')+'</div>';
  return h+'</div></div>'+(right?'<div class="hero-stats">'+right+'</div>':'')+'</section>';}
 
@@ -255,6 +261,10 @@ function topbar(v){
  var h='<header class="topbar"><a class="brand" href="#'+esc(children()[0]?children()[0].id:"parents")+'">'+logo(40)+'<span class="wordmark"><span>ACADÉMIE</span><b>KIZUNA</b></span></a>';
  if(c){h+='<nav class="secnav" aria-label="Sections">'+SECTIONS.map(function(s){return '<a href="#'+esc(c.id)+(s[0]==="jour"?"":"/"+s[0])+'" class="sec" aria-current="'+(sec===s[0]?"page":"false")+'">'+'<span class="secpic">'+picto(s[2],30)+'</span><span>'+s[1]+'</span></a>';}).join("")+'</nav>';}
  h+='<div class="who">';
+ var cur=c||null,ct=cur?theme(cur):THEMES[themeName(null)];
+ h+='<details class="pmenu"'+(S.pmenu?" open":"")+'><summary aria-label="Changer de profil"><span class="av" style="background:'+ct.bg+';color:'+ct.txt+'">'+esc(cur?cur.name.charAt(0):(v==="parents"?"P":"·"))+'</span><span class="pm-name">'+esc(cur?cur.name:v==="parents"?"Parents":v==="parametres"?"Paramètres":"Conseils")+'</span><span class="caret" aria-hidden="true">▾</span></summary><div class="pm-list">';
+ children().forEach(function(ch){var t2=theme(ch);h+='<button class="pm-item" data-view="'+esc(ch.id)+'" aria-current="'+(v===ch.id?"page":"false")+'"><span class="av" style="background:'+t2.bg+';color:'+t2.txt+'">'+esc(ch.name.charAt(0))+'</span>'+esc(ch.name)+'</button>';});
+ h+='<button class="pm-item" data-view="parents" aria-current="'+(v==="parents"?"page":"false")+'"><span class="av" style="background:#3A4250;color:#fff">P</span>Vue parents</button><button class="pm-item" data-view="parametres" aria-current="'+(v==="parametres"?"page":"false")+'"><span class="av" style="background:#E9EEF0;color:#0D3B45">'+GEAR+'</span>Paramètres</button><button class="pm-item" data-view="conseils"><span class="av" style="background:#0D3B45;color:#fff">?</span>Conseils</button></div></details>';
  if(c){var k=card(c.id);h+='<span class="streak" title="Jours de suite">'+FLAME+'<b>'+k.streak+'</b></span>';}
  h+='<nav class="profiles" aria-label="Profils">';
  children().forEach(function(ch){var t=theme(ch);var on=v===ch.id;h+='<button class="prof" data-view="'+esc(ch.id)+'" aria-current="'+(on?"page":"false")+'" style="--tc:'+t.bg+';--tt:'+t.txt+'"><span class="av">'+esc(ch.name.charAt(0))+'</span><span class="pn">'+esc(ch.name)+'</span></button>';});
@@ -276,6 +286,11 @@ function weeksNav(){
  if(others.length)h+='<select class="wk" id="oldweek" aria-label="Autres semaines"><option value="">Autres semaines…</option>'+others.map(function(i){return '<option value="'+i+'"'+(i===sel?" selected":"")+'>Semaine du '+lbl(i)+'</option>';}).join("")+'</select>';
  return h+'</nav>';
 }
+var FOLDS=[["stampf","Donner un tampon","stamp"],["senseif","Écrire le mot du sensei","sensei"],["addhw","Ajouter une mission","addhw"],["bulk","Saisie rapide de plusieurs missions","bulk"],["idea","Proposer une idée de loisir ou de sortie","idea"]];
+function foldForms(){FOLDS.forEach(function(f){var el=document.getElementById(f[0]);if(!el||el.parentNode.tagName==="DETAILS")return;
+ var d=document.createElement("details");d.className="fold"+(f[0]==="bulk"?" wide":"");d.setAttribute("data-fold",f[0]);
+ if((S.open||{})[f[0]]||S.msg[f[2]]||(f[0]==="bulk"&&S.bulk.items))d.open=true;
+ var sm=document.createElement("summary");sm.textContent="+ "+f[1];d.appendChild(sm);el.parentNode.insertBefore(d,el);d.appendChild(el);});}
 function footer(){return '<footer class="foot">'+syncLine()+'<a href="#conseils">Conseils</a></footer>';}
 function render(){
  if(!S.fam){root.innerHTML='<div class="wrap">'+topbar("parents")+renderParents(true)+footer()+'</div>';bindForms();return;}
@@ -296,13 +311,13 @@ function render(){
  h+=footer();
  if(c&&S.focus)h+=renderFocus(c);
  h+='</div>';
- root.innerHTML=h;bindForms();
+ root.innerHTML=h;foldForms();bindForms();
  if(c&&S.focus){var fb=document.querySelector(".focus [data-fdone]")||document.querySelector(".focus [data-fclose]");if(fb)fb.focus();}
 }
 function hero(c,plan){
  var t=theme(c),k=card(c.id),w=weekProg(c.id,plan),st=stampsFor(c.id);
  var h='<section class="hero" style="background-color:'+t.bg+';color:'+t.txt+'">';
- h+='<div class="hero-id"><span class="shield" style="background:'+t.acc+';color:'+t.bg+'">'+k.level+'</span><div><span class="over">Carte d’élève · niveau '+k.level+'</span><h1>'+esc(c.name)+'</h1><div class="badges">'+(k.badges.length?k.badges.map(function(b){return '<span>'+esc(b)+'</span>';}).join(""):'<span>Encore '+k.next+' missions pour le niveau '+(k.level+1)+'</span>')+'</div></div></div>';
+ h+='<div class="hero-id"><span class="shield" style="background:'+t.acc+';color:#0D3B45">'+k.level+'</span><div><span class="over">Carte d’élève · niveau '+k.level+'</span><h1>'+esc(c.name)+'</h1><div class="badges">'+(k.badges.length?k.badges.map(function(b){return '<span>'+esc(b)+'</span>';}).join(""):'<span>Encore '+k.next+' missions pour le niveau '+(k.level+1)+'</span>')+'</div></div></div>';
  h+='<div class="hero-stats"><div class="wk-prog"><div><span>Ma semaine</span><b>'+pct(w)+' %</b></div><div class="track"><i style="width:'+pct(w)+'%;background:'+t.acc+'"></i></div><small>'+w.n+' mission'+(w.n>1?"s":"")+' sur '+w.t+'</small></div>';
  h+='<div class="hero-stamps">'+stampHtml(54)+'<div><b>'+st.length+'</b><small>tampon'+(st.length>1?"s":"")+'</small></div></div></div>';
  return h+'</section>';
@@ -334,8 +349,14 @@ function renderChild(c,plan){
  var nt=nextTask(c.id,S.day);
  if(nt){h+='<div class="nextcard">'+'<span class="nc-pic">'+picto(pictoName(nt)||"Devoir",64)+'</span><div class="nc-txt"><span class="kicker acc">'+(S.day===TODAY?"Prochaine mission":"Première mission")+(nt.over?"":" · "+esc(nt.t))+'</span><h2>'+esc(nt.l)+'</h2>'+(nt.d?'<p>'+esc(nt.d)+'</p>':'')+'</div><button class="cta" data-focus="'+esc(keyOf(nt))+'">Commencer</button></div>';}
  else if(full)h+='<div class="boom"><span>MISSION ACCOMPLIE !</span></div>';
+ var nd0=addDays(S.day,1),due0=dueFor(c.id,nd0),ev0=evalsFor(c.id).filter(function(e){return e[0]>=S.day;})[0],sm0=senseiFor(c.id);
+ if(ev0||due0.length||sm0){h+='<div class="m-alerts">';
+  if(ev0){var dd0=dDiff(ev0[0],S.day);h+='<div class="m-ev"><b>'+(dd0===0?"Évaluation aujourd’hui":dd0===1?"Évaluation demain":"Évaluation dans "+dd0+" jours")+'</b><span>'+esc(ev0[1])+'</span></div>';}
+  if(due0.length)h+='<details class="m-due"><summary>Pour demain : '+due0.length+' chose'+(due0.length>1?"s":"")+' à rendre</summary><ul class="dots">'+due0.map(function(x){return '<li>'+esc(x)+'</li>';}).join("")+'</ul></details>';
+  if(sm0)h+='<div class="m-sensei"><b>Le mot du sensei</b><span>'+esc(sm0.text)+'</span></div>';
+  h+='</div>';}
  h+=renderEdt(c,S.day);
- h+='<section class="card pathcard"><div class="pc-head"><h2>Le chemin du jour</h2><span>'+p.n+' sur '+p.t+'</span></div><ol class="path">';
+ h+='<section class="card pathcard"><div class="pc-head"><h2>Le chemin du jour</h2><span>'+p.n+' sur '+p.t+'</span></div>'+(lsGet("kizuna-hint-check")?'':'<p class="hint">Touche le <b>rond</b> quand une mission est faite. Touche son <b>nom</b> pour l’ouvrir en grand. <button class="linkbtn" data-act="hint-ok">Compris</button></p>')+'<ol class="path">';
  var all=blocksOf(c.id,S.day);var bl=all.filter(function(b){return !b.over;});var over=all.filter(function(b){return b.over;});
  var nk=nt?keyOf(nt):null;
  bl.forEach(function(b){h+=stepHtml(b,nk);});
@@ -350,7 +371,7 @@ function stepHtml(b,nk){
  if(!task)return '<li class="step calm"><span class="node-col"><span class="dot"></span></span><div class="st-txt"><span class="st-t">'+esc(b.t)+'</span><span class="st-l">'+esc(b.l)+'</span></div></li>';
  var node;
  if(b.k==="rel")node='<span class="node rel'+(done?" done":"")+'">'+(done?'':'<span class="np">'+svgPic(pn)+'</span>')+'</span>';
- else node='<span class="node-wrap"><input type="checkbox" class="chk node'+(now?" now":"")+'" data-id="'+esc(b.id)+'" aria-label="Fait : '+esc(b.l)+'"'+(done?" checked":"")+'>'+(done?'':'<span class="np" aria-hidden="true">'+svgPic(pn)+'</span>')+'</span>';
+ else node='<span class="node-wrap"><input type="checkbox" class="chk node'+(now?" now":"")+(S.pop===b.id?" pop":"")+'" data-id="'+esc(b.id)+'" aria-label="Fait : '+esc(b.l)+'"'+(done?" checked":"")+'>'+(done?'':'<span class="np" aria-hidden="true">'+svgPic(pn)+'</span>')+'</span>';
  var h='<li class="step'+(done?" done":"")+(now?" now":"")+(b.k==="loi"?" loi":"")+'"><span class="node-col">'+node+'</span><div class="st-txt">';
  h+=(now?'<span class="st-t acc">En cours · '+esc(b.over?"sans horaire":b.t)+'</span>':'<span class="st-t">'+esc(b.over?"Sans horaire":b.t)+'</span>');
  h+='<button class="st-l link" data-focus="'+esc(keyOf(b))+'">'+esc(b.l)+'</button>';
@@ -428,10 +449,12 @@ function renderParents(noFam){
   var tot={n:0,t:0};children().forEach(function(c){var w=weekProg(c.id,plan);tot.n+=w.n;tot.t+=w.t;});
   var evc=0;children().forEach(function(c){evc+=evalsFor(c.id).filter(function(e){return e[0]>=TODAY&&dDiff(e[0],TODAY)<=7;}).length;});
   h+='<section class="hero" style="background-color:'+tp.bg+';color:'+tp.txt+'"><div class="hero-id"><div><span class="over">Bureau du sensei</span><h1>'+esc(plan?plan.data.title.replace(/^Du /,"Semaine du "):"Semaine")+'</h1></div></div><div class="hero-stats parents"><div><b>'+pct(tot)+' %</b><small>de la semaine</small></div><div><b style="color:'+tp.acc+'">'+evc+'</b><small>évaluations à 7 jours</small></div><div><b>'+S.stamps.length+'</b><small>tampons</small></div></div></section>';
+  h+='<div class="kidcards">'+children().map(function(c){var t=theme(c),mp=mprog(c.id,TODAY),w=weekProg(c.id,plan),ev=evalsFor(c.id).filter(function(e){return e[0]>=TODAY;})[0];
+   return '<button class="kidcard" data-go="'+esc(c.id)+'" data-day="'+TODAY+'" style="--child:'+t.bg+'">'+ring(mp.t?mp.n/mp.t:0,58,7,mp.t?mp.n+"/"+mp.t:"–")+'<span class="kc-txt"><b>'+esc(c.name)+'</b><small>Aujourd’hui : '+(mp.t?(mp.t-mp.n?(mp.t-mp.n)+" mission"+(mp.t-mp.n>1?"s":"")+" à faire":"tout est fait"):"rien de prévu")+' · semaine '+pct(w)+' %</small>'+(ev?'<small class="evtxt">'+esc(fmtDate(ev[0]))+' : '+esc(ev[1])+'</small>':'')+'</span><span class="chev" aria-hidden="true">›</span></button>';}).join("")+'</div>';
   h+=weeksNav();
   if(plan){
    var days=plan.data.days;
-   h+='<section class="card"><h2>Avancement</h2><div class="ovwrap"><table class="ov"><thead><tr><th></th>';
+   h+='<section class="card ovcard"><h2>Avancement de la semaine</h2><div class="ovwrap"><table class="ov"><thead><tr><th></th>';
    days.forEach(function(d){h+='<th>'+esc(d.short)+' '+d.num+'</th>';});
    h+='<th>Semaine</th></tr></thead><tbody>';
    children().forEach(function(c){var t=theme(c);h+='<tr style="--child:'+t.bg+'"><td class="n"><i></i>'+esc(c.name)+'</td>';
@@ -695,6 +718,7 @@ root.addEventListener("click",function(e){
  if(t.hasAttribute("data-uncancel")){var uid=t.getAttribute("data-uncancel");var aftu=function(){S.cancels=S.cancels.filter(function(x){return String(x.id)!==uid;});render();};
   if(DEMO)aftu();else sb.from("cancellations").delete().eq("id",uid).then(function(r){if(!r.error)aftu();});return;}
  if(t.getAttribute("data-act")==="install"){var ev=S.installEvt;if(ev){ev.prompt();ev.userChoice.then(function(){S.installEvt=null;render();});}return;}
+ if(t.getAttribute("data-act")==="hint-ok"){lsSet("kizuna-hint-check","1");render();return;}
  if(t.getAttribute("data-act")==="book-close"){S.bookOpen=false;render();var ob=document.querySelector('[data-act="book-open"]');if(ob)ob.focus();return;}
  if(t.getAttribute("data-act")==="books-all"){S.bookAll=true;render();return;}
  if(t.hasAttribute("data-act")){sb.auth.signOut().then(function(){location.reload();});return;}
@@ -703,16 +727,16 @@ root.addEventListener("click",function(e){
   if(DEMO)after();else sb.from("extras").delete().eq("id",id).then(function(r){if(!r.error)after();});return;}
  if(t.hasAttribute("data-week")){pickWeek(+t.getAttribute("data-week"));return;}
  if(t.hasAttribute("data-go")){S.day=t.getAttribute("data-day");location.hash=t.getAttribute("data-go");return;}
- if(t.hasAttribute("data-view")){location.hash=t.getAttribute("data-view");return;}
+ if(t.hasAttribute("data-view")){S.pmenu=false;var nv=t.getAttribute("data-view");if((location.hash||"").replace("#","")===nv)render();else location.hash=nv;return;}
  if(t.hasAttribute("data-day")){if(t.hasAttribute("data-sec")){var cv=curView();S.day=t.getAttribute("data-day");try{sessionStorage.setItem("planning-day",S.day);}catch(e2){}location.hash=cv;return;}setDay(t.getAttribute("data-day"));return;}
  if(t.hasAttribute("data-id")){var i=t.getAttribute("data-id");setDone(i,!S.done[i]);}
 });
-root.addEventListener("toggle",function(e){if(e.target.classList&&e.target.classList.contains("edt"))S.edtOpen=e.target.open;},true);
+root.addEventListener("toggle",function(e){if(e.target.hasAttribute&&e.target.hasAttribute("data-fold")){S.open=S.open||{};S.open[e.target.getAttribute("data-fold")]=e.target.open;}if(e.target.classList&&e.target.classList.contains("pmenu"))S.pmenu=e.target.open;if(e.target.classList&&e.target.classList.contains("edt"))S.edtOpen=e.target.open;},true);
  try{S.standalone=window.matchMedia("(display-mode: standalone)").matches||navigator.standalone===true;}catch(e){}
 window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();S.installEvt=e;if(curView()==="parametres")softRender();});
 window.addEventListener("appinstalled",function(){S.installEvt=null;S.standalone=true;flash("global","L’Académie est installée : retrouvez l’icône 絆 sur l’écran d’accueil.");});
 root.addEventListener("keydown",function(e){if(e.key==="Escape"&&S.focus){S.focus=null;render();return;}if(e.key==="Escape"&&S.bookOpen&&e.target.closest&&e.target.closest("#bookf")){S.bookOpen=false;render();var ob=document.querySelector('[data-act="book-open"]');if(ob)ob.focus();}});
-window.addEventListener("hashchange",function(){var hv=(location.hash||"").replace("#","").split("/")[0];if(hv&&hv!=="parametres"&&hv!=="conseils")lsSet("kizuna-view",hv);S.bookOpen=false;S.focus=null;render();window.scrollTo(0,0);});
+window.addEventListener("hashchange",function(){S.pmenu=false;var hv=(location.hash||"").replace("#","").split("/")[0];if(hv&&hv!=="parametres"&&hv!=="conseils")lsSet("kizuna-view",hv);S.bookOpen=false;S.focus=null;render();window.scrollTo(0,0);});
 
 /* ------------------------------------------------------------ démarrage */
 if(DEMO){loadAll();}

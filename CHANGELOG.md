@@ -5,9 +5,9 @@ Numérotation : `MAJEUR.MINEUR.CORRECTIF` (ex. 0.2.1).
 - **mineur** (0.**2**.0) : une nouveauté (un réglage, un écran, une règle de planning) ;
 - **majeur** (**1**.0.0) : la version jugée stable après plusieurs semaines d'usage réel.
 
-## [0.7.0] – préversion (non publiée)
+## [0.7.0] – 23 novembre 2026
 
-Visible uniquement sur `/preview/`. Corrections issues de l'audit UX du 23/11 :
+Validée le 23/11 et publiée. Corrections issues de l'audit UX du 23/11 :
 - Téléphone : la carte d'élève est compacte, la « Prochaine mission » et son bouton Commencer sont visibles
   dès l'ouverture ; évaluation proche, « Pour demain » et mot du sensei juste en dessous.
 - Téléphone : menu des profils (enfants, Vue parents, Paramètres, Conseils) derrière l'avatar en haut à droite.
