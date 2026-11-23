@@ -466,6 +466,7 @@ a{color:var(--child)}
 .home-more{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
 .home-small{display:inline-flex;align-items:center;gap:10px;padding:6px 16px 6px 6px;border:2px solid var(--line);border-radius:999px;background:#fff;text-decoration:none;color:var(--ink);font-weight:700;min-height:48px}
 .home-small .av{width:34px;height:34px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:800}
+.stamp span,.logo span{font-weight:400;font-synthesis:none}
 .hero .stamp{box-shadow:inset 0 0 0 4px var(--stamp),inset 0 0 0 6px #fff,0 0 0 3px #fff,0 4px 0 3px rgba(0,0,0,.18)}
 @media (min-width:901px){
   .topbar{flex-wrap:nowrap;gap:10px 18px}
@@ -475,7 +476,6 @@ a{color:var(--child)}
   .profiles{flex-wrap:nowrap}
   .prof .pn{font-size:.85rem}
 }
-@media (min-width:901px) and (max-width:1180px){.wordmark span{display:none}}
 
 @media (max-width:900px){
   .profiles{display:none}
@@ -503,8 +503,8 @@ a{color:var(--child)}
 </head>
 <body>
 <div id="root"><p style="padding:2rem;font-family:sans-serif">Chargement de l’Académie…</p></div>
-<script src="config.js?v=0.8.0"></script>
+<script src="config.js?v=0.8.1"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script src="app.js?v=0.8.0"></script>
+<script src="app.js?v=0.8.1"></script>
 </body>
 </html>

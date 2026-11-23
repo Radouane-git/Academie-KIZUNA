@@ -11,7 +11,15 @@ try {
     $cfg = Get-Content (Join-Path $Dir "config.json") -Raw | ConvertFrom-Json
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
     $zip = Join-Path $Dir "code.zip"
-    Invoke-WebRequest "https://github.com/Radouane-git/Kidz-Homeworks/archive/refs/heads/main.zip" -OutFile $zip -UseBasicParsing
+    # Nom du depot : nouveau nom d'abord, ancien nom en secours (renommage Academie-KIZUNA).
+    $ok = $false
+    foreach ($repo in @("Academie-KIZUNA", "Kidz-Homeworks")) {
+        try {
+            Invoke-WebRequest "https://github.com/Radouane-git/$repo/archive/refs/heads/main.zip" -OutFile $zip -UseBasicParsing
+            $ok = $true; break
+        } catch { }
+    }
+    if (-not $ok) { throw "Telechargement du code impossible (verifiez la connexion internet)." }
     $code = Join-Path $Dir "code"
     if (Test-Path $code) { Remove-Item $code -Recurse -Force }
     Expand-Archive $zip -DestinationPath $code -Force

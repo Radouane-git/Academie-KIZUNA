@@ -5,6 +5,12 @@ Numérotation : `MAJEUR.MINEUR.CORRECTIF` (ex. 0.2.1).
 - **mineur** (0.**2**.0) : une nouveauté (un réglage, un écran, une règle de planning) ;
 - **majeur** (**1**.0.0) : la version jugée stable après plusieurs semaines d'usage réel.
 
+## [0.8.1] – 23 novembre 2026
+
+- « ACADÉMIE KIZUNA » toujours affiché en entier sur ordinateur (seulement « KIZUNA » sur téléphone).
+- Tampon : contour blanc et ombre sur toutes les couleurs de héros, kanji 絆 inchangé (Dela Gothic One).
+- Synchro du PC : télécharge le code depuis le nouveau nom de dépôt « Academie-KIZUNA », ou l'ancien en secours.
+
 ## [0.8.0] – 23 novembre 2026
 
 - Page d'accueil « Qui ouvre l'Académie ? » : une grande carte par enfant (couleur, niveau, missions du jour),
