@@ -5,6 +5,20 @@ Numérotation : `MAJEUR.MINEUR.CORRECTIF` (ex. 0.2.1).
 - **mineur** (0.**2**.0) : une nouveauté (un réglage, un écran, une règle de planning) ;
 - **majeur** (**1**.0.0) : la version jugée stable après plusieurs semaines d'usage réel.
 
+## [0.7.0] – préversion (non publiée)
+
+Visible uniquement sur `/preview/`. Corrections issues de l'audit UX du 23/11 :
+- Téléphone : la carte d'élève est compacte, la « Prochaine mission » et son bouton Commencer sont visibles
+  dès l'ouverture ; évaluation proche, « Pour demain » et mot du sensei juste en dessous.
+- Téléphone : menu des profils (enfants, Vue parents, Paramètres, Conseils) derrière l'avatar en haut à droite.
+- Aide à la première visite : « Touche le rond quand une mission est faite » (bouton Compris).
+- Retour quand on coche : petit rebond du rond, vibration courte, message tous les 3 cochés et à la fin.
+- Vue parents : une carte par enfant (missions du jour, semaine, prochaine évaluation) ; formulaires repliés
+  (« + Donner un tampon », « + Écrire le mot du sensei »…) ; tableau de la semaine masqué sur téléphone.
+- Contrastes corrigés (corail foncé sur fond clair, chiffre du niveau, titres corail sur fond sombre).
+- Zones à toucher d'au moins 44 px (roue dentée, matières à relire, Prof absent, emploi du temps, liens).
+- Nouvelle couleur de héros « Jade » (#14806D, éclair #9FF5E1).
+
 ## [0.6.0] – 23 novembre 2026
 
 - L'Académie s'installe comme une appli (icône 絆 sur l'écran d'accueil, ouverture en plein écran,
