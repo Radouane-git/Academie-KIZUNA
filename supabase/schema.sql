@@ -182,3 +182,6 @@ alter table public.cancellations enable row level security;
 drop policy if exists "famille cancellations" on public.cancellations;
 create policy "famille cancellations" on public.cancellations for all to authenticated using (public.is_family()) with check (public.is_family());
 grant select, insert, update, delete on public.cancellations to authenticated;
+
+-- ============================================================ v0.9.0 : difficulté ressentie (1 à 5) sur les missions cochées
+alter table public.checks add column if not exists difficulty smallint check (difficulty is null or difficulty between 1 and 5);

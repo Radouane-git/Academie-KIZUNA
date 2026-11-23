@@ -45,6 +45,8 @@ de l'ENT, et qu'il coche lui-même. Les parents suivent l'avancement, ajoutent c
 - **Pas de place avant le coucher** : encadré des missions qui ne rentrent pas dans la journée (voir § 5.4).
 - Colonne (ou bloc sous la prochaine mission sur téléphone) : **mot du sensei**, **Pour demain** (ce qui est à rendre),
   **prochaine évaluation**.
+- **Difficulté ressentie** : en cochant un devoir, une leçon, une révision ou une lecture, l'enfant note de 1 (très facile)
+  à 5 (très difficile), ou passe ; pastille colorée sur le rond, modifiable.
 - **Retours quand on coche** : petit rebond du rond, vibration courte, message tous les 3 cochés et à la fin.
 - **Aide** à la première visite : « Touche le rond quand une mission est faite » (bouton Compris).
 
@@ -63,7 +65,8 @@ Carte d'élève complète, liste des tampons reçus, rappel des règles de nivea
 ## 4. Vue parents
 
 - **Bureau du sensei** : semaine en cours, pourcentage, évaluations à 7 jours, tampons.
-- **Une carte par enfant** : missions du jour, semaine, prochaine évaluation ; un clic ouvre sa journée.
+- **Une carte par enfant** : missions du jour, semaine, prochaine évaluation, missions notées difficiles ; un clic ouvre sa journée.
+- **Points difficiles de la semaine** : missions notées 4 ou 5, par enfant (utile avant une évaluation).
 - **Avancement de la semaine** (ordinateur) : tableau enfant × jour.
 - Formulaires repliés :
   - **Donner un tampon** (enfant, évaluation, note, date, message) ;

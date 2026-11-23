@@ -5,6 +5,16 @@ Numérotation : `MAJEUR.MINEUR.CORRECTIF` (ex. 0.2.1).
 - **mineur** (0.**2**.0) : une nouveauté (un réglage, un écran, une règle de planning) ;
 - **majeur** (**1**.0.0) : la version jugée stable après plusieurs semaines d'usage réel.
 
+## [0.9.0] – préversion (non publiée)
+
+Visible uniquement sur `/preview/`.
+- Difficulté ressentie : quand un enfant coche un devoir, une leçon, une révision ou une lecture, il note
+  de 1 (très facile) à 5 (très difficile), ou passe. La note s'affiche dans une pastille colorée sur le rond coché,
+  et se modifie d'un toucher (« Difficulté 4/5 · modifier »).
+- Écran « mission en cours » : « C'est fait ! C'était comment ? » avec les 5 notes, ou « C'est fait (sans noter) ».
+- Vue parents : « Points difficiles de la semaine » (missions notées 4 ou 5) et rappel sur la carte de chaque enfant.
+- Base : nouvelle colonne `checks.difficulty` (bloc SQL « v0.9.0 » de schema.sql).
+
 ## [0.8.2] – 23 novembre 2026
 
 - Téléphone : la case du jour (bande des 7 jours) n'est plus décalée ni plus haute que les autres.

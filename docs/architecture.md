@@ -69,7 +69,7 @@ Semaines calculées : semaine en cours + suivante (+ une troisième le week-end)
 |---|---|---|
 | `settings` | clé `famille` : enfants, activités, coucher, corvées, couleurs, réglages | site (Paramètres), import |
 | `plans` | une ligne par semaine (`week_start`, `data` JSON, `source` : `auto` ou verrouillée) | synchro, import |
-| `checks` | une ligne par case cochée (`id` de la tâche) | site |
+| `checks` | une ligne par case cochée (`id` de la tâche, `difficulty` 1 à 5 facultative) | site |
 | `extras` | missions ajoutées à la main | site |
 | `ideas` | idées de loisirs | site |
 | `stamps` | tampons de l'Académie | site |
