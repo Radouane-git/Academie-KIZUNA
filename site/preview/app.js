@@ -270,7 +270,7 @@ function weeksNav(){
  if(others.length)h+='<select class="wk" id="oldweek" aria-label="Autres semaines"><option value="">Autres semaines…</option>'+others.map(function(i){return '<option value="'+i+'"'+(i===sel?" selected":"")+'>Semaine du '+lbl(i)+'</option>';}).join("")+'</select>';
  return h+'</nav>';
 }
-function footer(){return '<footer class="foot">'+syncLine()+' · <a href="#conseils">Conseils</a></footer>';}
+function footer(){return '<footer class="foot">'+syncLine()+'<a href="#conseils">Conseils</a></footer>';}
 function render(){
  if(!S.fam){root.innerHTML='<div class="wrap">'+topbar("parents")+renderParents(true)+footer()+'</div>';bindForms();return;}
  var v=curView();var c=child(v);var t=theme(c);
@@ -296,7 +296,7 @@ function hero(c,plan){
  var t=theme(c),k=card(c.id),w=weekProg(c.id,plan),st=stampsFor(c.id);
  var h='<section class="hero" style="background-color:'+t.bg+';color:'+t.txt+'">';
  h+='<div class="hero-id"><span class="shield" style="background:'+t.acc+';color:'+t.bg+'">'+k.level+'</span><div><span class="over">Carte d’élève · niveau '+k.level+'</span><h1>'+esc(c.name)+'</h1><div class="badges">'+(k.badges.length?k.badges.map(function(b){return '<span>'+esc(b)+'</span>';}).join(""):'<span>Encore '+k.next+' missions pour le niveau '+(k.level+1)+'</span>')+'</div></div></div>';
- h+='<div class="hero-stats"><div class="wk-prog"><div><span>Ma semaine</span><b>'+pct(w)+' %</b></div><div class="track"><i style="width:'+pct(w)+'%;background:'+t.acc+'"></i></div><small>'+w.n+' missions sur '+w.t+'</small></div>';
+ h+='<div class="hero-stats"><div class="wk-prog"><div><span>Ma semaine</span><b>'+pct(w)+' %</b></div><div class="track"><i style="width:'+pct(w)+'%;background:'+t.acc+'"></i></div><small>'+w.n+' mission'+(w.n>1?"s":"")+' sur '+w.t+'</small></div>';
  h+='<div class="hero-stamps">'+stampHtml(54)+'<div><b>'+st.length+'</b><small>tampon'+(st.length>1?"s":"")+'</small></div></div></div>';
  return h+'</section>';
 }
