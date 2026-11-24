@@ -62,6 +62,12 @@ def slug(s: str) -> str:
     return re.sub(r"[^a-z0-9]+", "-", s.lower()).strip("-")[:40]
 
 
+def norm_label(s: str) -> str:
+    s = unicodedata.normalize("NFD", s or "").encode("ascii", "ignore").decode().lower()
+    s = re.sub(r"\s*\(au lit\)$", "", s)
+    return re.sub(r"[^a-z0-9]+", " ", s).strip()
+
+
 def short_text(text: str, n: int = 70) -> str:
     t = re.split(r"(?<=[.!?;])\s|\n", text.strip())[0]
     return t if len(t) <= n else t[: n - 1].rstrip() + "…"
@@ -287,6 +293,23 @@ def build_week(cfg: dict, monday: date, data_by_child: dict, extras: list[dict],
         manual = [x for x in (cancellations or []) if x.get("child") in same or x.get("child") == "tous"]
         extra_hw = [{"due": e["due"], "subject": e.get("subject") or "", "text": e["text"], "eval": e.get("kind") == "rev", "kind": e.get("kind"), "extra": True}
                     for e in extras if e["child"] in (cid, "tous")]
+        # doublons : une évaluation saisie à la main pour la même matière et la même date qu'une évaluation de l'ENT
+        ed_evals = {(h["due"], norm_label(h.get("subject") or "")) for h in data.get("homework", []) if classify(h) == "eval"}
+        dup_extra = [h for h in extra_hw if h["eval"] and (h["due"], norm_label(h["subject"])) in ed_evals]
+        extra_hw = [h for h in extra_hw if h not in dup_extra]
+        for h in dup_extra:
+            week["notes"].append([f"{child['name']} : évaluation saisie deux fois",
+                                  f"« {h['subject']} » du {long_fr(date.fromisoformat(h['due'])).lower()} est déjà dans EcoleDirecte : la saisie manuelle est ignorée (vous pouvez la supprimer)."])
+        # libellés déjà prévus les jours passés (semaine en cours figée)
+        past_labels = set()
+        if frozen:
+            for dk, bl in ((frozen.get("children", {}).get(cid, {}) or {}).get("blocks", {}) or {}).items():
+                if dk < today.isoformat():
+                    past_labels.update(norm_label(b.get("l", "")) for b in bl)
+        if prev_week:
+            for dk, bl in ((prev_week.get("children", {}).get(cid, {}) or {}).get("blocks", {}) or {}).items():
+                past_labels.update(norm_label(b.get("l", "")) for b in bl)
+        late = []
         rec_tasks, rec_hw = recurring_tasks(child, week_days)
         homework = data.get("homework", []) + extra_hw + rec_hw
         schedule = apply_cancellations(data.get("schedule", []), homework, manual)
@@ -299,12 +322,16 @@ def build_week(cfg: dict, monday: date, data_by_child: dict, extras: list[dict],
         for t in tasks:
             cands = [p for p in t["prefs"] if p.isoformat() in days and p >= today]
             if not cands and t.get("src") and t.get("slot") != "morning":
+                if norm_label(t["l"]) in past_labels:
+                    continue   # déjà prévue un jour passé (semaine figée) : on ne la reprogramme pas
                 due_d = date.fromisoformat(t["src"]["due"])
                 spare = [days[k] for k in sorted(days) if today <= days[k].d < due_d]
                 spare.sort(key=lambda dd: dd.used - dd.capacity)
                 cands = [dd.d for dd in spare[:1]]
-                if not cands and due_d.isoformat() in days and due_d >= today:
-                    cands = [due_d]   # plus de jour avant l'échéance : on le place le jour même
+                if not cands:
+                    # plus aucun jour avant l'échéance : jamais après les cours le jour même (trop tard)
+                    late.append(t)
+                    continue
             chosen = None
             for p in cands:
                 day = days[p.isoformat()]
@@ -333,6 +360,10 @@ def build_week(cfg: dict, monday: date, data_by_child: dict, extras: list[dict],
             if t.get("slot") not in ("morning", "bedtime"):
                 chosen.used += t["min"]
             chosen.tasks.append(t)
+        for t in late:
+            if t["k"] in ("dev", "app") and t.get("src") and not t["src"].get("recurring") and t["src"]["due"] >= today.isoformat():
+                week["notes"].append([f"{child['name']} : devoir découvert trop tard",
+                                      f"« {t['l']} » est à rendre le {long_fr(date.fromisoformat(t['src']['due'])).lower()} : plus de soirée libre avant. À faire le matin si possible, ou à signaler au professeur."])
         # mise en page horaire
         blocks, school_lbl = {}, {}
         for i, d in enumerate(week_days):

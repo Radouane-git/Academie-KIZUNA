@@ -5,6 +5,16 @@ Numérotation : `MAJEUR.MINEUR.CORRECTIF` (ex. 0.2.1).
 - **mineur** (0.**2**.0) : une nouveauté (un réglage, un écran, une règle de planning) ;
 - **majeur** (**1**.0.0) : la version jugée stable après plusieurs semaines d'usage réel.
 
+## [0.9.1] – 24 novembre 2026
+
+Corrections du planificateur (synchro) :
+- Plus de révision ni de devoir placé **après les cours le jour même de l'échéance** (c'était trop tard) ;
+  la révision du matin même est conservée. Un devoir découvert trop tard est signalé aux parents.
+- Plus de **doublons** : une séance déjà prévue un jour passé (ou la semaine précédente) n'est plus
+  reprogrammée sur les jours restants à chaque synchro.
+- Une évaluation saisie à la main pour la même matière et la même date qu'une évaluation d'EcoleDirecte
+  est ignorée, avec une remarque aux parents (onglet Conseils).
+
 ## [0.9.0] – 23 novembre 2026
 
 Validée le 23/11 et publiée.

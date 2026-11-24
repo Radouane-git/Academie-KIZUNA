@@ -1537,13 +1537,6 @@
          "d": "Souffler 30 minutes avant de s’y mettre."
         },
         {
-         "t": "18h00",
-         "k": "dev",
-         "l": "Maths : Exercices 7 et 11 du polycopié",
-         "d": "Pour lundi 23.",
-         "id": "sarah|2026-11-23|dev|maths-exercices-7-et-11-du-polycopie"
-        },
-        {
          "t": "18h40",
          "k": "rel",
          "l": "Relire les leçons",
@@ -2215,7 +2208,12 @@
       }
      }
     },
-    "notes": []
+    "notes": [
+     [
+      "Sarah : devoir découvert trop tard",
+      "« Maths : Exercices 7 et 11 du polycopié » est à rendre le lundi 23 novembre : plus de soirée libre avant. À faire le matin si possible, ou à signaler au professeur."
+     ]
+    ]
    },
    "source": "auto"
   },
@@ -2284,13 +2282,6 @@
          "k": "rep",
          "l": "Goûter + pause sans écran",
          "d": "Souffler 30 minutes avant de s’y mettre."
-        },
-        {
-         "t": "17h25",
-         "k": "dev",
-         "l": "Anglais : Rédiger 10 lignes sur votre dernier voyage",
-         "d": "Pour lundi 30.",
-         "id": "leo|2026-11-30|dev|anglais-rediger-10-lignes-sur-votre-dern"
         },
         {
          "t": "18h40",
@@ -2834,13 +2825,6 @@
          "d": "Souffler 30 minutes avant de s’y mettre."
         },
         {
-         "t": "17h25",
-         "k": "dev",
-         "l": "Anglais : Rédiger 10 lignes sur votre dernier voyage",
-         "d": "Pour lundi 30.",
-         "id": "ines|2026-11-30|dev|anglais-rediger-10-lignes-sur-votre-dern"
-        },
-        {
          "t": "18h40",
          "k": "rel",
          "l": "Relire les leçons",
@@ -3353,13 +3337,6 @@
          "k": "rep",
          "l": "Goûter + pause sans écran",
          "d": "Souffler 30 minutes avant de s’y mettre."
-        },
-        {
-         "t": "18h00",
-         "k": "dev",
-         "l": "Français : Fiche d'analyse du texte : analyser les quatre mouvements",
-         "d": "Pour lundi 30.",
-         "id": "sarah|2026-11-30|dev|francais-fiche-d-analyse-du-texte-analys"
         },
         {
          "t": "18h40",
@@ -3895,7 +3872,7 @@
  "checks": {},
  "sync": {
   "status": "ok",
-  "ran_at": "2026-11-23T17:05:00",
+  "ran_at": "2026-11-24T17:05:00",
   "message": "Démo : données fictives."
  },
  "ideas": [

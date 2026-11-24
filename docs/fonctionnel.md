@@ -108,6 +108,12 @@ Le planning est recalculé à chaque synchronisation (7h et 18h). Réglages dans
 2. Puis après le dîner, jusqu'à 21h30, les plus courtes et les révisions d'abord.
 3. Ce qui ne rentre toujours pas va dans l'encadré **Pas de place avant le coucher**, et une remarque prévient les parents.
 
+### 5.4 bis Échéances et doublons
+- Rien n'est jamais placé après les cours le jour de l'échéance (sauf la relecture du matin même).
+- S'il ne reste aucune soirée avant l'échéance, le devoir n'est pas placé et une remarque prévient les parents.
+- Une séance déjà prévue un jour passé n'est pas reprogrammée.
+- Une évaluation saisie à la main en double d'une évaluation de l'ENT (même matière, même date) est ignorée.
+
 ### 5.5 Cours annulés
 Un cours est annulé s'il est :
 - marqué annulé dans l'ENT ;
