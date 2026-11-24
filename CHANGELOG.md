@@ -5,9 +5,9 @@ Numérotation : `MAJEUR.MINEUR.CORRECTIF` (ex. 0.2.1).
 - **mineur** (0.**2**.0) : une nouveauté (un réglage, un écran, une règle de planning) ;
 - **majeur** (**1**.0.0) : la version jugée stable après plusieurs semaines d'usage réel.
 
-## [0.10.0] – préversion (non publiée)
+## [0.10.0] – 24 novembre 2026
 
-Visible uniquement sur `/preview/`.
+Validée le 24/11 et publiée.
 - **Retours des professeurs** (Vue parents) : ajouter, **modifier** et supprimer un retour (enfant, date, source, matière,
   professeur, type, message d'origine privé) avec une **version pour l'enfant** en trois parties
   (ce que le professeur apprécie, ce qu'il attend, ce qui peut changer) et un **objectif** facultatif.

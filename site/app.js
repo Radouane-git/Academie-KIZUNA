@@ -20,7 +20,7 @@ var TIPS = [
 ];
 
 /* ------------------------------------------------------------ état */
-var S = {fam:null, plans:[], done:{}, extras:[], ideas:[], ideasMissing:false, stamps:[], sensei:[], stampsMissing:false, books:[], booksMissing:false, cancels:[], cancelsMissing:false, edtOpen:false, focus:null, installEvt:null, standalone:false, diff:{}, rate:null, diffMissing:false, bookOpen:false, sync:null, mfa:null, view:null, day:null, msg:{}, bulk:{text:"",items:null}};
+var S = {fam:null, plans:[], done:{}, extras:[], ideas:[], ideasMissing:false, stamps:[], sensei:[], stampsMissing:false, books:[], booksMissing:false, cancels:[], cancelsMissing:false, edtOpen:false, focus:null, installEvt:null, standalone:false, diff:{}, rate:null, diffMissing:false, notes:[], notesMissing:false, editNote:null, bookOpen:false, sync:null, mfa:null, view:null, day:null, msg:{}, bulk:{text:"",items:null}};
 function lsGet(k){try{return localStorage.getItem(k);}catch(e){return null;}}
 function lsSet(k,v){try{localStorage.setItem(k,v);}catch(e){}}
 function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
@@ -92,7 +92,7 @@ function loadAll(){
   return fetch("demo.json").then(function(r){return r.json();}).then(function(d){
    S.fam=d.settings.famille;S.plans=d.plans.sort(function(a,b){return a.week_start<b.week_start?-1:1;});
    try{S.done=JSON.parse(lsGet("planning-demo-done")||"{}");}catch(e){S.done={};}try{S.diff=JSON.parse(lsGet("planning-demo-diff")||"{}");}catch(e){S.diff={};}
-   S.sync=d.sync;S.ideas=d.ideas||[];S.stamps=d.stamps||[];S.sensei=d.sensei||[];S.books=d.books||[];S.cancels=d.cancellations||[];start();
+   S.sync=d.sync;S.ideas=d.ideas||[];S.stamps=d.stamps||[];S.sensei=d.sensei||[];S.books=d.books||[];S.cancels=d.cancellations||[];S.notes=d.teacher_notes||[];start();
   });
  }
  return Promise.all([
@@ -105,8 +105,10 @@ function loadAll(){
   sb.from("stamps").select("*").order("created_at"),
   sb.from("sensei_messages").select("*").order("created_at"),
   sb.from("books").select("*").order("finished",{ascending:false}),
-  sb.from("cancellations").select("*").gte("date",addDays(TODAY,-14))
+  sb.from("cancellations").select("*").gte("date",addDays(TODAY,-14)),
+  sb.from("teacher_notes").select("*").order("date",{ascending:false})
  ]).then(function(r){
+  S.notesMissing=!!r[10].error;S.notes=r[10].error?[]:(r[10].data||[]);
   S.cancelsMissing=!!r[9].error;S.cancels=r[9].error?[]:(r[9].data||[]);
   S.booksMissing=!!r[8].error;S.books=r[8].error?[]:(r[8].data||[]);
   S.ideasMissing=!!r[5].error;S.ideas=r[5].error?[]:(r[5].data||[]);
@@ -302,10 +304,10 @@ function weeksNav(){
  if(others.length)h+='<select class="wk" id="oldweek" aria-label="Autres semaines"><option value="">Autres semaines…</option>'+others.map(function(i){return '<option value="'+i+'"'+(i===sel?" selected":"")+'>Semaine du '+lbl(i)+'</option>';}).join("")+'</select>';
  return h+'</nav>';
 }
-var FOLDS=[["stampf","Donner un tampon","stamp"],["senseif","Écrire le mot du sensei","sensei"],["addhw","Ajouter une mission","addhw"],["bulk","Saisie rapide de plusieurs missions","bulk"],["idea","Proposer une idée de loisir ou de sortie","idea"]];
+var FOLDS=[["notef","Ajouter un retour de professeur","note"],["stampf","Donner un tampon","stamp"],["senseif","Écrire le mot du sensei","sensei"],["addhw","Ajouter une mission","addhw"],["bulk","Saisie rapide de plusieurs missions","bulk"],["idea","Proposer une idée de loisir ou de sortie","idea"]];
 function foldForms(){FOLDS.forEach(function(f){var el=document.getElementById(f[0]);if(!el||el.parentNode.tagName==="DETAILS")return;
- var d=document.createElement("details");d.className="fold"+(f[0]==="bulk"?" wide":"");d.setAttribute("data-fold",f[0]);
- if((S.open||{})[f[0]]||S.msg[f[2]]||(f[0]==="bulk"&&S.bulk.items))d.open=true;
+ var d=document.createElement("details");d.className="fold"+(f[0]==="bulk"||f[0]==="notef"?" wide":"");d.setAttribute("data-fold",f[0]);
+ if((S.open||{})[f[0]]||S.msg[f[2]]||(f[0]==="bulk"&&S.bulk.items)||(f[0]==="notef"&&S.editNote))d.open=true;
  var sm=document.createElement("summary");sm.textContent="+ "+f[1];d.appendChild(sm);el.parentNode.insertBefore(d,el);d.appendChild(el);});}
 function renderHome(){
  var hr=new Date().getHours();
@@ -322,6 +324,45 @@ function pendingExtras(cid,date){
  return S.extras.filter(function(e){if(!(e.child===cid||e.child==="tous")||e.due!==due||e.kind==="rev")return false;
   var core=fold(e.text).replace(/[^a-z0-9]+/g," ").trim().slice(0,30);
   return !Object.keys(labels).some(function(l){return l.indexOf(core)>=0;});});}
+var NOTE_SRC=[["mail","E-mail"],["reunion","Réunion"],["bulletin","Bulletin"],["oral","À l’oral"],["cahier","Carnet de liaison"],["autre","Autre"]];
+var NOTE_TONE=[["positif","Encouragement"],["mixte","Encouragement et points à travailler"],["travail","Point à travailler"]];
+function notesFor(cid,sharedOnly){return S.notes.filter(function(n){return (n.child===cid||n.child==="tous")&&(!sharedOnly||n.shared);}).sort(function(a,b){return (a.date||"")<(b.date||"")?1:-1;});}
+function weekKey(){var d=new Date(TODAY+"T12:00:00");var wd=(d.getDay()+6)%7;return addDays(TODAY,-wd);}
+function goalId(n){return "goal|"+n.id+"|"+weekKey();}
+function noteLabel(list,v){var x=list.filter(function(z){return z[0]===v;})[0];return x?x[1]:"";}
+function kidNoteHtml(n){
+ var h='<article class="tnote tone-'+esc(n.tone||"mixte")+'"><header><b>'+esc(n.subject||"Professeur")+'</b>'+(n.teacher?' · '+esc(n.teacher):'')+'<small>'+esc(fmtDate(n.date||TODAY,{day:"numeric",month:"long"}))+'</small></header>';
+ if(n.kid_strengths)h+='<div class="tn-part good"><em>Ce que ton professeur apprécie chez toi</em><p>'+esc(n.kid_strengths)+'</p></div>';
+ if(n.kid_expect)h+='<div class="tn-part expect"><em>Ce qu’il attend de toi</em><p>'+esc(n.kid_expect)+'</p></div>';
+ if(n.kid_next)h+='<div class="tn-part next"><em>Ce qui peut changer</em><p>'+esc(n.kid_next)+'</p></div>';
+ return h+'</article>';}
+function goalHtml(n,compact){var gid=goalId(n),ok=!!S.done[gid];
+ return '<div class="goal'+(ok?" ok":"")+'"><span class="g-txt"><em>Mon objectif'+(n.subject?' · '+esc(n.subject):'')+'</em><b>'+esc(n.goal)+'</b></span><button class="g-btn" data-id="'+esc(gid)+'" aria-pressed="'+ok+'">'+(ok?"Tenu cette semaine ✓":"Cette semaine, je l’ai tenu")+'</button></div>';}
+function activeGoals(cid){return notesFor(cid,true).filter(function(n){return n.goal&&n.goal_active!==false;});}
+function noteForm(){
+ var n=S.editNote?S.notes.filter(function(x){return String(x.id)===String(S.editNote);})[0]||{}:{};
+ var opt=function(list,v){return list.map(function(o){return '<option value="'+o[0]+'"'+(o[0]===v?" selected":"")+'>'+o[1]+'</option>';}).join("");};
+ var h='<form class="card f notef" id="notef"><h2>'+(S.editNote?"Modifier le retour":"Nouveau retour de professeur")+'</h2>';
+ h+='<div class="cols three"><label for="n-child">Enfant<select id="n-child">'+children().map(function(c){return '<option value="'+esc(c.id)+'"'+(n.child===c.id?" selected":"")+'>'+esc(c.name)+'</option>';}).join("")+'<option value="tous"'+(n.child==="tous"?" selected":"")+'>Tous</option></select></label>';
+ h+='<label for="n-date">Date<input id="n-date" type="date" value="'+esc(n.date||TODAY)+'"></label><label for="n-src">Reçu par<select id="n-src">'+opt(NOTE_SRC,n.source||"mail")+'</select></label></div>';
+ h+='<div class="cols three"><label for="n-subj">Matière<input id="n-subj" type="text" value="'+esc(n.subject||"")+'" placeholder="ex. EPS"></label><label for="n-teacher">Professeur (facultatif)<input id="n-teacher" type="text" value="'+esc(n.teacher||"")+'" placeholder="ex. M. Dupont"></label><label for="n-tone">Type<select id="n-tone">'+opt(NOTE_TONE,n.tone||"mixte")+'</select></label></div>';
+ h+='<label for="n-orig">Message d’origine (privé : seuls les parents le voient)<textarea id="n-orig" placeholder="Collez ici le message du professeur. Évitez les noms d’autres élèves : écrivez « un camarade ».">'+esc(n.original||"")+'</textarea></label>';
+ h+='<fieldset class="kidver"><legend>Version pour l’enfant</legend><p class="det">Trois phrases simples et bienveillantes. Laissez vide ce qui ne s’applique pas.</p>';
+ h+='<label for="n-good">Ce que le professeur apprécie chez lui/elle<textarea id="n-good" rows="2">'+esc(n.kid_strengths||"")+'</textarea></label>';
+ h+='<label for="n-expect">Ce qu’il attend<textarea id="n-expect" rows="2">'+esc(n.kid_expect||"")+'</textarea></label>';
+ h+='<label for="n-next">Ce qui peut changer (facultatif)<textarea id="n-next" rows="2">'+esc(n.kid_next||"")+'</textarea></label>';
+ h+='<label for="n-goal">Objectif à suivre chaque semaine (facultatif)<input id="n-goal" type="text" value="'+esc(n.goal||"")+'" placeholder="ex. Me mettre au travail dès le goûter fini"></label>';
+ h+='<label class="chkline"><input type="checkbox" id="n-shared"'+(n.shared?" checked":"")+'> Montrer la version pour l’enfant (et l’objectif) dans son profil</label>';
+ if(S.editNote)h+='<label class="chkline"><input type="checkbox" id="n-goalon"'+(n.goal_active!==false?" checked":"")+'> Objectif toujours en cours</label>';
+ h+='</fieldset><div class="btnrow"><button class="btn" type="submit">'+(S.editNote?"Enregistrer les modifications":"Enregistrer le retour")+'</button>'+(S.editNote?'<button class="btn sec" type="button" data-act="note-cancel">Annuler</button>':'')+'</div>'+msgHtml("note")+(S.notesMissing&&!DEMO?'<p class="msg err">Exécutez d’abord le bloc SQL « v0.10.0 » dans Supabase.</p>':'')+'</form>';
+ return h;}
+function renderNotesParents(){
+ var h='<section class="card wide notes-card"><h2>Retours des professeurs</h2><p class="det">Le message d’origine reste privé. L’enfant ne voit que la version pour lui, et seulement si vous cochez « Montrer ».</p>';
+ if(!S.notes.length)h+='<p class="none">Aucun retour pour le moment.</p>';
+ children().forEach(function(c){var ns=notesFor(c.id).filter(function(n){return n.child===c.id||n.child==="tous";});if(!ns.length)return;
+  h+='<div class="nk"><h3>'+esc(c.name)+'</h3>'+ns.map(function(n){var gid=goalId(n);
+   return '<div class="nrow"><div class="nr-txt"><b>'+esc(n.subject||"—")+(n.teacher?' · '+esc(n.teacher):'')+'</b><small>'+esc(fmtDate(n.date||TODAY))+' · '+esc(noteLabel(NOTE_SRC,n.source))+' · '+esc(noteLabel(NOTE_TONE,n.tone))+'</small><span class="nr-flag '+(n.shared?"on":"off")+'">'+(n.shared?"Visible par l’enfant":"Privé")+'</span>'+(n.kid_strengths||n.kid_expect?'<p>'+esc([n.kid_strengths,n.kid_expect].filter(Boolean).join(" · "))+'</p>':'<p class="none">Pas encore de version pour l’enfant.</p>')+(n.goal?'<small class="nr-goal">Objectif : '+esc(n.goal)+(n.goal_active===false?" (terminé)":S.done[gid]?" · tenu cette semaine ✓":" · pas encore coché cette semaine")+'</small>':'')+(n.original?'<details class="orig"><summary>Message d’origine</summary><p>'+esc(n.original)+'</p></details>':'')+'</div><div class="nr-btns"><button class="btn sec mini" data-editnote="'+esc(n.id)+'">Modifier</button><button class="btn sec mini" data-delnote="'+esc(n.id)+'">Supprimer</button></div></div>';}).join("")+'</div>';});
+ return h+'</section>';}
 function footer(){return '<footer class="foot">'+syncLine()+'<a href="#conseils">Conseils</a></footer>';}
 function render(){
  if(!S.fam){root.innerHTML='<div class="wrap">'+topbar("parents")+renderParents(true)+footer()+'</div>';bindForms();return;}
@@ -382,10 +423,11 @@ function renderChild(c,plan){
  if(nt){h+='<div class="nextcard">'+'<span class="nc-pic">'+picto(pictoName(nt)||"Devoir",64)+'</span><div class="nc-txt"><span class="kicker acc">'+(S.day===TODAY?"Prochaine mission":"Première mission")+(nt.over?"":" · "+esc(nt.t))+'</span><h2>'+esc(nt.l)+'</h2>'+(nt.d?'<p>'+esc(nt.d)+'</p>':'')+'</div><button class="cta" data-focus="'+esc(keyOf(nt))+'">Commencer</button></div>';}
  else if(full)h+='<div class="boom"><span>MISSION ACCOMPLIE !</span></div>';
  var nd0=addDays(S.day,1),due0=dueFor(c.id,nd0),ev0=evalsFor(c.id).filter(function(e){return e[0]>=S.day;})[0],sm0=senseiFor(c.id);
- if(ev0||due0.length||sm0){h+='<div class="m-alerts">';
+ if(ev0||due0.length||sm0||activeGoals(c.id).length){h+='<div class="m-alerts">';
   if(ev0){var dd0=dDiff(ev0[0],S.day);h+='<div class="m-ev"><b>'+(dd0===0?"Évaluation aujourd’hui":dd0===1?"Évaluation demain":"Évaluation dans "+dd0+" jours")+'</b><span>'+esc(ev0[1])+'</span></div>';}
   if(due0.length)h+='<details class="m-due"><summary>Pour demain : '+due0.length+' chose'+(due0.length>1?"s":"")+' à rendre</summary><ul class="dots">'+due0.map(function(x){return '<li>'+esc(x)+'</li>';}).join("")+'</ul></details>';
   if(sm0)h+='<div class="m-sensei"><b>Le mot du sensei</b><span>'+esc(sm0.text)+'</span></div>';
+  activeGoals(c.id).slice(0,1).forEach(function(n){h+=goalHtml(n,true);});
   h+='</div>';}
  var pend=pendingExtras(c.id,S.day);
  if(pend.length)h+='<section class="card pending"><h2>Ajouté par les parents</h2><p class="det">Ces missions seront placées dans ta journée à la prochaine synchronisation (7h ou 18h).</p><ul class="dots">'+pend.map(function(e){return '<li>'+esc((e.subject?e.subject+" : ":"")+e.text)+'</li>';}).join("")+'</ul></section>';
@@ -425,6 +467,8 @@ function renderSide(c,plan){
  var p=mprog(c.id,S.day),w=weekProg(c.id,plan);
  var m=senseiFor(c.id);
  if(m)h+=side('<span class="sensei-t">Le mot du sensei</span>','<p class="sensei-msg">'+esc(m.text)+'</p><small class="muted">'+esc(fmtDate(m.created_at.slice(0,10),{weekday:"long",day:"numeric",month:"long"}))+'</small>','sensei');
+ var ag=activeGoals(c.id);
+ if(ag.length)h+=side("Mon objectif",ag.slice(0,2).map(function(n){return goalHtml(n,true);}).join(""));
  var nd=addDays(S.day,1);var due=dueFor(c.id,nd);
  h+=side("Pour demain, "+esc(fmtDate(nd,{weekday:"long",day:"numeric"})),due.length?'<ul class="dots">'+due.map(function(x){return "<li>"+esc(x)+"</li>";}).join("")+'</ul>':'<p class="none">Rien de noté pour demain.</p>');
  var ev=evalsFor(c.id).filter(function(e){return e[0]>=S.day;});
@@ -456,6 +500,10 @@ function renderStamps(c,plan){
  var st=stampsFor(c.id);
  var h='<div class="narrow">'+hero(c,plan||planOf(TODAY)||S.plans[S.plans.length-1]);
  h+=side("Mes tampons de l’Académie",st.length?st.map(function(x){return '<div class="stamp-row">'+stampHtml(46)+'<span><b>'+esc((x.title||"")+(x.note?" · "+x.note:""))+'</b>'+(x.message?'<small>« '+esc(x.message)+' »</small>':'')+'<small>'+esc(fmtDate(x.date||x.created_at.slice(0,10)))+'</small></span></div>';}).join(""):'<p class="none">Ton premier tampon arrivera après une bonne note préparée avec tes révisions.</p>');
+ var kn=notesFor(c.id,true);
+ var gl=activeGoals(c.id);
+ if(gl.length)h+=side("Mes objectifs",gl.map(function(n){return goalHtml(n);}).join(""));
+ h+=side("Ce que pensent mes professeurs",kn.length?kn.map(kidNoteHtml).join(""):'<p class="none">Quand tes professeurs donnent des nouvelles, tes parents peuvent les partager ici.</p>');
  h+=side("Comment monter de niveau",'<ul class="dots"><li>Un niveau toutes les 40 missions cochées.</li><li>« Jours de suite » : au moins 80 % de la journée faite.</li><li>Lecteur : 15 lectures ou 3 livres. Stratège : 10 révisions. Pilier de la maison : 15 tâches.</li><li>Un tampon : une bonne note préparée avec tes révisions.</li></ul>');
  return h+'</div>';
 }
@@ -491,6 +539,7 @@ function renderParents(noFam){
   h+=weeksNav();
   if(plan){
    var days=plan.data.days;
+   h+=renderNotesParents();
    var hardAll=children().map(function(c){return [c,hardOf(c.id,plan)];}).filter(function(x){return x[1].length;});
    h+='<section class="card hardcard"><h2>Points difficiles de la semaine</h2>'+(hardAll.length?hardAll.map(function(x){return '<div class="hard-kid"><b>'+esc(x[0].name)+'</b><ul>'+x[1].map(function(m){return '<li>'+diffBadge(m.n)+'<span>'+esc(m.l)+'<small>'+esc(fmtDate(m.date))+' · '+DIFF[m.n][0]+'</small></span></li>';}).join("")+'</ul></div>';}).join(""):'<p class="none">Aucune mission notée 4 ou 5 cette semaine. Les enfants notent la difficulté quand ils cochent un devoir, une leçon, une révision ou une lecture.</p>')+(S.diffMissing&&!DEMO?'<p class="msg err">Exécutez le bloc SQL « v0.9.0 » dans Supabase pour enregistrer les notes.</p>':'')+'</section>';
    h+='<section class="card ovcard"><h2>Avancement de la semaine</h2><div class="ovwrap"><table class="ov"><thead><tr><th></th>';
@@ -511,6 +560,7 @@ function renderParents(noFam){
  if(!noFam){
   // tampon
   var evOpts=[];children().forEach(function(c){evalsFor(c.id).forEach(function(e){if(e[0]<=addDays(TODAY,1))evOpts.push([c.id,e[1]+" ("+fmtDate(e[0])+")"]);});});
+  h+=noteForm();
   h+='<form class="card f stamp-card" id="stampf"><div class="ftitle">'+stampHtml(52)+'<h2>Donner un tampon</h2></div><p>Une bonne note après des révisions ? L’enfant reçoit le tampon de l’Académie sur sa carte d’élève.</p>';
   h+='<label for="s-child">Enfant<select id="s-child">'+kidOptions(false)+'</select></label>';
   h+='<label for="s-title">Évaluation<input id="s-title" type="text" list="s-evals" required placeholder="ex. SVT : la digestion"><datalist id="s-evals">'+evOpts.map(function(o){return '<option value="'+esc(o[1])+'">';}).join("")+'</datalist></label>';
@@ -706,6 +756,18 @@ function bindForms(){
   if(DEMO){row.id="demo-"+Date.now();ok(row);return;}
   sb.from("books").insert(row).select().then(function(r){if(r.error)flash("book","Erreur : "+r.error.message,true);else ok(r.data[0]);});
  });
+ if((f=document.getElementById("notef")))f.addEventListener("submit",function(e){
+  e.preventDefault();
+  var row={child:val("n-child"),date:val("n-date")||TODAY,source:val("n-src"),subject:val("n-subj")||null,teacher:val("n-teacher")||null,tone:val("n-tone"),original:val("n-orig")||null,
+   kid_strengths:val("n-good")||null,kid_expect:val("n-expect")||null,kid_next:val("n-next")||null,goal:val("n-goal")||null,shared:document.getElementById("n-shared").checked,updated_at:new Date().toISOString()};
+  var go=document.getElementById("n-goalon");row.goal_active=go?go.checked:true;
+  if(!row.original&&!row.kid_strengths&&!row.kid_expect){flash("note","Écrivez au moins le message d’origine ou une phrase pour l’enfant.",true);return;}
+  var edit=S.editNote;
+  var ok=function(x){if(edit)S.notes=S.notes.map(function(n){return String(n.id)===String(edit)?x:n;});else S.notes.unshift(x);S.editNote=null;S.open=S.open||{};S.open.notef=false;flash("global",edit?"Retour modifié.":"Retour enregistré.");};
+  if(DEMO){row.id=edit||("demo-"+Date.now());ok(row);return;}
+  var q=edit?sb.from("teacher_notes").update(row).eq("id",edit).select():sb.from("teacher_notes").insert(row).select();
+  q.then(function(r){if(r.error)flash("note","Erreur : "+r.error.message,true);else ok(r.data[0]);});
+ });
  if((f=document.getElementById("stampf")))f.addEventListener("submit",function(e){
   e.preventDefault();
   var row={child:val("s-child"),title:val("s-title"),note:val("s-note")||null,message:val("s-msg")||null,date:val("s-date")||TODAY};
@@ -734,7 +796,7 @@ function val(id){return (document.getElementById(id).value||"").trim();}
 function pickWeek(idx){var p=S.plans[idx];if(!p)return;var has=p.data.days.some(function(d){return d.date===TODAY;});setDay(has?TODAY:(p.data.days[1]||p.data.days[0]).date);}
 
 root.addEventListener("click",function(e){
- var t=e.target.closest("[data-rate],[data-rateopen],[data-focus],[data-fclose],[data-fdone],[data-fundo],[data-fnext],[data-cancel],[data-uncancel],[data-delbook],[data-view],[data-day],[data-id],[data-go],[data-week],[data-del],[data-act],[data-delidea]");if(!t)return;
+ var t=e.target.closest("[data-editnote],[data-delnote],[data-rate],[data-rateopen],[data-focus],[data-fclose],[data-fdone],[data-fundo],[data-fnext],[data-cancel],[data-uncancel],[data-delbook],[data-view],[data-day],[data-id],[data-go],[data-week],[data-del],[data-act],[data-delidea]");if(!t)return;
  if(t.hasAttribute("data-delidea")){var di=t.getAttribute("data-delidea");var aft=function(){S.ideas=S.ideas.filter(function(x){return String(x.id)!==di;});render();};
   if(DEMO)aft();else sb.from("ideas").delete().eq("id",di).then(function(r){if(!r.error)aft();});return;}
  if(t.matches("input.chk")){setDone(t.getAttribute("data-id"),t.checked);return;}
@@ -742,6 +804,10 @@ root.addEventListener("click",function(e){
   var aftb=function(){S.books=S.books.filter(function(x){return String(x.id)!==bid;});render();};
   if(DEMO)aftb();else sb.from("books").delete().eq("id",bid).then(function(r){if(!r.error)aftb();});return;}
  if(t.getAttribute("data-act")==="book-open"){S.bookOpen=true;render();var bi=document.getElementById("b-title");if(bi)bi.focus();return;}
+ if(t.hasAttribute("data-editnote")){S.editNote=t.getAttribute("data-editnote");S.open=S.open||{};S.open.notef=true;render();var nf=document.getElementById("notef");if(nf)nf.scrollIntoView({block:"start"});return;}
+ if(t.hasAttribute("data-delnote")){var nid=t.getAttribute("data-delnote");if(!t.dataset.ok){t.dataset.ok="1";t.textContent="Confirmer";return;}
+  var aftn=function(){S.notes=S.notes.filter(function(n){return String(n.id)!==nid;});if(String(S.editNote)===nid)S.editNote=null;render();};
+  if(DEMO)aftn();else sb.from("teacher_notes").delete().eq("id",nid).then(function(r){if(!r.error)aftn();});return;}
  if(t.hasAttribute("data-rate")){var rid=t.getAttribute("data-rate"),rn=+t.getAttribute("data-n");if(rn)setDiff(rid,rn);S.rate=null;render();return;}
  if(t.hasAttribute("data-rateopen")){S.rate=t.getAttribute("data-rateopen");render();return;}
  if(t.hasAttribute("data-focus")){S.focus=t.getAttribute("data-focus");render();return;}
@@ -762,6 +828,7 @@ root.addEventListener("click",function(e){
  if(t.hasAttribute("data-uncancel")){var uid=t.getAttribute("data-uncancel");var aftu=function(){S.cancels=S.cancels.filter(function(x){return String(x.id)!==uid;});render();};
   if(DEMO)aftu();else sb.from("cancellations").delete().eq("id",uid).then(function(r){if(!r.error)aftu();});return;}
  if(t.getAttribute("data-act")==="install"){var ev=S.installEvt;if(ev){ev.prompt();ev.userChoice.then(function(){S.installEvt=null;render();});}return;}
+ if(t.getAttribute("data-act")==="note-cancel"){S.editNote=null;S.open=S.open||{};S.open.notef=false;render();return;}
  if(t.getAttribute("data-act")==="hint-ok"){lsSet("kizuna-hint-check","1");render();return;}
  if(t.getAttribute("data-act")==="book-close"){S.bookOpen=false;render();var ob=document.querySelector('[data-act="book-open"]');if(ob)ob.focus();return;}
  if(t.getAttribute("data-act")==="books-all"){S.bookAll=true;render();return;}
