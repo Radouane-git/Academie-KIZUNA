@@ -5,6 +5,18 @@ Numérotation : `MAJEUR.MINEUR.CORRECTIF` (ex. 0.2.1).
 - **mineur** (0.**2**.0) : une nouveauté (un réglage, un écran, une règle de planning) ;
 - **majeur** (**1**.0.0) : la version jugée stable après plusieurs semaines d'usage réel.
 
+## [0.12.0] – préversion (non publiée)
+
+Visible uniquement sur `/preview/`.
+- **Conseils enrichis** : l'onglet Conseils devient une bibliothèque de méthodes, filtrable (Organisation, Devoirs,
+  Révisions, Leçons, Lecture). Conseils de l'Académie par défaut (14, dont 6 nouveaux sur la façon d'apprendre et de lire)
+  + **conseils de la famille** : conseils des professeurs et fiches de livres de méthode, rédigés avec ses mots.
+- **Au bon moment** : l'écran « mission en cours » affiche un conseil adapté (révision, leçon, lecture, devoir) ;
+  « Conseil de la semaine » sur l'accueil.
+- Vue parents : « Conseils de la famille » (Modifier / Supprimer), formulaire « Ajouter un conseil » (source, professeur
+  ou livre, matière, moments, enfant concerné), et bouton « En faire un conseil » sur un retour de professeur.
+- Base : nouvelle table `tips` (bloc SQL « v0.12.0 »).
+
 ## [0.11.0] – 24 novembre 2026
 
 Validée le 24/11 et publiée.

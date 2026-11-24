@@ -85,6 +85,14 @@ Carte d'élève complète, **Mes objectifs** (bouton « Cette semaine, je l'ai t
   - **Proposer une idée** de loisir ou de sortie (datée ou non).
 - **Missions ajoutées à la main** (liste avec défilement, suppression, « tout décaler d'un jour »).
 
+## 4 bis. Conseils
+
+- Onglet **Conseils** : conseils de l'Académie + conseils de la famille (professeurs, fiches de livres reformulées),
+  filtrables par moment (organisation, devoirs, révisions, leçons, lecture).
+- Un conseil adapté s'affiche dans l'écran « mission en cours » ; « Conseil de la semaine » sur l'accueil.
+- Les parents ajoutent, modifient, suppriment les conseils (Vue parents) ; un retour de professeur peut devenir un conseil.
+- Règle : écrire les conseils avec ses mots, ne jamais recopier de passages de livres.
+
 ## 5. Règles du planning
 
 Le planning est recalculé à chaque synchronisation (7h et 18h). Réglages dans Paramètres → Réglages (avancé).

@@ -3912,6 +3912,30 @@
    "created_at": "2026-11-20T19:00:00"
   }
  ],
+ "tips": [
+  {
+   "id": "t1",
+   "title": "Lire le sujet deux fois",
+   "body": "Avant de commencer un exercice, lire l'énoncé deux fois et souligner ce qui est demandé. Beaucoup d'erreurs viennent d'une consigne mal lue.",
+   "source_type": "prof",
+   "source": "M. Robert",
+   "subject": "Maths",
+   "moments": "dev,rev",
+   "child": "tous",
+   "active": true
+  },
+  {
+   "id": "t2",
+   "title": "Trois passages pour un livre",
+   "body": "Un premier survol pour voir la structure, une lecture attentive, puis un retour sur les passages clés : c'est ainsi qu'on retient l'essentiel d'un livre.",
+   "source_type": "livre",
+   "source": "Un livre sur l'art de lire",
+   "subject": "",
+   "moments": "lec",
+   "child": "tous",
+   "active": true
+  }
+ ],
  "teacher_notes": [
   {
    "id": "n1",

@@ -215,3 +215,21 @@ alter table public.ideas add column if not exists status text default 'ok';
 alter table public.ideas add column if not exists proposed_by text;
 alter table public.checks add column if not exists method text;
 alter table public.checks add column if not exists minutes smallint;
+
+-- ============================================================ v0.12.0 : conseils de la famille (professeurs, livres)
+create table if not exists public.tips (
+  id uuid primary key default gen_random_uuid(),
+  title text not null,
+  body text not null,
+  source_type text default 'famille',
+  source text,
+  subject text,
+  moments text default 'general',
+  child text default 'tous',
+  active boolean default true,
+  created_at timestamptz default now()
+);
+alter table public.tips enable row level security;
+drop policy if exists "famille tips" on public.tips;
+create policy "famille tips" on public.tips for all to authenticated using (public.is_family()) with check (public.is_family());
+grant select, insert, update, delete on public.tips to authenticated;

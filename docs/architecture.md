@@ -76,6 +76,7 @@ Semaines calculées : semaine en cours + suivante (+ une troisième le week-end)
 | `sensei_messages` | mots du sensei | site |
 | `books` | livres lus | site |
 | `cancellations` | cours annulés depuis le site | site |
+| `tips` | conseils de la famille (titre, texte, source, matière, moments, enfant) | site |
 | `teacher_notes` | retours des professeurs : original privé, version pour l'enfant, objectif, partage | site |
 | `sync_log` | résultat de chaque synchro (état, message court, détails techniques sans donnée personnelle) | synchro |
 | `mfa_answers` | réponses déjà données aux questions de sécurité de l'ENT | synchro |
