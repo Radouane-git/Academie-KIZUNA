@@ -185,3 +185,27 @@ grant select, insert, update, delete on public.cancellations to authenticated;
 
 -- ============================================================ v0.9.0 : difficulté ressentie (1 à 5) sur les missions cochées
 alter table public.checks add column if not exists difficulty smallint check (difficulty is null or difficulty between 1 and 5);
+
+-- ============================================================ v0.10.0 : retours des professeurs
+create table if not exists public.teacher_notes (
+  id uuid primary key default gen_random_uuid(),
+  child text not null,
+  date date default current_date,
+  source text,
+  subject text,
+  teacher text,
+  tone text,
+  original text,
+  kid_strengths text,
+  kid_expect text,
+  kid_next text,
+  goal text,
+  goal_active boolean default true,
+  shared boolean default false,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+alter table public.teacher_notes enable row level security;
+drop policy if exists "famille teacher_notes" on public.teacher_notes;
+create policy "famille teacher_notes" on public.teacher_notes for all to authenticated using (public.is_family()) with check (public.is_family());
+grant select, insert, update, delete on public.teacher_notes to authenticated;

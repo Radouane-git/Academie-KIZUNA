@@ -3902,6 +3902,40 @@
    "created_at": "2026-11-20T19:00:00"
   }
  ],
+ "teacher_notes": [
+  {
+   "id": "n1",
+   "child": "leo",
+   "date": "2026-11-19",
+   "source": "mail",
+   "subject": "Mathématiques",
+   "teacher": "Mme Martin",
+   "tone": "mixte",
+   "original": "Léo comprend vite mais bavarde beaucoup et oublie souvent son matériel.",
+   "kid_strengths": "Ta professeure trouve que tu comprends vite.",
+   "kid_expect": "Elle attend que tu écoutes jusqu'au bout et que tu aies ton matériel à chaque cours.",
+   "kid_next": "Ton appréciation du trimestre peut être excellente si tu t'y tiens.",
+   "goal": "Vérifier mon sac le soir avec la liste du lendemain",
+   "goal_active": true,
+   "shared": true
+  },
+  {
+   "id": "n2",
+   "child": "sarah",
+   "date": "2026-11-15",
+   "source": "reunion",
+   "subject": "Français",
+   "teacher": "M. Bernard",
+   "tone": "positif",
+   "original": "Excellente lectrice, analyses fines.",
+   "kid_strengths": "Ton professeur est impressionné : tu lis vite et tes analyses des personnages sont fines.",
+   "kid_expect": "Il t'encourage à continuer à lire beaucoup.",
+   "kid_next": null,
+   "goal": null,
+   "goal_active": true,
+   "shared": true
+  }
+ ],
  "books": [
   {
    "id": "b1",

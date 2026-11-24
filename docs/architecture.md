@@ -76,13 +76,14 @@ Semaines calculées : semaine en cours + suivante (+ une troisième le week-end)
 | `sensei_messages` | mots du sensei | site |
 | `books` | livres lus | site |
 | `cancellations` | cours annulés depuis le site | site |
+| `teacher_notes` | retours des professeurs : original privé, version pour l'enfant, objectif, partage | site |
 | `sync_log` | résultat de chaque synchro (état, message court, détails techniques sans donnée personnelle) | synchro |
 | `mfa_answers` | réponses déjà données aux questions de sécurité de l'ENT | synchro |
 | `private_kv` | clés techniques privées (appareil reconnu par l'ENT) | synchro |
 
 Identifiants de tâches (stables d'une synchro à l'autre, servent de clé aux coches) :
 `<enfant>|<date>|<type>|<texte-simplifié>` ; pastilles de relecture `<…>|r|t|<matière>` et `<…>|r|d|<matière>` ;
-idées `idea|<uuid>`.
+idées `idea|<uuid>` ; objectif tenu dans la semaine `goal|<id du retour>|<lundi>`.
 
 Évolution du schéma : chaque version qui ajoute une table ajoute un bloc à la fin de `schema.sql`
 (idempotent : `create table if not exists`, `drop policy if exists`) à exécuter dans le SQL Editor.

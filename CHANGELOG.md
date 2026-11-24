@@ -5,6 +5,17 @@ Numérotation : `MAJEUR.MINEUR.CORRECTIF` (ex. 0.2.1).
 - **mineur** (0.**2**.0) : une nouveauté (un réglage, un écran, une règle de planning) ;
 - **majeur** (**1**.0.0) : la version jugée stable après plusieurs semaines d'usage réel.
 
+## [0.10.0] – préversion (non publiée)
+
+Visible uniquement sur `/preview/`.
+- **Retours des professeurs** (Vue parents) : ajouter, **modifier** et supprimer un retour (enfant, date, source, matière,
+  professeur, type, message d'origine privé) avec une **version pour l'enfant** en trois parties
+  (ce que le professeur apprécie, ce qu'il attend, ce qui peut changer) et un **objectif** facultatif.
+- Case « Montrer à l'enfant » : sans elle, le retour reste privé aux parents.
+- Côté enfant (section Tampons) : « Ce que pensent mes professeurs » et « Mes objectifs » ; l'objectif en cours apparaît
+  aussi dans la journée, avec un bouton « Cette semaine, je l'ai tenu » que les parents voient.
+- Base : nouvelle table `teacher_notes` (bloc SQL « v0.10.0 » de schema.sql).
+
 ## [0.9.4] – 24 novembre 2026
 
 - Journée de l'enfant : encadré « Ajouté par les parents » listant les missions saisies pour ce jour-là

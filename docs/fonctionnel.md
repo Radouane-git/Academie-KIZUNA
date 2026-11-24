@@ -60,7 +60,8 @@ Livres terminés (titre, auteur, pages, date), total de livres et de pages, bout
 (formulaire avec Annuler).
 
 ### 3.4 Tampons
-Carte d'élève complète, liste des tampons reçus, rappel des règles de niveau.
+Carte d'élève complète, **Mes objectifs** (bouton « Cette semaine, je l'ai tenu »), **Ce que pensent mes professeurs**
+(version pour l'enfant des retours partagés par les parents), liste des tampons reçus, rappel des règles de niveau.
 
 ## 4. Vue parents
 
@@ -68,7 +69,11 @@ Carte d'élève complète, liste des tampons reçus, rappel des règles de nivea
 - **Une carte par enfant** : missions du jour, semaine, prochaine évaluation, missions notées difficiles ; un clic ouvre sa journée.
 - **Points difficiles de la semaine** : missions notées 4 ou 5, par enfant (utile avant une évaluation).
 - **Avancement de la semaine** (ordinateur) : tableau enfant × jour.
+- **Retours des professeurs** : liste par enfant (privé / visible par l'enfant, objectif et suivi de la semaine,
+  message d'origine repliable), boutons Modifier et Supprimer.
 - Formulaires repliés :
+  - **Ajouter un retour de professeur** (message d'origine privé + version pour l'enfant en trois parties + objectif +
+    case « Montrer à l'enfant ») ; ne jamais y écrire le nom d'un autre élève ;
   - **Donner un tampon** (enfant, évaluation, note, date, message) ;
   - **Écrire le mot du sensei** (pour un enfant ou tous) ;
   - **Ajouter une mission** (date « à faire » ou « à rendre », matière, consigne, type) ;
