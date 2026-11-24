@@ -5,6 +5,20 @@ Numérotation : `MAJEUR.MINEUR.CORRECTIF` (ex. 0.2.1).
 - **mineur** (0.**2**.0) : une nouveauté (un réglage, un écran, une règle de planning) ;
 - **majeur** (**1**.0.0) : la version jugée stable après plusieurs semaines d'usage réel.
 
+## [0.11.0] – préversion (non publiée)
+
+Visible uniquement sur `/preview/`.
+- **Idées proposées par les enfants** : bouton « Proposer une idée » dans « Idées pour toi » (Ma semaine) ; l'idée arrive
+  chez les parents dans « À valider » avec **Accepter** (date facultative) ou **Refuser** ; l'enfant voit l'état
+  (en attente, acceptée, pas cette fois). Une idée n'apparaît dans le planning qu'une fois acceptée.
+- **« Comment as-tu travaillé ? »** : après une révision ou une leçon (et sa note de difficulté), l'enfant coche ses méthodes
+  (relu le cours, fiche, exercices, interrogation, cartes mémoire, expliqué à quelqu'un, schéma) et le temps passé ;
+  modifiable ensuite. Dans l'écran « mission en cours », la question vient juste après « C'est fait ».
+- **Coup de pouce** : si les dernières révisions se limitent à « relu le cours », l'écran de révision propose une méthode
+  plus efficace.
+- Vue parents : « Méthodes de travail de la semaine » par enfant (après les points difficiles).
+- Base : colonnes `ideas.status`, `ideas.proposed_by`, `checks.method`, `checks.minutes` (bloc SQL « v0.11.0 »).
+
 ## [0.10.1] – 24 novembre 2026
 
 - Vue parents réordonnée : 1. Avancement de la semaine · 2. Points difficiles · 3. Bibliothèque, missions ajoutées à la main

@@ -3889,6 +3889,16 @@
    "kind": "lecture",
    "title": "Lire « Le Petit Prince »",
    "detail": "Lecture plaisir, sans résumé"
+  },
+  {
+   "id": "d4",
+   "child": "ines",
+   "proposed_by": "ines",
+   "status": "proposee",
+   "kind": "sortie",
+   "title": "Patinoire avec mes amies",
+   "detail": "Samedi après le match",
+   "date": "2026-11-28"
   }
  ],
  "stamps": [

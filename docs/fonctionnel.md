@@ -47,12 +47,15 @@ de l'ENT, et qu'il coche lui-même. Les parents suivent l'avancement, ajoutent c
   **prochaine évaluation**.
 - **Difficulté ressentie** : en cochant un devoir, une leçon, une révision ou une lecture, l'enfant note de 1 (très facile)
   à 5 (très difficile), ou passe ; pastille colorée sur le rond, modifiable.
+- **Méthode de travail** : après une révision ou une leçon, l'enfant indique comment il a travaillé (méthodes, temps) ;
+  un coup de pouce propose une méthode plus efficace si les dernières révisions se limitent à relire le cours.
 - **Retours quand on coche** : petit rebond du rond, vibration courte, message tous les 3 cochés et à la fin.
 - **Aide** à la première visite : « Touche le rond quand une mission est faite » (bouton Compris).
 
 ### 3.2 Ma semaine
 Un jour par ligne (anneau, horaires de cours, évaluations du jour) ; un clic ouvre le jour.
-Puis évaluations à venir et **idées pour toi** (loisirs proposés par les parents, cochables).
+Puis évaluations à venir et **idées pour toi** (loisirs proposés par les parents, cochables) ; l'enfant peut aussi
+**proposer une idée**, qui attend l'accord d'un parent.
 Navigation : semaine dernière, cette semaine, semaine prochaine, autres semaines.
 
 ### 3.3 Bibliothèque

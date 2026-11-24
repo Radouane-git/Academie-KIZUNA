@@ -209,3 +209,9 @@ alter table public.teacher_notes enable row level security;
 drop policy if exists "famille teacher_notes" on public.teacher_notes;
 create policy "famille teacher_notes" on public.teacher_notes for all to authenticated using (public.is_family()) with check (public.is_family());
 grant select, insert, update, delete on public.teacher_notes to authenticated;
+
+-- ============================================================ v0.11.0 : idées proposées par les enfants + méthode de travail
+alter table public.ideas add column if not exists status text default 'ok';
+alter table public.ideas add column if not exists proposed_by text;
+alter table public.checks add column if not exists method text;
+alter table public.checks add column if not exists minutes smallint;
