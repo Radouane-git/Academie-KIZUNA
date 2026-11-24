@@ -5,6 +5,13 @@ Numérotation : `MAJEUR.MINEUR.CORRECTIF` (ex. 0.2.1).
 - **mineur** (0.**2**.0) : une nouveauté (un réglage, un écran, une règle de planning) ;
 - **majeur** (**1**.0.0) : la version jugée stable après plusieurs semaines d'usage réel.
 
+## [0.9.4] – 24 novembre 2026
+
+- Journée de l'enfant : encadré « Ajouté par les parents » listant les missions saisies pour ce jour-là
+  qui ne sont pas encore placées (elles le seront à la prochaine synchronisation).
+- Saisie rapide : « Devoirs M. X : » donne la matière « M. X » ; « vocabulaire », « sourate », « réciter »
+  sont reconnus comme « à apprendre » (et plus comme une lecture).
+
 ## [0.9.3] – 24 novembre 2026
 
 - Vue parents : le bouton « Dates « à faire » ? Tout décaler d'un jour » ne déborde plus de son encadré.

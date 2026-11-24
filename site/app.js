@@ -316,6 +316,12 @@ function renderHome(){
  h+='</div><div class="home-more"><a class="home-small" href="#parents" style="--tc:'+tp.bg+'"><span class="av" style="background:'+tp.bg+';color:#fff">P</span>Vue parents</a><a class="home-small" href="#conseils"><span class="av" style="background:#0D3B45;color:#fff">?</span>Conseils</a></div></div>';
  return h;}
 function hardOf(cid,plan){var out=[];if(!plan)return out;var ch=plan.data.children[cid];if(!ch||!ch.blocks)return out;Object.keys(ch.blocks).sort().forEach(function(d){ch.blocks[d].forEach(function(b){if(b.id&&S.diff[b.id]>=4&&S.done[b.id])out.push({l:b.l,date:d,n:S.diff[b.id]});});});return out;}
+function pendingExtras(cid,date){
+ var due=addDays(date,1),labels={};
+ blocksOf(cid,date).forEach(function(b){labels[fold(b.l).replace(/[^a-z0-9]+/g," ").trim()]=1;});
+ return S.extras.filter(function(e){if(!(e.child===cid||e.child==="tous")||e.due!==due||e.kind==="rev")return false;
+  var core=fold(e.text).replace(/[^a-z0-9]+/g," ").trim().slice(0,30);
+  return !Object.keys(labels).some(function(l){return l.indexOf(core)>=0;});});}
 function footer(){return '<footer class="foot">'+syncLine()+'<a href="#conseils">Conseils</a></footer>';}
 function render(){
  if(!S.fam){root.innerHTML='<div class="wrap">'+topbar("parents")+renderParents(true)+footer()+'</div>';bindForms();return;}
@@ -381,6 +387,8 @@ function renderChild(c,plan){
   if(due0.length)h+='<details class="m-due"><summary>Pour demain : '+due0.length+' chose'+(due0.length>1?"s":"")+' à rendre</summary><ul class="dots">'+due0.map(function(x){return '<li>'+esc(x)+'</li>';}).join("")+'</ul></details>';
   if(sm0)h+='<div class="m-sensei"><b>Le mot du sensei</b><span>'+esc(sm0.text)+'</span></div>';
   h+='</div>';}
+ var pend=pendingExtras(c.id,S.day);
+ if(pend.length)h+='<section class="card pending"><h2>Ajouté par les parents</h2><p class="det">Ces missions seront placées dans ta journée à la prochaine synchronisation (7h ou 18h).</p><ul class="dots">'+pend.map(function(e){return '<li>'+esc((e.subject?e.subject+" : ":"")+e.text)+'</li>';}).join("")+'</ul></section>';
  h+=renderEdt(c,S.day);
  h+='<section class="card pathcard"><div class="pc-head"><h2>Le chemin du jour</h2><span>'+p.n+' sur '+p.t+'</span></div>'+(S.diffMissing&&!DEMO?'<p class="msg err">Les notes de difficulté ne sont pas encore enregistrées : un parent doit exécuter le bloc SQL « v0.9.0 » dans Supabase.</p>':'')+(lsGet("kizuna-hint-check")?'':'<p class="hint">Touche le <b>rond</b> quand une mission est faite. Touche son <b>nom</b> pour l’ouvrir en grand. <button class="linkbtn" data-act="hint-ok">Compris</button></p>')+'<ol class="path">';
  var all=blocksOf(c.id,S.day);var bl=all.filter(function(b){return !b.over;});var over=all.filter(function(b){return b.over;});
@@ -586,6 +594,7 @@ var JOURS=["dimanche","lundi","mardi","mercredi","jeudi","vendredi","samedi"];
 function fold(s){return String(s||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();}
 function guessKind(t){var f=fold(t);
  if(/\b(evaluation|controle|ds|qcm|interro|interrogation|test|devoir surveille)\b/.test(f))return "rev";
+ if(/(vocabulaire|sourate|reciter|par c(oe|œ)ur|apprendre)/.test(f)&&!/exercice|rediger|ecrire|resume/.test(f))return "app";
  if(/\b(lire|lecture)\b/.test(f)&&!/exercice|\bex\b/.test(f))return "lec";
  if(/(apprendre|par c(oe|œ)ur|reciter|vocabulaire|lecon|\bcours\b)/.test(f)&&!/exercice|faire|rediger|ecrire/.test(f))return "app";
  return "dev";}
@@ -617,7 +626,7 @@ function parseBulk(text,defChild,defSubj){
   if(dt){due=dt.date;subj=null;subjIndent=-1;line=line.slice(0,dt.idx)+line.slice(dt.end);line=line.replace(/^[^:]*:\s*/,"").trim();if(!line)return;}
   if(!due||!cur.length)return;
   if(subj!==null&&indent<=subjIndent){subj=null;subjIndent=-1;}
-  if(/:\s*$/.test(line)){subj=line.replace(/:\s*$/,"").trim().replace(/^devoirs?\s+(de|du|d['’])\s*/i,"");subjIndent=indent;return;}
+  if(/:\s*$/.test(line)){subj=line.replace(/:\s*$/,"").trim().replace(/^devoirs?\s+((de|du|d['’])\s*)?/i,"");subjIndent=indent;return;}
   line.split(/\s;\s/).forEach(function(part){
    part=part.trim().replace(/^[*\-•·–]+\s*/,"");if(!part)return;
    var s2=subj||defSubj||"",m=/^([^:]{2,30}?)\s*:\s+(.+)$/.exec(part);
