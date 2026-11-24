@@ -539,9 +539,6 @@ function renderParents(noFam){
   h+=weeksNav();
   if(plan){
    var days=plan.data.days;
-   h+=renderNotesParents();
-   var hardAll=children().map(function(c){return [c,hardOf(c.id,plan)];}).filter(function(x){return x[1].length;});
-   h+='<section class="card hardcard"><h2>Points difficiles de la semaine</h2>'+(hardAll.length?hardAll.map(function(x){return '<div class="hard-kid"><b>'+esc(x[0].name)+'</b><ul>'+x[1].map(function(m){return '<li>'+diffBadge(m.n)+'<span>'+esc(m.l)+'<small>'+esc(fmtDate(m.date))+' · '+DIFF[m.n][0]+'</small></span></li>';}).join("")+'</ul></div>';}).join(""):'<p class="none">Aucune mission notée 4 ou 5 cette semaine. Les enfants notent la difficulté quand ils cochent un devoir, une leçon, une révision ou une lecture.</p>')+(S.diffMissing&&!DEMO?'<p class="msg err">Exécutez le bloc SQL « v0.9.0 » dans Supabase pour enregistrer les notes.</p>':'')+'</section>';
    h+='<section class="card ovcard"><h2>Avancement de la semaine</h2><div class="ovwrap"><table class="ov"><thead><tr><th></th>';
    days.forEach(function(d){h+='<th>'+esc(d.short)+' '+d.num+'</th>';});
    h+='<th>Semaine</th></tr></thead><tbody>';
@@ -549,6 +546,8 @@ function renderParents(noFam){
     days.forEach(function(d){var p=prog(c.id,d.date);h+='<td><button class="cell'+(p.t&&p.n===p.t?" full":"")+'" data-go="'+esc(c.id)+'" data-day="'+d.date+'" aria-label="'+esc(c.name)+', '+esc(d.long)+'"><i class="bar"><i style="width:'+pct(p)+'%"></i></i><small>'+p.n+'/'+p.t+'</small></button></td>';});
     h+='<td><b>'+pct(weekProg(c.id,plan))+' %</b></td></tr>';});
    h+='</tbody></table></div></section>';
+   var hardAll=children().map(function(c){return [c,hardOf(c.id,plan)];}).filter(function(x){return x[1].length;});
+   h+='<section class="card hardcard"><h2>Points difficiles de la semaine</h2>'+(hardAll.length?hardAll.map(function(x){return '<div class="hard-kid"><b>'+esc(x[0].name)+'</b><ul>'+x[1].map(function(m){return '<li>'+diffBadge(m.n)+'<span>'+esc(m.l)+'<small>'+esc(fmtDate(m.date))+' · '+DIFF[m.n][0]+'</small></span></li>';}).join("")+'</ul></div>';}).join(""):'<p class="none">Aucune mission notée 4 ou 5 cette semaine. Les enfants notent la difficulté quand ils cochent un devoir, une leçon, une révision ou une lecture.</p>')+(S.diffMissing&&!DEMO?'<p class="msg err">Exécutez le bloc SQL « v0.9.0 » dans Supabase pour enregistrer les notes.</p>':'')+'</section>';
   }
  }
  h+='<div class="cols">';
@@ -558,6 +557,16 @@ function renderParents(noFam){
   h+='<div class="card warn"><h2>La dernière synchronisation a échoué</h2><p>'+esc(S.sync.message||"")+'</p></div>';
  }
  if(!noFam){
+  h+='<section class="card"><div class="ftitle">'+picto("Lecture",44)+'<h2>Bibliothèque des enfants</h2></div>'+children().map(function(c){var bk=booksFor(c.id);var sum='<b>'+esc(c.name)+'</b><small>'+bk.length+' livre'+(bk.length>1?"s":"")+' · '+fmtN(pagesOf(bk))+' pages</small>';
+   if(!bk.length)return '<div class="xl"><span>'+sum+'</span></div>';
+   return '<details class="libkid"><summary><span>'+sum+'</span><span class="lk-more">Voir les livres</span></summary><ul class="books">'+bk.map(function(b){return '<li><span><b>'+esc(b.title)+'</b>'+(b.author?' · '+esc(b.author):'')+'<small>'+(b.pages?fmtN(+b.pages)+' pages · ':'')+(b.finished?'fini le '+esc(fmtDate(b.finished,{day:"numeric",month:"long"})):'')+'</small></span></li>';}).join("")+'</ul><a class="linkbtn" href="#'+esc(c.id)+'/livres">Ouvrir la bibliothèque de '+esc(c.name)+'</a></details>';}).join("")+'</section>';
+  // liste des ajouts
+  var up=S.extras.filter(function(e){return e.due>=TODAY;});
+  h+='<section class="card"><h2>Missions ajoutées à la main</h2>'+(up.length?'<p>Date affichée : jour de <b>rendu</b>.</p><button class="btn sec wrapbtn" type="button" id="shift-extras">Dates « à faire » ? Tout décaler d’un jour</button>'+msgHtml("shift"):'')+(up.length?'<div class="scrollbox" tabindex="0" role="region" aria-label="Liste des missions ajoutées ('+up.length+')">'+up.map(function(e){var c=child(e.child);return '<div class="xl"><span><span class="xl-h"><b>'+esc(c?c.name:"Tous")+'</b> · à rendre le '+esc(fmtDate(e.due))+'</span><small>'+esc((e.subject?e.subject+" : ":"")+e.text)+'</small></span><button class="btn sec mini" data-del="'+esc(e.id)+'">Supprimer</button></div>';}).join("")+'</div>'+(up.length>5?'<p class="det">'+up.length+' missions : faites défiler la liste.</p>':''):'<p class="none">Aucune pour le moment.</p>')+'</section>';
+  h+='<section class="card"><h2>Idées proposées</h2>'+(S.ideas.length?S.ideas.map(function(x){var c=child(x.child);return '<div class="xl"><span><b>'+esc(c?c.name:"Tous")+'</b> · '+esc(x.title)+(x.date?' · '+esc(fmtDate(x.date)):'')+(S.done["idea|"+x.id]?' · fait':'')+'</span><button class="btn sec" data-delidea="'+esc(x.id)+'">Supprimer</button></div>';}).join(""):'<p class="none">Aucune idée pour le moment.</p>')+'</section>';
+  // retours des professeurs
+  h+=renderNotesParents();
+  h+='<h2 class="acts-title">Actions</h2>';
   // tampon
   var evOpts=[];children().forEach(function(c){evalsFor(c.id).forEach(function(e){if(e[0]<=addDays(TODAY,1))evOpts.push([c.id,e[1]+" ("+fmtDate(e[0])+")"]);});});
   h+=noteForm();
@@ -595,12 +604,6 @@ function renderParents(noFam){
    }
   }
   h+=msgHtml("bulk")+'</form>';
-  h+='<section class="card"><div class="ftitle">'+picto("Lecture",44)+'<h2>Bibliothèque des enfants</h2></div>'+children().map(function(c){var bk=booksFor(c.id);var sum='<b>'+esc(c.name)+'</b><small>'+bk.length+' livre'+(bk.length>1?"s":"")+' · '+fmtN(pagesOf(bk))+' pages</small>';
-   if(!bk.length)return '<div class="xl"><span>'+sum+'</span></div>';
-   return '<details class="libkid"><summary><span>'+sum+'</span><span class="lk-more">Voir les livres</span></summary><ul class="books">'+bk.map(function(b){return '<li><span><b>'+esc(b.title)+'</b>'+(b.author?' · '+esc(b.author):'')+'<small>'+(b.pages?fmtN(+b.pages)+' pages · ':'')+(b.finished?'fini le '+esc(fmtDate(b.finished,{day:"numeric",month:"long"})):'')+'</small></span></li>';}).join("")+'</ul><a class="linkbtn" href="#'+esc(c.id)+'/livres">Ouvrir la bibliothèque de '+esc(c.name)+'</a></details>';}).join("")+'</section>';
-  // liste des ajouts
-  var up=S.extras.filter(function(e){return e.due>=TODAY;});
-  h+='<section class="card"><h2>Missions ajoutées à la main</h2>'+(up.length?'<p>Date affichée : jour de <b>rendu</b>.</p><button class="btn sec wrapbtn" type="button" id="shift-extras">Dates « à faire » ? Tout décaler d’un jour</button>'+msgHtml("shift"):'')+(up.length?'<div class="scrollbox" tabindex="0" role="region" aria-label="Liste des missions ajoutées ('+up.length+')">'+up.map(function(e){var c=child(e.child);return '<div class="xl"><span><span class="xl-h"><b>'+esc(c?c.name:"Tous")+'</b> · à rendre le '+esc(fmtDate(e.due))+'</span><small>'+esc((e.subject?e.subject+" : ":"")+e.text)+'</small></span><button class="btn sec mini" data-del="'+esc(e.id)+'">Supprimer</button></div>';}).join("")+'</div>'+(up.length>5?'<p class="det">'+up.length+' missions : faites défiler la liste.</p>':''):'<p class="none">Aucune pour le moment.</p>')+'</section>';
   // idées
   h+='<form class="card f" id="idea"><div class="ftitle">'+picto("Loisir",44)+'<h2>Idée de loisir ou de sortie</h2></div><p>Lecture plaisir, sortie, défi construction, échecs… Affichée dans l’onglet de l’enfant, et dans sa journée si elle est datée.</p>';
   h+='<label for="i-child">Pour<select id="i-child">'+kidOptions(true)+'</select></label>';
@@ -610,7 +613,6 @@ function renderParents(noFam){
   h+='<label for="i-link">Lien (facultatif)<input id="i-link" type="url" placeholder="https://…"></label>';
   h+='<div class="cols two"><label for="i-date">Date (facultatif)<input id="i-date" type="date"></label><label for="i-time">Heure (facultatif)<input id="i-time" type="time"></label></div>';
   h+='<button class="btn" type="submit">Ajouter l’idée</button>'+msgHtml("idea")+'</form>';
-  h+='<section class="card"><h2>Idées proposées</h2>'+(S.ideas.length?S.ideas.map(function(x){var c=child(x.child);return '<div class="xl"><span><b>'+esc(c?c.name:"Tous")+'</b> · '+esc(x.title)+(x.date?' · '+esc(fmtDate(x.date)):'')+(S.done["idea|"+x.id]?' · fait':'')+'</span><button class="btn sec" data-delidea="'+esc(x.id)+'">Supprimer</button></div>';}).join(""):'<p class="none">Aucune idée pour le moment.</p>')+'</section>';
  }
  if(noFam)h+=renderSettings(true);
  else h+='<a class="setlink" href="#parametres">'+GEAR+'<span>Paramètres : couleurs de héros, import d’historique, réglages avancés</span></a>';

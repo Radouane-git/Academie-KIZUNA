@@ -5,6 +5,11 @@ Numérotation : `MAJEUR.MINEUR.CORRECTIF` (ex. 0.2.1).
 - **mineur** (0.**2**.0) : une nouveauté (un réglage, un écran, une règle de planning) ;
 - **majeur** (**1**.0.0) : la version jugée stable après plusieurs semaines d'usage réel.
 
+## [0.10.1] – 24 novembre 2026
+
+- Vue parents réordonnée : 1. Avancement de la semaine · 2. Points difficiles · 3. Bibliothèque, missions ajoutées à la main
+  et idées proposées · 4. Retours des professeurs · puis les actions (formulaires repliés).
+
 ## [0.10.0] – 24 novembre 2026
 
 Validée le 24/11 et publiée.
