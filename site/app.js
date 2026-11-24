@@ -9,18 +9,26 @@ var sb = null;
 var KINDS = {dev:["Devoirs","--k-dev",1],app:["Apprendre / réciter","--k-app",1],rev:["Réviser une éval","--k-rev",1],lec:["Lecture","--k-lec",1],rel:["Relire les leçons","--k-rel",0],cor:["Corvée","--k-cor",1],ran:["Rangement","--k-ran",1],org:["Sac & agenda","--k-org",1],rep:["Pause","--k-calm",0],repas:["Repas","--k-calm",0],act:["Activité","--k-calm",0],dodo:["Soirée","--k-calm",0],loi:["Loisir / sortie","--k-loi",1]};
 var IDEA_KINDS=[["lecture","Lecture plaisir"],["sortie","Sortie"],["defi","Défi construction"],["echecs","Échecs"],["sport","Sport / plein air"],["autre","Autre"]];
 var TIPS = [
- ["Une pause avant de s’y mettre","20 à 30 minutes de goûter et de repos sans écran en rentrant : le travail qui suit va plus vite."],
- ["25 minutes de travail, 5 minutes de pause","Un minuteur posé sur le bureau aide à tenir le rythme et à éviter de traîner."],
- ["Apprendre le soir, réciter le matin","Le sommeil fixe la mémoire, et la récitation du petit-déjeuner vérifie que c’est su."],
- ["Travailler en binôme","Quand deux enfants ont les mêmes devoirs, ils s’interrogent l’un l’autre : expliquer est la meilleure façon d’apprendre."],
- ["Les évaluations se préparent sur 3 jours","Jour 1 : la fiche. Jour 2 : les exercices. Jour 3 : se faire interroger. Le matin même : 10 minutes de relecture, rien de nouveau."],
- ["Les soirs de sport, zéro devoir après","Tout est fait avant de partir. Au retour : douche, collation, coucher."],
- ["Écrans coupés avant le coucher","Téléphones rechargés hors de la chambre : l’endormissement est plus rapide."],
- ["Le rituel du dimanche","15 minutes pour regarder EcoleDirecte, vérifier le planning de la semaine et préparer les sacs."]
+ ["Une pause avant de s’y mettre","20 à 30 minutes de goûter et de repos sans écran en rentrant : le travail qui suit va plus vite.","general"],
+ ["25 minutes de travail, 5 minutes de pause","Un minuteur posé sur le bureau aide à tenir le rythme et à éviter de traîner.","dev,rev"],
+ ["Apprendre le soir, réciter le matin","Le sommeil fixe la mémoire, et la récitation du petit-déjeuner vérifie que c’est su.","app"],
+ ["Travailler en binôme","Quand deux enfants ont les mêmes devoirs, ils s’interrogent l’un l’autre : expliquer est la meilleure façon d’apprendre.","rev,app"],
+ ["Les évaluations se préparent sur 3 jours","Jour 1 : la fiche. Jour 2 : les exercices. Jour 3 : se faire interroger. Le matin même : 10 minutes de relecture, rien de nouveau.","rev"],
+ ["Se tester plutôt que relire","Relire donne l’impression de savoir. Cacher le cours et essayer de le redire, ou refaire un exercice sans la correction, montre ce qui est vraiment su.","rev,app"],
+ ["Revoir plusieurs fois, en petits morceaux","Trois fois 10 minutes sur trois jours valent mieux qu’une heure la veille : on oublie moins.","rev,app"],
+ ["Expliquer à quelqu’un","Si tu sais l’expliquer simplement à un frère, une sœur ou un parent, c’est que tu as compris.","rev,app"],
+ ["Avant de lire, faire un repérage","Titre, sommaire, quatrième de couverture, premières lignes de chaque chapitre : deux minutes pour savoir où l’on va.","lec"],
+ ["Lire avec un crayon","Noter en marge un mot, une question, un personnage : à la fin, le résumé s’écrit presque tout seul.","lec"],
+ ["Commencer par le plus difficile","Quand on est encore frais, on avance plus vite sur ce qui résiste. Le facile vient ensuite.","dev"],
+ ["Les soirs de sport, zéro devoir après","Tout est fait avant de partir. Au retour : douche, collation, coucher.","general"],
+ ["Écrans coupés avant le coucher","Téléphones rechargés hors de la chambre : l’endormissement est plus rapide.","general"],
+ ["Le rituel du dimanche","15 minutes pour regarder EcoleDirecte, vérifier le planning de la semaine et préparer les sacs.","general"]
 ];
+var MOMENTS=[["general","Organisation"],["dev","Devoirs"],["rev","Révisions"],["app","Leçons"],["lec","Lecture"]];
+var TIP_SRC=[["prof","Conseil d’un professeur"],["livre","D’après un livre"],["famille","Conseil de la famille"]];
 
 /* ------------------------------------------------------------ état */
-var S = {fam:null, plans:[], done:{}, extras:[], ideas:[], ideasMissing:false, stamps:[], sensei:[], stampsMissing:false, books:[], booksMissing:false, cancels:[], cancelsMissing:false, edtOpen:false, focus:null, ideaOpen:false, ideasPropMissing:false, installEvt:null, standalone:false, diff:{}, rate:null, diffMissing:false, meth:{}, methOpen:null, methMissing:false, notes:[], notesMissing:false, editNote:null, bookOpen:false, sync:null, mfa:null, view:null, day:null, msg:{}, bulk:{text:"",items:null}};
+var S = {fam:null, plans:[], done:{}, extras:[], ideas:[], ideasMissing:false, stamps:[], sensei:[], stampsMissing:false, books:[], booksMissing:false, cancels:[], cancelsMissing:false, edtOpen:false, focus:null, ideaOpen:false, ideasPropMissing:false, installEvt:null, standalone:false, diff:{}, rate:null, diffMissing:false, meth:{}, methOpen:null, methMissing:false, notes:[], notesMissing:false, editNote:null, tips:[], tipsMissing:false, editTip:null, tipFilter:"tous", bookOpen:false, sync:null, mfa:null, view:null, day:null, msg:{}, bulk:{text:"",items:null}};
 function lsGet(k){try{return localStorage.getItem(k);}catch(e){return null;}}
 function lsSet(k,v){try{localStorage.setItem(k,v);}catch(e){}}
 function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
@@ -93,7 +101,7 @@ function loadAll(){
   return fetch("demo.json").then(function(r){return r.json();}).then(function(d){
    S.fam=d.settings.famille;S.plans=d.plans.sort(function(a,b){return a.week_start<b.week_start?-1:1;});
    try{S.done=JSON.parse(lsGet("planning-demo-done")||"{}");}catch(e){S.done={};}try{S.diff=JSON.parse(lsGet("planning-demo-diff")||"{}");}catch(e){S.diff={};}try{S.meth=JSON.parse(lsGet("planning-demo-meth")||"{}");}catch(e){S.meth={};}
-   S.sync=d.sync;S.ideas=d.ideas||[];S.stamps=d.stamps||[];S.sensei=d.sensei||[];S.books=d.books||[];S.cancels=d.cancellations||[];S.notes=d.teacher_notes||[];start();
+   S.sync=d.sync;S.ideas=d.ideas||[];S.stamps=d.stamps||[];S.sensei=d.sensei||[];S.books=d.books||[];S.cancels=d.cancellations||[];S.notes=d.teacher_notes||[];S.tips=d.tips||[];start();
   });
  }
  return Promise.all([
@@ -107,8 +115,10 @@ function loadAll(){
   sb.from("sensei_messages").select("*").order("created_at"),
   sb.from("books").select("*").order("finished",{ascending:false}),
   sb.from("cancellations").select("*").gte("date",addDays(TODAY,-14)),
-  sb.from("teacher_notes").select("*").order("date",{ascending:false})
+  sb.from("teacher_notes").select("*").order("date",{ascending:false}),
+  sb.from("tips").select("*").order("created_at",{ascending:false})
  ]).then(function(r){
+  S.tipsMissing=!!r[11].error;S.tips=r[11].error?[]:(r[11].data||[]);
   S.notesMissing=!!r[10].error;S.notes=r[10].error?[]:(r[10].data||[]);
   S.cancelsMissing=!!r[9].error;S.cancels=r[9].error?[]:(r[9].data||[]);
   S.booksMissing=!!r[8].error;S.books=r[8].error?[]:(r[8].data||[]);
@@ -306,16 +316,18 @@ function weeksNav(){
  if(others.length)h+='<select class="wk" id="oldweek" aria-label="Autres semaines"><option value="">Autres semaines…</option>'+others.map(function(i){return '<option value="'+i+'"'+(i===sel?" selected":"")+'>Semaine du '+lbl(i)+'</option>';}).join("")+'</select>';
  return h+'</nav>';
 }
-var FOLDS=[["notef","Ajouter un retour de professeur","note"],["stampf","Donner un tampon","stamp"],["senseif","Écrire le mot du sensei","sensei"],["addhw","Ajouter une mission","addhw"],["bulk","Saisie rapide de plusieurs missions","bulk"],["idea","Proposer une idée de loisir ou de sortie","idea"]];
+var FOLDS=[["tipf","Ajouter un conseil (professeur, livre…)","tip"],["notef","Ajouter un retour de professeur","note"],["stampf","Donner un tampon","stamp"],["senseif","Écrire le mot du sensei","sensei"],["addhw","Ajouter une mission","addhw"],["bulk","Saisie rapide de plusieurs missions","bulk"],["idea","Proposer une idée de loisir ou de sortie","idea"]];
 function foldForms(){FOLDS.forEach(function(f){var el=document.getElementById(f[0]);if(!el||el.parentNode.tagName==="DETAILS")return;
- var d=document.createElement("details");d.className="fold"+(f[0]==="bulk"||f[0]==="notef"?" wide":"");d.setAttribute("data-fold",f[0]);
- if((S.open||{})[f[0]]||S.msg[f[2]]||(f[0]==="bulk"&&S.bulk.items)||(f[0]==="notef"&&S.editNote))d.open=true;
+ var d=document.createElement("details");d.className="fold"+(f[0]==="bulk"||f[0]==="notef"||f[0]==="tipf"?" wide":"");d.setAttribute("data-fold",f[0]);
+ if((S.open||{})[f[0]]||S.msg[f[2]]||(f[0]==="bulk"&&S.bulk.items)||(f[0]==="notef"&&S.editNote)||(f[0]==="tipf"&&(S.editTip||S.tipDraft)))d.open=true;
  var sm=document.createElement("summary");sm.textContent="+ "+f[1];d.appendChild(sm);el.parentNode.insertBefore(d,el);d.appendChild(el);});}
 function renderHome(){
  var hr=new Date().getHours();
  var h='<div class="home"><div class="home-head">'+logo(72)+'<h1>'+(hr<18?"Bonjour":"Bonsoir")+' !</h1><p>Qui ouvre l’Académie ?</p></div><div class="home-grid">';
  children().forEach(function(c){var t=theme(c),k=card(c.id),mp=mprog(c.id,TODAY),left=mp.t-mp.n;
   h+='<a class="home-card" href="#'+esc(c.id)+'" style="background-color:'+t.bg+';color:'+t.txt+'"><span class="shield" style="background:'+t.acc+';color:'+shieldFg(t)+'" aria-hidden="true">'+k.level+'</span><span class="hc-txt"><b>'+esc(c.name)+'</b><small>'+(mp.t?(left?left+" mission"+(left>1?"s":"")+" aujourd’hui":"Tout est fait aujourd’hui !"):"Rien de prévu aujourd’hui")+(k.streak>1?" · "+k.streak+" jours de suite":"")+'</small></span>'+(mp.t?ring(mp.n/mp.t,56,6,mp.n+"/"+mp.t,t.acc,"rgba(255,255,255,.25)",t.txt):'')+'</a>';});
+ var tw=allTips(null);var tow=tw.length?tw[weekNum()%tw.length]:null;
+ if(tow)h+='</div><section class="tow"><span class="kicker acc">Conseil de la semaine</span>'+tipCard(tow,true)+'<a class="linkbtn" href="#conseils">Tous les conseils</a></section><div>';
  var tp=THEMES[themeName(null)];
  h+='</div><div class="home-more"><a class="home-small" href="#parents" style="--tc:'+tp.bg+'"><span class="av" style="background:'+tp.bg+';color:#fff">P</span>Vue parents</a><a class="home-small" href="#conseils"><span class="av" style="background:#0D3B45;color:#fff">?</span>Conseils</a></div></div>';
  return h;}
@@ -363,7 +375,7 @@ function renderNotesParents(){
  if(!S.notes.length)h+='<p class="none">Aucun retour pour le moment.</p>';
  children().forEach(function(c){var ns=notesFor(c.id).filter(function(n){return n.child===c.id||n.child==="tous";});if(!ns.length)return;
   h+='<div class="nk"><h3>'+esc(c.name)+'</h3>'+ns.map(function(n){var gid=goalId(n);
-   return '<div class="nrow"><div class="nr-txt"><b>'+esc(n.subject||"—")+(n.teacher?' · '+esc(n.teacher):'')+'</b><small>'+esc(fmtDate(n.date||TODAY))+' · '+esc(noteLabel(NOTE_SRC,n.source))+' · '+esc(noteLabel(NOTE_TONE,n.tone))+'</small><span class="nr-flag '+(n.shared?"on":"off")+'">'+(n.shared?"Visible par l’enfant":"Privé")+'</span>'+(n.kid_strengths||n.kid_expect?'<p>'+esc([n.kid_strengths,n.kid_expect].filter(Boolean).join(" · "))+'</p>':'<p class="none">Pas encore de version pour l’enfant.</p>')+(n.goal?'<small class="nr-goal">Objectif : '+esc(n.goal)+(n.goal_active===false?" (terminé)":S.done[gid]?" · tenu cette semaine ✓":" · pas encore coché cette semaine")+'</small>':'')+(n.original?'<details class="orig"><summary>Message d’origine</summary><p>'+esc(n.original)+'</p></details>':'')+'</div><div class="nr-btns"><button class="btn sec mini" data-editnote="'+esc(n.id)+'">Modifier</button><button class="btn sec mini" data-delnote="'+esc(n.id)+'">Supprimer</button></div></div>';}).join("")+'</div>';});
+   return '<div class="nrow"><div class="nr-txt"><b>'+esc(n.subject||"—")+(n.teacher?' · '+esc(n.teacher):'')+'</b><small>'+esc(fmtDate(n.date||TODAY))+' · '+esc(noteLabel(NOTE_SRC,n.source))+' · '+esc(noteLabel(NOTE_TONE,n.tone))+'</small><span class="nr-flag '+(n.shared?"on":"off")+'">'+(n.shared?"Visible par l’enfant":"Privé")+'</span>'+(n.kid_strengths||n.kid_expect?'<p>'+esc([n.kid_strengths,n.kid_expect].filter(Boolean).join(" · "))+'</p>':'<p class="none">Pas encore de version pour l’enfant.</p>')+(n.goal?'<small class="nr-goal">Objectif : '+esc(n.goal)+(n.goal_active===false?" (terminé)":S.done[gid]?" · tenu cette semaine ✓":" · pas encore coché cette semaine")+'</small>':'')+(n.original?'<details class="orig"><summary>Message d’origine</summary><p>'+esc(n.original)+'</p></details>':'')+'</div><div class="nr-btns"><button class="btn sec mini" data-editnote="'+esc(n.id)+'">Modifier</button><button class="btn sec mini" data-note2tip="'+esc(n.id)+'">En faire un conseil</button><button class="btn sec mini" data-delnote="'+esc(n.id)+'">Supprimer</button></div></div>';}).join("")+'</div>';});
  return h+'</section>';}
 function kidIdeaBlock(c){
  var h='<div class="kid-idea">';
@@ -393,6 +405,30 @@ function lastRevMethods(cid){var out=[];Object.keys(S.meth).forEach(function(id)
 function methStats(cid,plan){var cnt={},tot=0,mins=0;if(!plan)return null;var ch=plan.data.children[cid];if(!ch||!ch.blocks)return null;
  Object.keys(ch.blocks).forEach(function(d){ch.blocks[d].forEach(function(b){var v=b.id&&S.meth[b.id];if(!v)return;tot++;mins+=v.min||0;v.m.forEach(function(k){cnt[k]=(cnt[k]||0)+1;});});});
  return tot?{cnt:cnt,tot:tot,mins:mins}:null;}
+function allTips(cid){
+ var fam=S.tips.filter(function(t){return t.active!==false&&(!cid||!t.child||t.child==="tous"||t.child===cid);}).map(function(t){return {id:t.id,title:t.title,body:t.body,moments:(t.moments||"general").split(","),src:t.source_type||"famille",from:t.source||"",subject:t.subject||"",fam:true};});
+ var def=TIPS.map(function(t,i){return {id:"d"+i,title:t[0],body:t[1],moments:t[2].split(","),src:"academie",from:"",subject:""};});
+ return fam.concat(def);}
+function tipFor(cid,kind,salt){var list=allTips(cid).filter(function(t){return t.moments.indexOf(kind)>=0;});if(!list.length)return null;
+ var famL=list.filter(function(t){return t.fam;});var pool=famL.length&&((salt||0)%2===0)?famL:list;
+ return pool[Math.abs(salt||0)%pool.length];}
+function tipSrcLabel(t){if(t.src==="academie")return "Conseil de l’Académie";var l=(TIP_SRC.filter(function(x){return x[0]===t.src;})[0]||["","Conseil"])[1];return t.from?(t.src==="prof"?"Conseil de "+t.from:t.src==="livre"?"D’après « "+t.from+" »":l+" · "+t.from):l;}
+function tipCard(t,small){return '<article class="tip'+(small?" small":"")+' src-'+esc(t.src)+'"><span class="tip-src">'+esc(tipSrcLabel(t))+(t.subject?' · '+esc(t.subject):'')+'</span><h3>'+esc(t.title)+'</h3><p>'+esc(t.body)+'</p></article>';}
+function weekNum(){var d=new Date(TODAY+"T12:00:00");var j=new Date(d.getFullYear(),0,1);return Math.floor((d-j)/604800000);}
+function tipForm(){
+ var t=S.editTip?S.tips.filter(function(x){return String(x.id)===String(S.editTip);})[0]||{}:(S.tipDraft||{});
+ var ms=(t.moments||"general").split(",");
+ var h='<form class="card f tipf" id="tipf"><h2>'+(S.editTip?"Modifier le conseil":"Nouveau conseil")+'</h2><p class="det">Écrivez le conseil avec vos mots, en deux ou trois phrases. Pour un livre, résumez l’idée : ne recopiez pas de passages.</p>';
+ h+='<label for="t-title">Titre<input id="t-title" type="text" required value="'+esc(t.title||"")+'" placeholder="ex. Lire le sujet deux fois"></label>';
+ h+='<label for="t-body">Conseil<textarea id="t-body" required rows="3">'+esc(t.body||"")+'</textarea></label>';
+ h+='<div class="cols three"><label for="t-src">Source<select id="t-src">'+TIP_SRC.map(function(o){return '<option value="'+o[0]+'"'+((t.source_type||"famille")===o[0]?" selected":"")+'>'+o[1]+'</option>';}).join("")+'</select></label><label for="t-from">Professeur ou livre (facultatif)<input id="t-from" type="text" value="'+esc(t.source||"")+'" placeholder="ex. M. Dupont, ou titre du livre"></label><label for="t-subj">Matière (facultatif)<input id="t-subj" type="text" value="'+esc(t.subject||"")+'"></label></div>';
+ h+='<fieldset class="kidver"><legend>Quand l’afficher</legend><div class="m-chips">'+MOMENTS.map(function(m){return '<label class="mchip chk-chip"><input type="checkbox" class="t-mom" value="'+m[0]+'"'+(ms.indexOf(m[0])>=0?" checked":"")+'> '+m[1]+'</label>';}).join("")+'</div></fieldset>';
+ h+='<label for="t-child">Pour<select id="t-child"><option value="tous">Tous</option>'+children().map(function(c){return '<option value="'+esc(c.id)+'"'+(t.child===c.id?" selected":"")+'>'+esc(c.name)+'</option>';}).join("")+'</select></label>';
+ h+='<div class="btnrow"><button class="btn" type="submit">'+(S.editTip?"Enregistrer les modifications":"Ajouter le conseil")+'</button>'+(S.editTip||S.tipDraft?'<button class="btn sec" type="button" data-act="tip-cancel">Annuler</button>':'')+'</div>'+msgHtml("tip")+(S.tipsMissing&&!DEMO?'<p class="msg err">Exécutez d’abord le bloc SQL « v0.12.0 » dans Supabase.</p>':'')+'</form>';
+ return h;}
+function renderTipsParents(){
+ var fam=S.tips;
+ return '<section class="card wide tips-card"><h2>Conseils de la famille</h2>'+(fam.length?fam.map(function(t){var c=child(t.child);return '<div class="nrow"><div class="nr-txt"><b>'+esc(t.title)+'</b><small>'+esc(tipSrcLabel({src:t.source_type||"famille",from:t.source||""}))+(t.subject?' · '+esc(t.subject):'')+' · '+esc((t.moments||"general").split(",").map(function(k){return (MOMENTS.filter(function(m){return m[0]===k;})[0]||["",k])[1];}).join(", "))+' · '+esc(c?c.name:"tous")+'</small><p>'+esc(t.body)+'</p></div><div class="nr-btns"><button class="btn sec mini" data-edittip="'+esc(t.id)+'">Modifier</button><button class="btn sec mini" data-deltip="'+esc(t.id)+'">Supprimer</button></div></div>';}).join(""):'<p class="none">Ajoutez les conseils des professeurs ou vos fiches de livres de méthode : ils s’affichent dans l’onglet Conseils et au bon moment dans les missions.</p>')+'</section>';}
 function footer(){return '<footer class="foot">'+syncLine()+'<a href="#conseils">Conseils</a></footer>';}
 function render(){
  if(!S.fam){root.innerHTML='<div class="wrap">'+topbar("parents")+renderParents(true)+footer()+'</div>';bindForms();return;}
@@ -549,6 +585,8 @@ function renderFocus(c){
  if(b.k==="rel"&&b.rel)h+=renderRel(b.rel)+'<p class="st-d">Touche chaque matière quand elle est relue.</p>';
  var lrm=b.k==="rev"?lastRevMethods(c.id):[];
  if(lrm.length>=2&&lrm.every(function(x){return x.v.m.length&&x.v.m.every(function(k){return k==="relu";});}))h+='<div class="tipbox coach"><b>Coup de pouce</b><span>Tes dernières révisions : seulement relire le cours. Cette fois, essaie de te faire interroger ou de refaire des exercices sans la correction : c’est plus efficace pour retenir.</span></div>';
+ var ft=tipFor(c.id,b.k==="lec"?"lec":b.k==="app"?"app":b.k==="rev"?"rev":b.k==="dev"?"dev":"x",(new Date(TODAY+"T12:00:00").getDate())+i);
+ if(ft)h+='<div class="tipbox ctx"><span class="tip-src">'+esc(tipSrcLabel(ft))+'</span><b>'+esc(ft.title)+'</b><span>'+esc(ft.body)+'</span></div>';
  if(b.k==="rev")h+='<div class="tipbox">'+stampHtml(34)+'<span>Une bonne note après tes révisions ? Montre-la à un parent : tampon de l’Académie à la clé.</span></div>';
  else if(b.k==="dev")h+='<div class="tipbox">'+stampHtml(34)+'<span>Bloqué ? Note ta question pour la poser au professeur.</span></div>';
  h+='</div><footer>';
@@ -607,10 +645,12 @@ function renderParents(noFam){
    return '<div class="pi-row"><span><b>'+esc(x.title)+'</b><small>Proposée par '+esc(c?c.name:"un enfant")+' · '+esc(k)+(x.detail?' · '+esc(x.detail):'')+(x.date?' · souhaitée le '+esc(fmtDate(x.date)):'')+'</small></span><div class="pi-act"><label class="pi-date">Date<input type="date" data-idate="'+esc(x.id)+'" value="'+esc(x.date||"")+'"></label><button class="btn mini" data-ideaok="'+esc(x.id)+'">Accepter</button><button class="btn sec mini" data-ideano="'+esc(x.id)+'">Refuser</button></div></div>';}).join("")+'</div>':'')+(S.ideas.filter(ideaOk).length?S.ideas.filter(ideaOk).map(function(x){var c=child(x.child);return '<div class="xl"><span><b>'+esc(c?c.name:"Tous")+'</b> · '+esc(x.title)+(x.date?' · '+esc(fmtDate(x.date)):'')+(S.done["idea|"+x.id]?' · fait':'')+'</span><button class="btn sec" data-delidea="'+esc(x.id)+'">Supprimer</button></div>';}).join(""):'<p class="none">Aucune idée pour le moment.</p>')+'</section>';
   // retours des professeurs
   h+=renderNotesParents();
+  h+=renderTipsParents();
   h+='<h2 class="acts-title">Actions</h2>';
   // tampon
   var evOpts=[];children().forEach(function(c){evalsFor(c.id).forEach(function(e){if(e[0]<=addDays(TODAY,1))evOpts.push([c.id,e[1]+" ("+fmtDate(e[0])+")"]);});});
   h+=noteForm();
+  h+=tipForm();
   h+='<form class="card f stamp-card" id="stampf"><div class="ftitle">'+stampHtml(52)+'<h2>Donner un tampon</h2></div><p>Une bonne note après des révisions ? L’enfant reçoit le tampon de l’Académie sur sa carte d’élève.</p>';
   h+='<label for="s-child">Enfant<select id="s-child">'+kidOptions(false)+'</select></label>';
   h+='<label for="s-title">Évaluation<input id="s-title" type="text" list="s-evals" required placeholder="ex. SVT : la digestion"><datalist id="s-evals">'+evOpts.map(function(o){return '<option value="'+esc(o[1])+'">';}).join("")+'</datalist></label>';
@@ -676,9 +716,11 @@ function renderSettings(noFam){
 }
 function renderTips(plan){
  var notes=(plan&&plan.data.notes)||[];
- var h='<section class="hero" style="background-color:#0D3B45;color:#FFFFFF"><div class="hero-id"><div><span class="over">Conseils de l’Académie</span><h1>Bien s’organiser</h1></div></div></section>';
+ var h='<section class="hero" style="background-color:#0D3B45;color:#FFFFFF"><div class="hero-id"><div><span class="over">Conseils de l’Académie</span><h1>Bien apprendre, bien s’organiser</h1></div></div></section>';
  if(notes.length)h+='<div class="cols">'+notes.map(function(n){return '<div class="card warn"><h2>À vérifier : '+esc(n[0])+'</h2><p>'+esc(n[1])+'</p></div>';}).join("")+'</div>';
- h+='<div class="cols">'+TIPS.map(function(t){return '<div class="card"><h2>'+esc(t[0])+'</h2><p>'+esc(t[1])+'</p></div>';}).join("")+'</div>';
+ h+='<nav class="tipfilter" aria-label="Filtrer les conseils">'+[["tous","Tous"]].concat(MOMENTS).map(function(m){return '<button class="wk" data-tipf="'+m[0]+'" aria-pressed="'+(S.tipFilter===m[0])+'">'+m[1]+'</button>';}).join("")+'</nav>';
+ var list=allTips(null).filter(function(t){return S.tipFilter==="tous"||t.moments.indexOf(S.tipFilter)>=0;});
+ h+='<div class="tips-grid">'+list.map(function(t){return tipCard(t);}).join("")+'</div>';
  return h;
 }
 
@@ -806,6 +848,16 @@ function bindForms(){
   if(DEMO){row.id="demo-"+Date.now();ok(row);return;}
   sb.from("books").insert(row).select().then(function(r){if(r.error)flash("book","Erreur : "+r.error.message,true);else ok(r.data[0]);});
  });
+ if((f=document.getElementById("tipf")))f.addEventListener("submit",function(e){
+  e.preventDefault();
+  var moms=[].slice.call(document.querySelectorAll(".t-mom:checked")).map(function(x){return x.value;});
+  var row={title:val("t-title"),body:val("t-body"),source_type:val("t-src"),source:val("t-from")||null,subject:val("t-subj")||null,moments:(moms.length?moms:["general"]).join(","),child:val("t-child")||"tous",active:true};
+  var edit=S.editTip;
+  var ok=function(x){if(edit)S.tips=S.tips.map(function(t){return String(t.id)===String(edit)?x:t;});else S.tips.unshift(x);S.editTip=null;S.tipDraft=null;S.open=S.open||{};S.open.tipf=false;flash("global",edit?"Conseil modifié.":"Conseil ajouté.");};
+  if(DEMO){row.id=edit||("demo-"+Date.now());ok(row);return;}
+  var q=edit?sb.from("tips").update(row).eq("id",edit).select():sb.from("tips").insert(row).select();
+  q.then(function(r){if(r.error)flash("tip","Erreur : "+r.error.message,true);else ok(r.data[0]);});
+ });
  if((f=document.getElementById("notef")))f.addEventListener("submit",function(e){
   e.preventDefault();
   var row={child:val("n-child"),date:val("n-date")||TODAY,source:val("n-src"),subject:val("n-subj")||null,teacher:val("n-teacher")||null,tone:val("n-tone"),original:val("n-orig")||null,
@@ -846,7 +898,7 @@ function val(id){return (document.getElementById(id).value||"").trim();}
 function pickWeek(idx){var p=S.plans[idx];if(!p)return;var has=p.data.days.some(function(d){return d.date===TODAY;});setDay(has?TODAY:(p.data.days[1]||p.data.days[0]).date);}
 
 root.addEventListener("click",function(e){
- var t=e.target.closest("[data-mopen],[data-mtog],[data-mmin],[data-msave],[data-mskip],[data-ideaok],[data-ideano],[data-editnote],[data-delnote],[data-rate],[data-rateopen],[data-focus],[data-fclose],[data-fdone],[data-fundo],[data-fnext],[data-cancel],[data-uncancel],[data-delbook],[data-view],[data-day],[data-id],[data-go],[data-week],[data-del],[data-act],[data-delidea]");if(!t)return;
+ var t=e.target.closest("[data-tipf],[data-edittip],[data-deltip],[data-note2tip],[data-mopen],[data-mtog],[data-mmin],[data-msave],[data-mskip],[data-ideaok],[data-ideano],[data-editnote],[data-delnote],[data-rate],[data-rateopen],[data-focus],[data-fclose],[data-fdone],[data-fundo],[data-fnext],[data-cancel],[data-uncancel],[data-delbook],[data-view],[data-day],[data-id],[data-go],[data-week],[data-del],[data-act],[data-delidea]");if(!t)return;
  if(t.hasAttribute("data-delidea")){var di=t.getAttribute("data-delidea");var aft=function(){S.ideas=S.ideas.filter(function(x){return String(x.id)!==di;});render();};
   if(DEMO)aft();else sb.from("ideas").delete().eq("id",di).then(function(r){if(!r.error)aft();});return;}
  if(t.matches("input.chk")){setDone(t.getAttribute("data-id"),t.checked);return;}
@@ -863,6 +915,13 @@ root.addEventListener("click",function(e){
   var aftn=function(){S.notes=S.notes.filter(function(n){return String(n.id)!==nid;});if(String(S.editNote)===nid)S.editNote=null;render();};
   if(DEMO)aftn();else sb.from("teacher_notes").delete().eq("id",nid).then(function(r){if(!r.error)aftn();});return;}
  if(t.hasAttribute("data-rate")){var rid=t.getAttribute("data-rate"),rn=+t.getAttribute("data-n");if(rn)setDiff(rid,rn);S.rate=null;var cvr=child(curView()),bkr=cvr&&blockById(cvr.id,rid);if(bkr&&METH_KINDS[bkr.k]&&!S.meth[rid]&&!S.focus)S.methOpen=rid;render();return;}
+ if(t.hasAttribute("data-tipf")){S.tipFilter=t.getAttribute("data-tipf");render();return;}
+ if(t.hasAttribute("data-edittip")){S.editTip=t.getAttribute("data-edittip");S.tipDraft=null;render();var tf=document.getElementById("tipf");if(tf)tf.scrollIntoView({block:"start"});return;}
+ if(t.hasAttribute("data-note2tip")){var n2=S.notes.filter(function(n){return String(n.id)===t.getAttribute("data-note2tip");})[0];if(!n2)return;
+  S.editTip=null;S.tipDraft={title:n2.goal||"Conseil de "+(n2.teacher||"professeur"),body:n2.kid_expect||n2.original||"",source_type:"prof",source:n2.teacher||"",subject:n2.subject||"",moments:"general",child:n2.child};render();var tf2=document.getElementById("tipf");if(tf2)tf2.scrollIntoView({block:"start"});return;}
+ if(t.hasAttribute("data-deltip")){var tid=t.getAttribute("data-deltip");if(!t.dataset.ok){t.dataset.ok="1";t.textContent="Confirmer";return;}
+  var aftt=function(){S.tips=S.tips.filter(function(x){return String(x.id)!==tid;});render();};
+  if(DEMO)aftt();else sb.from("tips").delete().eq("id",tid).then(function(r){if(!r.error)aftt();});return;}
  if(t.hasAttribute("data-mopen")){S.methOpen=t.getAttribute("data-mopen");render();return;}
  if(t.hasAttribute("data-mtog")||t.hasAttribute("data-mmin")){var row=t.closest("[data-mfor]");if(!row)return;
   if(t.hasAttribute("data-mmin")){row.querySelectorAll("[data-mmin]").forEach(function(x){if(x!==t)x.setAttribute("aria-pressed","false");});}
@@ -895,6 +954,7 @@ root.addEventListener("click",function(e){
  if(t.getAttribute("data-act")==="install"){var ev=S.installEvt;if(ev){ev.prompt();ev.userChoice.then(function(){S.installEvt=null;render();});}return;}
  if(t.getAttribute("data-act")==="kidea-open"){S.ideaOpen=true;render();var kt=document.getElementById("ki-title");if(kt)kt.focus();return;}
  if(t.getAttribute("data-act")==="kidea-close"){S.ideaOpen=false;render();return;}
+ if(t.getAttribute("data-act")==="tip-cancel"){S.editTip=null;S.tipDraft=null;S.open=S.open||{};S.open.tipf=false;render();return;}
  if(t.getAttribute("data-act")==="note-cancel"){S.editNote=null;S.open=S.open||{};S.open.notef=false;render();return;}
  if(t.getAttribute("data-act")==="hint-ok"){lsSet("kizuna-hint-check","1");render();return;}
  if(t.getAttribute("data-act")==="book-close"){S.bookOpen=false;render();var ob=document.querySelector('[data-act="book-open"]');if(ob)ob.focus();return;}

@@ -5,9 +5,9 @@ Numérotation : `MAJEUR.MINEUR.CORRECTIF` (ex. 0.2.1).
 - **mineur** (0.**2**.0) : une nouveauté (un réglage, un écran, une règle de planning) ;
 - **majeur** (**1**.0.0) : la version jugée stable après plusieurs semaines d'usage réel.
 
-## [0.12.0] – préversion (non publiée)
+## [0.12.0] – 2026-11-24
 
-Visible uniquement sur `/preview/`.
+Validée par les parents et publiée sur le site principal.
 - **Conseils enrichis** : l'onglet Conseils devient une bibliothèque de méthodes, filtrable (Organisation, Devoirs,
   Révisions, Leçons, Lecture). Conseils de l'Académie par défaut (14, dont 6 nouveaux sur la façon d'apprendre et de lire)
   + **conseils de la famille** : conseils des professeurs et fiches de livres de méthode, rédigés avec ses mots.

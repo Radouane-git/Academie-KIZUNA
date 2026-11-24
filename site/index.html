@@ -492,6 +492,20 @@ a{color:var(--child)}
 .mbar i{position:absolute;left:0;top:0;bottom:0;background:#9CC9C2}
 .mbar em{position:relative;font-style:normal;font-size:.8rem;font-weight:700;padding:0 8px;line-height:26px}
 .cols>.methcard{grid-column:1/-1}
+/* ===== 0.12.0 : conseils enrichis ===== */
+.tipfilter{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+.tips-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.tip{background:#fff;border-radius:20px;padding:16px 18px;box-shadow:0 1px 0 var(--line),0 8px 24px -18px rgba(13,59,69,.35);border-top:5px solid #9CC9C2}
+.tip.src-prof{border-top-color:#5B3FA8}.tip.src-livre{border-top-color:#C2366C}.tip.src-famille{border-top-color:#FF6B4A}
+.tip h3{font-family:var(--display);font-size:1rem;margin:4px 0 6px}
+.tip p{margin:0;font-size:.95rem}
+.tip-src{display:block;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.tip.small{box-shadow:none;border:2px solid var(--line);border-top-width:5px}
+.tow{display:flex;flex-direction:column;gap:8px}
+.tow .linkbtn{align-self:flex-start;font-weight:700;padding:8px 0}
+.tipbox.ctx{flex-direction:column;align-items:flex-start;gap:2px;background:#EEF4FF}
+.chk-chip{display:inline-flex!important;flex-direction:row!important;align-items:center;gap:6px!important;margin:0!important}
+.chk-chip input{width:18px;height:18px;min-height:0!important}
 /* ===== 0.11.0 : idées des enfants ===== */
 .kid-idea{margin-top:10px;display:flex;flex-direction:column;gap:6px}
 .ki-title{font-size:.78rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin:6px 0 0}
@@ -597,8 +611,8 @@ a{color:var(--child)}
 </head>
 <body>
 <div id="root"><p style="padding:2rem;font-family:sans-serif">Chargement de l’Académie…</p></div>
-<script src="config.js?v=0.11.0"></script>
+<script src="config.js?v=0.12.0"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script src="app.js?v=0.11.0"></script>
+<script src="app.js?v=0.12.0"></script>
 </body>
 </html>
