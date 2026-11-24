@@ -208,6 +208,9 @@ def make_tasks(child: dict, homework: list[dict], week_days: list[date], horizon
             return due - timedelta(days=n)
 
         mdur = re.search(r"(\d{1,3})\s*min", h["text"], re.I)   # durée indiquée, ex. « (15 mins) »
+        # mission ajoutée à la main : à faire exactement le jour saisi (la veille de « due »), jamais plus tôt
+        ex = bool(h.get("extra"))
+        pour = "À faire aujourd’hui (ajouté par les parents)." if ex else f"Pour {jd}."
         if kind == "eval":
             big = bool(BIG_EVAL_RE.search(h["text"]))
             L = 45 if (big or lvl == "lycee") else 35
@@ -219,16 +222,18 @@ def make_tasks(child: dict, homework: list[dict], week_days: list[date], horizon
             tasks.append(dict(k="rev", l=f"{subj} : se faire interroger", d=f"Éval {jd}. " + (f"Avec {sib} ou un parent : 10 questions sur la fiche." if sib else "Un parent pose 10 questions à partir de la fiche."), min=20, prefs=[D(1), D(2)], src=h, short_ok=True))
             tasks.append(dict(k="rev", l=f"{subj} : relire la fiche (10 min)", d="Éval aujourd’hui : un dernier coup d’œil, rien de nouveau.", min=10, prefs=[due], slot="morning", src=h))
         elif kind == "app":
-            tasks.append(dict(k="app", l=label_core, d=f"Pour {jd}. Lire 2 fois, cacher, redire à voix haute. {more}", min=int(mdur.group(1)) if mdur else 15, prefs=[D(1), D(2)] if not monday else [D(1), D(2), D(3)], src=h))
+            tasks.append(dict(k="app", l=label_core, d=f"{pour} Lire 2 fois, cacher, redire à voix haute. {more}", min=int(mdur.group(1)) if mdur else 15, prefs=[D(1)] if ex else ([D(1), D(2)] if not monday else [D(1), D(2), D(3)]), src=h))
+            if ex:
+                continue   # pas de récitation le lendemain pour une mission saisie par les parents
             core = re.sub(r"^(apprendre|revoir|réviser|reviser)(\s+par\s+c[œo]eur)?\s*", "", h["text"].strip(), flags=re.I)
             tasks.append(dict(k="app", l=(f"Réciter à {sib} : " if sib else "Réciter : ") + f"{subj}, {short_text(core, 50)}", d="5 minutes au petit-déjeuner.", min=5, prefs=[due], slot="morning", src=h))
         elif kind == "lec":
             mn = int(mdur.group(1)) if mdur else (40 if lvl == "lycee" else 30)
-            tasks.append(dict(k="lec", l=label_core, d=f"Pour {jd}. {more}", min=mn, prefs=[D(1), D(2)], slot="bedtime", src=h))
+            tasks.append(dict(k="lec", l=label_core, d=f"{pour} {more}", min=mn, prefs=[D(1)] if ex else [D(1), D(2)], slot="bedtime", src=h))
         else:
             mn = int(mdur.group(1)) if mdur else dev_minutes(h["text"], lvl)
-            prefs = [D(2), D(1), D(3)] if monday else [D(1), D(2), D(3)]
-            tasks.append(dict(k="dev", l=label_core, d=f"Pour {jd}. {more}", min=mn, prefs=prefs, src=h))
+            prefs = [D(1)] if ex else ([D(2), D(1), D(3)] if monday else [D(1), D(2), D(3)])
+            tasks.append(dict(k="dev", l=label_core, d=f"{pour} {more}", min=mn, prefs=prefs, src=h))
     return tasks
 
 

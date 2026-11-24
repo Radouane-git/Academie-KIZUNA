@@ -5,6 +5,12 @@ Numérotation : `MAJEUR.MINEUR.CORRECTIF` (ex. 0.2.1).
 - **mineur** (0.**2**.0) : une nouveauté (un réglage, un écran, une règle de planning) ;
 - **majeur** (**1**.0.0) : la version jugée stable après plusieurs semaines d'usage réel.
 
+## [0.9.2] – 24 novembre 2026
+
+- Missions ajoutées à la main : placées **exactement le jour saisi** (« jour où le faire »), jamais un jour plus tôt,
+  même si la soirée est chargée ; détail « À faire aujourd'hui (ajouté par les parents) » au lieu de « Pour mercredi 25 ».
+- Pas de récitation automatique le lendemain matin pour une leçon ajoutée à la main.
+
 ## [0.9.1] – 24 novembre 2026
 
 Corrections du planificateur (synchro) :

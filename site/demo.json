@@ -1621,14 +1621,26 @@
         },
         {
          "t": "18h05",
+         "k": "rev",
+         "l": "SES : se faire interroger",
+         "d": "Éval jeudi 26. Un parent pose 10 questions à partir de la fiche.",
+         "id": "sarah|2026-11-24|rev|ses-se-faire-interroger"
+        },
+        {
+         "t": "18h25",
+         "k": "rep",
+         "l": "Pause 5 min"
+        },
+        {
+         "t": "18h30",
          "k": "app",
          "l": "Anglais : Apprendre le vocabulaire de la leçon 5",
-         "d": "Pour mercredi 25. Lire 2 fois, cacher, redire à voix haute.",
+         "d": "À faire aujourd’hui (ajouté par les parents). Lire 2 fois, cacher, redire à voix haute.",
          "id": "sarah|2026-11-24|app|anglais-apprendre-le-vocabulaire-de-la-l",
          "x": 1
         },
         {
-         "t": "18h40",
+         "t": "18h45",
          "k": "rel",
          "l": "Relire les leçons",
          "rel": {
@@ -1644,16 +1656,10 @@
          }
         },
         {
-         "t": "18h55",
+         "t": "19h00",
          "k": "org",
          "l": "Préparer le sac de demain",
          "id": "sarah|2026-11-24|org|preparer-le-sac-de-demain"
-        },
-        {
-         "t": "19h05",
-         "k": "ran",
-         "l": "Ranger la chambre (10 min)",
-         "id": "sarah|2026-11-24|ran|ranger-la-chambre-10-min"
         },
         {
          "t": "19h15",
@@ -1680,14 +1686,6 @@
         }
        ],
        "2026-11-25": [
-        {
-         "t": "7h20",
-         "k": "app",
-         "l": "Réciter : Anglais, le vocabulaire de la leçon 5",
-         "d": "5 minutes au petit-déjeuner.",
-         "id": "sarah|2026-11-25|app|reciter-anglais-le-vocabulaire-de-la-lec",
-         "x": 1
-        },
         {
          "t": "12h00",
          "k": "repas",
@@ -1748,13 +1746,13 @@
         },
         {
          "t": "16h55",
-         "k": "rev",
-         "l": "SES : se faire interroger",
-         "d": "Éval jeudi 26. Un parent pose 10 questions à partir de la fiche.",
-         "id": "sarah|2026-11-25|rev|ses-se-faire-interroger"
+         "k": "ran",
+         "l": "Grand rangement de la chambre (30 min)",
+         "d": "Bureau, sol, armoire, linge sale au panier, poubelle vidée.",
+         "id": "sarah|2026-11-25|ran|grand-rangement-de-la-chambre-30-min"
         },
         {
-         "t": "17h15",
+         "t": "17h25",
          "k": "rel",
          "l": "Relire les leçons",
          "rel": {
@@ -1770,7 +1768,7 @@
          }
         },
         {
-         "t": "17h30",
+         "t": "17h40",
          "k": "org",
          "l": "Préparer le sac de demain",
          "id": "sarah|2026-11-25|org|preparer-le-sac-de-demain"
@@ -1790,13 +1788,6 @@
          "t": "19h30",
          "k": "repas",
          "l": "Dîner"
-        },
-        {
-         "t": "20h15",
-         "k": "ran",
-         "l": "Grand rangement de la chambre (30 min)",
-         "d": "Bureau, sol, armoire, linge sale au panier, poubelle vidée.",
-         "id": "sarah|2026-11-25|ran|grand-rangement-de-la-chambre-30-min"
         },
         {
          "t": "20h45",

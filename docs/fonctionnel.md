@@ -84,7 +84,8 @@ Le planning est recalculé à chaque synchronisation (7h et 18h). Réglages dans
 ### 5.1 Quand faire quoi
 - Les dates de l'ENT sont des dates **de rendu** ; un devoir se fait **la veille**
   (pour un lundi : samedi pour l'écrit, dimanche pour l'oral).
-- Les missions ajoutées à la main sont par défaut datées du **jour où les faire**.
+- Les missions ajoutées à la main sont par défaut datées du **jour où les faire** et sont placées **ce jour-là exactement**
+  (jamais plus tôt), sans récitation automatique le lendemain.
 - **Évaluation** : préparation sur 3 jours (fiche, exercices, se faire interroger) + 10 minutes le matin même ;
   un DS ajoute une séance.
 - **À apprendre** : apprendre la veille, réciter le lendemain matin.
