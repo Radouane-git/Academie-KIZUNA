@@ -93,6 +93,18 @@ message, appréciation d'une copie).
 - **Plus tard** : récupérer automatiquement les appréciations des bulletins de l'ENT, si l'API le permet.
 - **Confidentialité** : visible par les parents ; l'enfant ne voit que ce que les parents choisissent de partager
   (case « montrer à l'enfant »).
+- **Pourquoi** (retour des parents, 24/11) : les enfants ne savent pas toujours ce que leurs professeurs pensent d'eux ;
+  les retours arrivent par e-mail, à l'oral ou au bulletin, et se perdent.
+- **Deux versions de chaque retour** :
+  - *original* (privé, parents seulement) : le message tel que reçu, la source (e-mail, réunion, bulletin), la date ;
+  - *version pour l'enfant* (rédigée ou reformulée par les parents, Claude peut proposer une formulation) :
+    **ce que le professeur apprécie chez toi** → **ce qu'il attend** → **ce qui peut changer** (ex. une note de
+    comportement qui peut remonter d'ici la fin du trimestre).
+- **Côté enfant** : rubrique « Ce que pensent mes professeurs », les points forts d'abord ; les retours positifs
+  s'affichent comme un « mot du professeur ». Un point à travailler peut devenir un **objectif** suivi
+  (« me mettre au travail plus vite », « rester calme quand on me cherche ») avec un petit bilan chaque semaine.
+- **Discrétion** : ne jamais enregistrer le nom d'autres élèves cités dans un message (les remplacer par « un camarade ») ;
+  ces contenus restent dans Supabase, jamais dans le dépôt.
 - Base : nouvelle table `teacher_notes` (bloc SQL dédié).
 
 ### 2. « Comment j'ai travaillé ? » (méthode de révision)
@@ -125,4 +137,4 @@ Transformer l'onglet Conseils en une petite bibliothèque de méthodes, aliment�
   vivent dans Supabase.
 
 ### Ordre conseillé
-2 (petit, prolonge la difficulté 1 à 5) → 3 (conseils au bon moment) → 1 (remarques des professeurs).
+1 (retours des professeurs, jugé prioritaire par les parents le 24/11) → 2 (méthode de révision) → 3 (conseils au bon moment).
