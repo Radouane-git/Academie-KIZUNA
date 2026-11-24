@@ -5,9 +5,9 @@ Numérotation : `MAJEUR.MINEUR.CORRECTIF` (ex. 0.2.1).
 - **mineur** (0.**2**.0) : une nouveauté (un réglage, un écran, une règle de planning) ;
 - **majeur** (**1**.0.0) : la version jugée stable après plusieurs semaines d'usage réel.
 
-## [0.11.0] – préversion (non publiée)
+## [0.11.0] – 24 novembre 2026
 
-Visible uniquement sur `/preview/`.
+Validée le 24/11 et publiée.
 - **Idées proposées par les enfants** : bouton « Proposer une idée » dans « Idées pour toi » (Ma semaine) ; l'idée arrive
   chez les parents dans « À valider » avec **Accepter** (date facultative) ou **Refuser** ; l'enfant voit l'état
   (en attente, acceptée, pas cette fois). Une idée n'apparaît dans le planning qu'une fois acceptée.
