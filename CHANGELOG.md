@@ -5,6 +5,12 @@ Numérotation : `MAJEUR.MINEUR.CORRECTIF` (ex. 0.2.1).
 - **mineur** (0.**2**.0) : une nouveauté (un réglage, un écran, une règle de planning) ;
 - **majeur** (**1**.0.0) : la version jugée stable après plusieurs semaines d'usage réel.
 
+## [0.9.3] – 24 novembre 2026
+
+- Vue parents : le bouton « Dates « à faire » ? Tout décaler d'un jour » ne déborde plus de son encadré.
+- Vue parents, Bibliothèque des enfants : « Voir les livres » déplie la liste des livres lus (titre, auteur, pages, date)
+  au lieu d'ouvrir la journée de l'enfant ; lien vers sa bibliothèque.
+
 ## [0.9.2] – 24 novembre 2026
 
 - Missions ajoutées à la main : placées **exactement le jour saisi** (« jour où le faire »), jamais un jour plus tôt,
