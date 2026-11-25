@@ -16,16 +16,23 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  deploy:
+  # Deux étapes séparées (modèle officiel de GitHub) : le paquet du site est préparé,
+  # puis publié dans une seconde étape, une fois bien enregistré.
+  build:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
           path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
       - id: deployment
         uses: actions/deploy-pages@v4
