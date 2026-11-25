@@ -374,6 +374,7 @@ function topbar(v){
  h+='<details class="pmenu"'+(S.pmenu?" open":"")+'><summary aria-label="Changer de profil"><span class="av" style="background:'+ct.bg+';color:'+ct.txt+'">'+esc(cur?cur.name.charAt(0):(v==="parents"?"P":"≡"))+'</span><span class="pm-name">'+esc(cur?cur.name:v==="parents"?"Parents":v==="parametres"?"Paramètres":v==="accueil"?"Profils":"Conseils")+'</span><span class="caret" aria-hidden="true">▾</span></summary><div class="pm-list">';
  children().forEach(function(ch){var t2=theme(ch);h+='<button class="pm-item" data-view="'+esc(ch.id)+'" aria-current="'+(v===ch.id?"page":"false")+'"><span class="av" style="background:'+t2.bg+';color:'+t2.txt+'">'+esc(ch.name.charAt(0))+'</span>'+esc(ch.name)+'</button>';});
  h+='<button class="pm-item" data-view="parents" aria-current="'+(v==="parents"?"page":"false")+'"><span class="av" style="background:#3A4250;color:#fff">P</span>Vue parents</button><button class="pm-item" data-view="parametres" aria-current="'+(v==="parametres"?"page":"false")+'"><span class="av" style="background:#E9EEF0;color:#0D3B45">'+GEAR+'</span>Paramètres</button><button class="pm-item" data-view="conseils"><span class="av" style="background:#0D3B45;color:#fff">?</span>Conseils</button></div></details>';
+  h+='<button class="tourbtn" id="tour-btn" type="button" data-act="tour" aria-label="Visite guidée de cet écran" title="Visite guidée de cet écran">'+BULB+'</button>';
  if(c){var k=card(c.id);h+='<span class="streak" title="Jours de suite">'+FLAME+'<b>'+k.streak+'</b></span>';}
  h+='<nav class="profiles" aria-label="Profils">';
  children().forEach(function(ch){var t=theme(ch);var on=v===ch.id;h+='<button class="prof" data-view="'+esc(ch.id)+'" aria-current="'+(on?"page":"false")+'" style="--tc:'+t.bg+';--tt:'+t.txt+'"><span class="av">'+esc(ch.name.charAt(0))+'</span><span class="pn">'+esc(ch.name)+'</span></button>';});
@@ -674,6 +675,47 @@ function readingClick(t){
  if(t.hasAttribute("data-sheetmode")){S.sheetMode=t.getAttribute("data-sheetmode");render();return true;}
  if(t.getAttribute("data-act")==="print-sheet"){var m=S.sheetMode;S.sheetMode="view";render();setTimeout(function(){window.print();S.sheetMode=m;render();},50);return true;}
  return false;}
+/* ------------------------------------------------------------ visites guidées (0.20) */
+var BULB='<svg width="22" height="22" viewBox="0 0 48 48" aria-hidden="true"><path d="M24 7a12 12 0 0 1 7 21.7V33H17v-4.3A12 12 0 0 1 24 7Z" fill="#FFC93C" stroke="#0D3B45" stroke-width="2.6" stroke-linejoin="round"/><rect x="18" y="33" width="12" height="5" rx="1.5" fill="#9CC9C2" stroke="#0D3B45" stroke-width="2.6"/><path d="M20 42h8" stroke="#0D3B45" stroke-width="2.6" stroke-linecap="round"/></svg>';
+var TOURS={
+ accueil:[["#tour-btn","Bienvenue à l’Académie !","Cette petite visite montre l’essentiel. L’ampoule la relance quand tu veux, sur chaque écran."],[".home-grid","Choisis ton profil","Chaque enfant a sa carte, avec son niveau et ses missions du jour. Touche la tienne pour ouvrir ta journée."],[".tow","Le conseil de la semaine","Une astuce pour mieux apprendre ou mieux s’organiser. Tous les conseils sont dans « Conseils »."],[".home-more","Pour les parents","La Vue parents suit la semaine de toute la famille."]],
+ jour:[[".kid-hero","Ta carte d’élève","Ton niveau, tes badges et tes tampons. Chaque mission cochée te fait progresser."],[".dstrip","Les 7 jours","Touche un jour pour voir ses missions. Rond vide : rien de coché ; demi-rond : commencé ; rond plein : tout fait."],[".nextcard","Ta prochaine mission","Appuie sur « Commencer » : la mission s’ouvre en grand, avec un conseil adapté."],[".pathcard","Le chemin du jour","Toutes les missions de la journée, dans l’ordre. Coche le rond quand c’est fait, puis dis si c’était facile ou difficile."],[".secnav","Tes sections","Ta semaine, ton emploi du temps, ta bibliothèque et tes tampons."],[".pmenu","Changer de profil","Ce bouton ouvre le menu : autres profils, Conseils, Vue parents."]],
+ semaine:[[".weeks","Choisir la semaine","Semaine dernière, cette semaine ou semaine prochaine."],[".weeklist","Ta semaine jour par jour","Pour chaque jour : tes missions faites et tes évaluations. Touche un jour pour l’ouvrir."]],
+ edt:[[".tt-sum","Ta semaine en un coup d’œil","Les heures de cours, de cours du soir et de sport de la semaine."],[".ttw","L’emploi du temps","Collège en bleu, cours et soutien en violet, sport en orange. Les cours annulés sont barrés et les évaluations signalées sous le jour."],[".weeks","Changer de semaine","Pour regarder la semaine prochaine, par exemple."]],
+ livres:[[".read-card","Ton livre en cours","Ouvre ton carnet pour noter les personnages, les lieux, l’époque et le résumé de chaque chapitre."],["[data-rstart]","Commencer un livre","Un nouveau livre ? Ouvre son carnet de lecture : il remplira presque tout seul ta fiche de lecture."],[".books","Tes livres lus","Chaque livre fini compte pour tes badges. Le bouton « Ma fiche de lecture » ouvre ta fiche, prête à imprimer."]],
+ tampons:[["h2=Mes tampons","Tes tampons","Une bonne note préparée avec tes révisions ? Tes parents te donnent le tampon de l’Académie."],["h2=Mes objectifs","Tes objectifs","Un objectif choisi avec tes parents ou tes professeurs. Coche-le quand tu l’as tenu cette semaine."],["h2=Ce que pensent","Ce que pensent tes professeurs","Les messages que tes parents choisissent de partager avec toi : tes points forts d’abord."]],
+ conseils:[[".tipfilter","Trier les conseils","Organisation, devoirs, révisions, leçons, lecture : choisis ce qui t’intéresse."],[".tips-grid","Les conseils","Conseils de l’Académie, de tes professeurs et de livres sur l’art d’apprendre."]],
+ parents:[[".kidcards","Les enfants aujourd’hui","Un coup d’œil sur la journée de chacun. Touchez une carte pour ouvrir sa page."],[".bilan-cta","Le bilan de la semaine","Le dimanche, faites le point en famille : ce qui a marché, ce qui a coincé, la semaine qui vient."],[".ovcard","Avancement de la semaine","Le pourcentage de missions faites, jour par jour et pour chaque enfant."],[".hardcard","Points difficiles","Les missions que les enfants ont notées difficiles, avec un conseil pour vous."],[".methcard","Méthodes de travail","Comment les enfants ont révisé. Une méthode trop passive est signalée."],[".acts","Actions","Ajouter un retour de professeur, un conseil, donner un tampon, écrire le mot du sensei, ajouter une mission ou une idée."],["#tour-btn","Revoir la visite","L’ampoule relance la visite de chaque écran."]],
+ bilan:[[".bilan-kid","Une carte par enfant","Les missions faites par catégorie, et quelques points proposés pour en parler ensemble."],[".bk-more","Le détail","Missions pas cochées, missions difficiles, méthodes, fiertés, semaine prochaine."],[".sunday","Préparer la semaine","Cinq gestes à cocher le dimanche, en famille."]],
+ parametres:[["#lockf","Code parent","Protégez la Vue parents et les Paramètres des curieux."],["[data-act=backup]","Sauvegarde","Une fois par trimestre, téléchargez une sauvegarde et rangez-la hors de GitHub."],["#themesf","Couleurs de héros","Chaque profil choisit sa couleur."]]};
+function tourKey(){var v=curView();if(child(v))return curSection();if(v==="parents"&&(location.hash||"").split("/")[1]==="bilan")return "bilan";return v;}
+function tourFind(sel){var el=null;
+ if(sel.indexOf("h2=")===0){var t=sel.slice(3);[].slice.call(document.querySelectorAll("#root h2")).some(function(h){if(h.textContent.indexOf(t)===0){el=h.closest(".card")||h;return true;}});}
+ else el=document.querySelector(sel);
+ if(!el)return null;var r=el.getBoundingClientRect();if(!r.width||!r.height||el.offsetParent===null&&getComputedStyle(el).position!=="fixed")return null;return el;}
+function tourSteps(k){return (TOURS[k]||[]).filter(function(s){return tourFind(s[0]);});}
+function tourStart(k,auto){if(!TOURS[k]||S.focus)return;var steps=tourSteps(k);if(!steps.length)return;S.tour={k:k,i:0,steps:steps,back:document.activeElement};lsSet("kizuna-tour-"+k,"1");tourShow();}
+function tourEnd(){var t=S.tour;S.tour=null;var o=document.getElementById("tour");if(o)o.remove();window.removeEventListener("resize",tourPlace);window.removeEventListener("scroll",tourPlace,true);var b=document.getElementById("tour-btn");if(b)b.focus();else if(t&&t.back&&t.back.focus)t.back.focus();}
+function tourShow(){var t=S.tour;if(!t)return;var s=t.steps[t.i];var el=tourFind(s[0]);if(!el){if(t.i<t.steps.length-1){t.i++;tourShow();}else tourEnd();return;}
+ var o=document.getElementById("tour");if(!o){o=document.createElement("div");o.id="tour";o.innerHTML='<div class="tour-hole"></div><div class="tour-pop" role="dialog" aria-modal="true" aria-labelledby="tour-t" aria-describedby="tour-d"></div>';document.body.appendChild(o);
+  o.addEventListener("click",function(e){var b=e.target.closest("[data-tour]");if(!b){if(e.target===o||e.target.classList.contains("tour-hole"))return;return;}var a=b.getAttribute("data-tour");
+   if(a==="next"){if(S.tour.i<S.tour.steps.length-1){S.tour.i++;tourShow();}else tourEnd();}else if(a==="prev"){if(S.tour.i>0){S.tour.i--;tourShow();}}else tourEnd();});
+  o.addEventListener("keydown",function(e){if(e.key==="Escape"){e.preventDefault();tourEnd();}else if(e.key==="ArrowRight"){var n=o.querySelector('[data-tour="next"]');if(n)n.click();}else if(e.key==="ArrowLeft"){var p=o.querySelector('[data-tour="prev"]');if(p)p.click();}
+   else if(e.key==="Tab"){var fs=[].slice.call(o.querySelectorAll("button"));var i=fs.indexOf(document.activeElement);e.preventDefault();fs[(i+(e.shiftKey?-1:1)+fs.length)%fs.length].focus();}});
+  window.addEventListener("resize",tourPlace);window.addEventListener("scroll",tourPlace,true);}
+ var last=t.i===t.steps.length-1;
+ o.querySelector(".tour-pop").innerHTML='<span class="tour-n">'+(t.i+1)+' / '+t.steps.length+'</span><h2 id="tour-t">'+esc(s[1])+'</h2><p id="tour-d">'+esc(s[2])+'</p><div class="tour-btns"><button type="button" class="linkbtn" data-tour="skip">Passer</button><span>'+(t.i?'<button type="button" class="btn sec mini" data-tour="prev">Précédent</button>':'')+'<button type="button" class="btn mini" data-tour="next">'+(last?"C’est parti !":"Suivant")+'</button></span></div>';
+ var rr=el.getBoundingClientRect();if(rr.top<70||rr.bottom>window.innerHeight-120){try{el.scrollIntoView({block:"center",behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});}catch(e){el.scrollIntoView();}}
+ tourPlace();setTimeout(tourPlace,350);var nb=o.querySelector('[data-tour="next"]');if(nb)nb.focus({preventScroll:true});}
+function tourPlace(){var t=S.tour;if(!t)return;var o=document.getElementById("tour");if(!o)return;var el=tourFind(t.steps[t.i][0]);if(!el)return;
+ var r=el.getBoundingClientRect(),pad=6,hole=o.querySelector(".tour-hole"),pop=o.querySelector(".tour-pop");
+ var top=Math.max(4,r.top-pad),left=Math.max(4,r.left-pad),w=Math.min(window.innerWidth-8,r.width+2*pad),h=Math.min(window.innerHeight-8,r.height+2*pad);
+ hole.style.cssText="top:"+top+"px;left:"+left+"px;width:"+w+"px;height:"+h+"px";
+ var pw=Math.min(360,window.innerWidth-24);pop.style.width=pw+"px";var ph=pop.offsetHeight;
+ var below=top+h+12,above=top-12-ph,y;
+ if(below+ph<window.innerHeight-8)y=below;else if(above>8)y=above;else y=Math.max(8,window.innerHeight-ph-(window.innerWidth<=900?96:16));
+ var x=Math.min(Math.max(12,r.left+r.width/2-pw/2),window.innerWidth-pw-12);pop.style.top=y+"px";pop.style.left=x+"px";}
+function tourAuto(){if(S.tour||S.focus||!S.fam)return;var k=tourKey();var v=curView();if((v==="parents"||v==="parametres")&&!unlocked())return;if(!TOURS[k]||lsGet("kizuna-tour-"+k))return;setTimeout(function(){if(!S.tour&&tourKey()===k)tourStart(k,true);},700);}
 function weekNum(){var d=new Date(TODAY+"T12:00:00");var j=new Date(d.getFullYear(),0,1);return Math.floor((d-j)/604800000);}
 function tipForm(){
  var t=S.editTip?S.tips.filter(function(x){return String(x.id)===String(S.editTip);})[0]||{}:(S.tipDraft||{});
@@ -719,6 +761,7 @@ function render(){
  root.innerHTML=h;foldForms();bindForms();
  var ttw=document.getElementById("ttw"),ttd=document.getElementById("tt-today");if(ttw&&ttd&&ttw.scrollWidth>ttw.clientWidth)ttw.scrollLeft=Math.max(0,ttd.offsetLeft-50);
  var uc=document.getElementById("u-code");if(uc&&!uc.disabled)uc.focus();
+ if(S.tour){var tk=S.tour.k;if(tk!==tourKey())tourEnd();else setTimeout(tourPlace,0);}else tourAuto();
  if(c&&S.focus){var fb=document.querySelector(".focus [data-fdone]")||document.querySelector(".focus [data-fclose]");if(fb)fb.focus();}
 }
 function hero(c,plan){
@@ -1251,6 +1294,7 @@ root.addEventListener("click",function(e){
  if(t.hasAttribute("data-uncancel")){var uid=t.getAttribute("data-uncancel");var aftu=function(){S.cancels=S.cancels.filter(function(x){return String(x.id)!==uid;});render();};
   if(DEMO)aftu();else sb.from("cancellations").delete().eq("id",uid).then(function(r){if(!r.error)aftu();});return;}
  if(t.getAttribute("data-act")==="print"){S.printing=true;render();setTimeout(function(){window.print();S.printing=false;render();},50);return;}
+ if(t.getAttribute("data-act")==="tour"){tourStart(tourKey());return;}
  if(t.getAttribute("data-act")==="backup"){doBackup();return;}
  if(t.getAttribute("data-act")==="lock-now"){relock();location.hash="#accueil";return;}
  if(t.getAttribute("data-act")==="lock-off"){if(!t.dataset.ok){t.dataset.ok="1";t.textContent="Confirmer : retirer le code";return;}saveLock(null,function(){relock();flash("lock","Code retiré : la Vue parents est de nouveau ouverte à tous.");});return;}
