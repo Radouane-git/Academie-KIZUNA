@@ -77,7 +77,7 @@ Le planificateur ne voit que ce format commun : ajouter Pronote ne change ni le 
 - Vue parents dans le nouveau style (navigation inspirée de Brilliant).
 - Code parent pour ouvrir les Paramètres (fait en v0.14.0 : Vue parents et Paramètres).
 - Notes EcoleDirecte → proposition de tampon automatique après une bonne note préparée.
-- Bilan du dimanche pour les parents.
+- Bilan du dimanche pour les parents (en préversion 0.15.0).
 - Mode « interroge-moi » pour les révisions.
 
 ## Idées notées le 24/11

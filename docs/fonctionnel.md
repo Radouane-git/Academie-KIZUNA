@@ -104,6 +104,16 @@ Carte d'élève complète, **Mes objectifs** (bouton « Cette semaine, je l'ai t
 - Déverrouillage valable jusqu'à la fermeture de l'appli, ou durablement sur l'appareil si la case est cochée.
 - Changer le code reverrouille les autres appareils. 5 codes faux : 30 secondes d'attente.
 
+## 4 quater. Bilan de la semaine (0.15)
+
+- Vue parents → « Bilan de la semaine » (bandeau mis en avant le samedi et le dimanche). Protégé par le code parent.
+- Par enfant : missions faites / prévues par catégorie, jours passés seulement (jusqu'à la veille en cours de
+  semaine, toute la semaine le dimanche) ; les loisirs et les pauses ne comptent pas.
+- « À en parler ensemble » : au plus 4 points calculés (tampons ou régularité ≥ 85 % → féliciter ; < 70 % sur une
+  semaine finie → ce qui a coincé ; mission notée 4 ou 5 ; révisions surtout « relu le cours » ; évaluations des
+  7 jours suivants ; objectif de retour de professeur pas encore tenu).
+- « Préparer la semaine » : 5 gestes cochables, enregistrés dans `checks` (`sunday|<lundi suivant>|<geste>`).
+
 ## 5. Règles du planning
 
 Le planning est recalculé à chaque synchronisation (7h et 18h). Réglages dans Paramètres → Réglages (avancé).

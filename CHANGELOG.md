@@ -5,6 +5,22 @@ Numérotation : `MAJEUR.MINEUR.CORRECTIF` (ex. 0.2.1).
 - **mineur** (0.**2**.0) : une nouveauté (un réglage, un écran, une règle de planning) ;
 - **majeur** (**1**.0.0) : la version jugée stable après plusieurs semaines d'usage réel.
 
+## [0.15.0] – préversion (non publiée)
+
+Visible uniquement sur `/preview/`.
+- **Bilan de la semaine** (Vue parents → « Bilan de la semaine », adresse `#parents/bilan`, protégé par le code parent) :
+  - en haut : pourcentage de missions faites, tampons et livres finis de la famille ;
+  - une carte par enfant : missions faites par catégorie (devoirs et leçons, révisions, lecture, maison),
+    « À en parler ensemble » (3 ou 4 points proposés : féliciter, ce qui a coincé, mission difficile à reprendre,
+    méthode à changer, évaluations de la semaine prochaine, objectif à faire le point) ;
+  - « Le détail » replié : missions pas cochées, notées difficiles, méthodes, tampons, livres, objectifs,
+    évaluations et nombre de missions de la semaine prochaine ;
+  - « Préparer la semaine » : 5 gestes à cocher en famille (synchro, évaluations, idées à valider, objectif, sacs).
+- En cours de semaine, le bilan compte jusqu'à la veille ; le dimanche, toute la semaine.
+- Choix de la semaine (dernière, cette semaine, prochaine) et bouton « Imprimer ».
+- Vue parents : bandeau d'accès au bilan, mis en avant le samedi et le dimanche.
+- Pas de nouveau bloc SQL (les gestes cochés sont enregistrés comme des coches).
+
 ## [0.14.0] – 2026-11-25
 
 Validée par les parents et publiée sur le site principal.
