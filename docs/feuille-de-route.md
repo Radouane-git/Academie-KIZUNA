@@ -78,7 +78,9 @@ Le planificateur ne voit que ce format commun : ajouter Pronote ne change ni le 
 
 - Vue parents dans le nouveau style (navigation inspirée de Brilliant).
 - Code parent pour ouvrir les Paramètres (fait en v0.14.0 : Vue parents et Paramètres).
-- Notes EcoleDirecte → proposition de tampon automatique après une bonne note préparée.
+- Notes EcoleDirecte → proposition de tampon automatique après une bonne note préparée. **Mis de côté le 25/11** :
+  une note décevante malgré le travail peut frustrer ; les parents préfèrent donner eux-mêmes le tampon (et une
+  récompense) quand une bonne note vient d'un travail sérieux et appliqué.
 - Bilan du dimanche pour les parents (fait en v0.15.0).
 - Mode « interroge-moi » pour les révisions.
 
@@ -192,3 +194,13 @@ Les écrans se chargent (Conseils, Retours des professeurs, Vue parents…) et i
 
 Vue synthétique sur une semaine qui mélange l'emploi du temps EcoleDirecte, les cours d'anglais, les cours du soir
 et le sport, dans une section des pages enfants comme Bibliothèque ou Tampons.
+
+## Demandes du 25/11 au soir (ordre convenu)
+
+1. **0.19.0 – Présentation, première passe** : Vue parents (espaces entre les cartes, « Conseils pour les parents »
+   avant « Conseils de la famille », conseils de la famille limités à 3 ou 4 avec ascenseur, boutons « Actions »
+   plus petits, « Mot du sensei » et « Ajouter une mission » rangés dans « Autres actions ») et bandeau du haut des
+   pages enfants (place manquante).
+2. **0.20.0 – Visites guidées** : une courte visite par écran (bulles qui montrent les éléments un par un),
+   affichée à la première ouverture et relançable avec un bouton ampoule.
+3. Puis la suite de « Revoir la présentation finale » avant la 1.0.
