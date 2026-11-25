@@ -18,7 +18,11 @@ Visible uniquement sur `/preview/`.
   - « Conseils de la famille » : nombre de conseils affiché, liste avec ascenseur (3 ou 4 visibles) ;
   - « Actions » : petits boutons sur une ligne (Retour de professeur, Conseil, Tampon, Mot du sensei, Mission,
     Saisie rapide, Idée) ; le formulaire ouvert s'affiche en dessous, sur toute la largeur ;
-  - bouton « Bilan de la semaine » sans soulignement.
+  - bouton « Bilan de la semaine » sans soulignement ;
+  - pictogrammes sur chaque bouton d'action et sur les titres des cartes (Avancement, Points difficiles, Méthodes,
+    Missions ajoutées, Idées proposées, Retours des professeurs, Conseils pour les parents, Conseils de la famille) ;
+    8 nouveaux pictogrammes dans le style de l'Académie (ampoule, bulle, tampon, parchemin, liste, méthode,
+    montagne, graphique).
 - Pas de nouveau bloc SQL.
 
 ## [0.18.0] – 2026-11-25

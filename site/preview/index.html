@@ -730,11 +730,17 @@ div.lockhint:not(.card){justify-content:flex-end}
 .ovcard,.hardcard,.methcard{margin-top:16px}
 .acts{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:8px;align-items:flex-start}
 .acts>.fold{flex:0 0 auto;border-radius:999px}
-.acts>.fold>summary{min-height:44px;padding:8px 16px;font-size:.9rem;border-radius:999px}
+.acts>.fold>summary{min-height:44px;padding:6px 14px 6px 6px;font-size:.9rem;border-radius:999px;gap:8px}
+.acts .fplus{font-size:1.1rem;color:var(--muted);margin-left:2px}
+.acts>.fold[open] .fplus{transform:rotate(45deg)}
+.acts .pic{flex:none}
 .acts>.fold[open]{order:10;flex:1 1 100%;border-radius:22px}
 .acts>.fold[open]>summary{border-radius:22px 22px 0 0}
 .cols>.setlink{grid-column:1/-1}
 .tips-scroll{max-height:380px}
+.card>.ftitle h2,.ftitle h2{margin:0}
+.card>.ftitle{margin-bottom:8px}
+h2 small.cnt{display:inline;font-weight:400;color:var(--muted);font-size:.85rem;margin-left:4px}
 .bilan-cta a.btn{text-decoration:none;color:#fff}
 .kidbar .profiles{display:none}
 .kidbar .pmenu{display:block}
