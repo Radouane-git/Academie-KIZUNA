@@ -138,3 +138,22 @@ Transformer l'onglet Conseils en une petite bibliothèque de méthodes, aliment�
 
 ### Ordre conseillé
 1 (retours des professeurs, jugé prioritaire par les parents le 24/11) → 2 (méthode de révision) → 3 (conseils au bon moment).
+Les trois idées du 24/11 sont faites (v0.10.0, v0.11.0, v0.12.0).
+
+## Idée notée le 25/11 : carnet de lecture et fiche de lecture guidée
+
+Inspirée de la méthode de lecture transmise par une professeure de français de 4e (ses conseils, reformulés,
+sont saisis dans les conseils de la famille, dans Supabase). À mettre en place plus tard.
+
+- **Pendant la lecture** (Bibliothèque de l'enfant → livre en cours) : un carnet de lecture où l'enfant note
+  au fil des chapitres les personnages principaux (âge, liens), les lieux, l'époque, qui raconte (« je » ou
+  « il / elle ») et un court résumé de chaque chapitre ; il peut marquer deux ou trois passages clés.
+- **Quand il clique sur « J'ai fini un livre »** : une fiche de lecture guidée, pré-remplie à partir du carnet,
+  en 5 parties : carte d'identité du livre (auteur, titre, éditeur, genre) · histoire et narration ·
+  personnage principal (but, alliés, opposants, qualités, défauts, évolution) · lieux et époque · avis
+  (au moins trois raisons). En option : une quatrième de couverture qui donne envie sans adjectifs creux.
+- **Sortie** : fiche imprimable ou à recopier dans le cahier.
+- **Parents** : voient où en est la fiche de chaque livre en cours.
+- **Lien avec le reste** : les conseils « Lecture » s'affichent pendant les missions de lecture ;
+  préparer l'évaluation = savoir raconter un passage clé.
+- Base : nouvelle table `reading_notes` (livre, enfant, chapitre, type de note, texte) ou champ JSON sur `books`.
