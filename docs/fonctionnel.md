@@ -18,7 +18,7 @@ de l'ENT, et qu'il coche lui-même. Les parents suivent l'avancement, ajoutent c
 |---|---|---|
 | Enfant | carte sur l'accueil, pastille ou menu avatar | voit et coche sa journée, sa semaine, ses livres, ses tampons |
 | Parents | « Vue parents » | suit les enfants, donne des tampons, écrit le mot du sensei, ajoute des missions, propose des idées |
-| Paramètres | roue dentée | couleurs de héros, installation sur téléphone, import d'historique, réglages avancés (JSON) |
+| Paramètres | roue dentée | rubriques repliées : code parent, couleurs de héros, sauvegarde, installation sur téléphone, import d'historique, réglages avancés (JSON) |
 
 - Un seul **mot de passe familial** ouvre l'appli (demandé une fois par appareil).
 - L'appli s'ouvre sur l'**accueil** « Qui ouvre l'Académie ? » : une carte par enfant (couleur, niveau, missions du jour).
@@ -68,27 +68,36 @@ Carte d'élève complète, **Mes objectifs** (bouton « Cette semaine, je l'ai t
 
 ## 4. Vue parents
 
-- **Bureau du sensei** : semaine en cours, pourcentage, évaluations à 7 jours, tampons.
-- **Une carte par enfant** : missions du jour, semaine, prochaine évaluation, missions notées difficiles ; un clic ouvre sa journée.
-- **Points difficiles de la semaine** : missions notées 4 ou 5, par enfant (utile avant une évaluation).
-- **Avancement de la semaine** (ordinateur) : tableau enfant × jour.
-- **Retours des professeurs** : liste par enfant (privé / visible par l'enfant, objectif et suivi de la semaine,
-  message d'origine repliable), boutons Modifier et Supprimer.
-- Formulaires repliés :
-  - **Ajouter un retour de professeur** (message d'origine privé + version pour l'enfant en trois parties + objectif +
+Depuis la 0.21, quatre onglets (adresses `#parents`, `#parents/enfants`, `#parents/retours`, `#parents/actions`) :
+
+- **Semaine** :
+  - **Bureau du sensei** : semaine en cours, pourcentage, évaluations à 7 jours, tampons ;
+  - accès au **Bilan de la semaine**, alerte « idées à valider », rappel du code parent ;
+  - **une carte par enfant** : missions du jour, semaine, prochaine évaluation, missions notées difficiles ;
+    un clic ouvre sa journée ;
+  - **Avancement de la semaine** : tableau enfant × jour ;
+  - **Points difficiles** (missions notées 4 ou 5) et **Méthodes de travail**, chacun avec un « Conseil pour vous » replié.
+- **Enfants** (chiffre rouge = idées à valider) : **Idées proposées** (accepter / refuser), **Bibliothèque des
+  enfants**, **Missions ajoutées à la main** (suppression, « tout décaler d'un jour »).
+- **Retours et conseils** :
+  - **Retours des professeurs** par enfant : les 3 plus récents, puis « Voir les autres retours » (privé / visible
+    par l'enfant, objectif et suivi, message d'origine repliable ; Modifier, En faire un conseil, Supprimer) ;
+  - **Conseils pour les parents** et **Conseils de la famille**.
+- **Actions** : une ligne par formulaire, replié ; le formulaire ouvert passe en haut. « Modifier » ou « En faire un
+  conseil » depuis l'onglet Retours ouvre directement le bon formulaire ici.
+  - **Retour de professeur** (message d'origine privé + version pour l'enfant en trois parties + objectif +
     case « Montrer à l'enfant ») ; ne jamais y écrire le nom d'un autre élève ;
-  - **Donner un tampon** (enfant, évaluation, note, date, message) ;
-  - **Écrire le mot du sensei** (pour un enfant ou tous) ;
-  - **Ajouter une mission** (date « à faire » ou « à rendre », matière, consigne, type) ;
+  - **Conseil** ; **Tampon** (enfant, évaluation, note, date, message) ; **Mot du sensei** (pour un enfant ou tous) ;
+  - **Mission** (date « à faire » ou « à rendre », matière, consigne, type) ;
   - **Saisie rapide** de plusieurs missions collées en texte (prénom, puis dates, puis une mission par ligne ;
     aperçu avant enregistrement) ;
-  - **Proposer une idée** de loisir ou de sortie (datée ou non).
-- **Missions ajoutées à la main** (liste avec défilement, suppression, « tout décaler d'un jour »).
+  - **Idée de loisir ou de sortie** (datée ou non).
 
 ## 4 bis. Conseils
 
 - Onglet **Conseils** : conseils de l'Académie + conseils de la famille (professeurs, fiches de livres reformulées),
-  filtrables par moment (organisation, devoirs, révisions, leçons, lecture).
+  filtrables par moment (organisation, devoirs, révisions, leçons, lecture). Depuis la 0.21, chaque conseil
+  n'affiche que son titre et sa source ; on le touche pour lire le texte.
 - Un conseil adapté s'affiche dans l'écran « mission en cours » ; « Conseil de la semaine » sur l'accueil.
 - Les parents ajoutent, modifient, suppriment les conseils (Vue parents) ; un retour de professeur peut devenir un conseil.
 - Règle : écrire les conseils avec ses mots, ne jamais recopier de passages de livres.

@@ -5,6 +5,23 @@ Numérotation : `MAJEUR.MINEUR.CORRECTIF` (ex. 0.2.1).
 - **mineur** (0.**2**.0) : une nouveauté (un réglage, un écran, une règle de planning) ;
 - **majeur** (**1**.0.0) : la version jugée stable après plusieurs semaines d'usage réel.
 
+## [0.21.0] – préversion (non publiée)
+
+Visible uniquement sur `/preview/`. Suite de « Revoir la présentation finale » : moins de défilement sur téléphone.
+- **Vue parents en 4 onglets** : Semaine (bureau du sensei, cartes des enfants, avancement, points difficiles,
+  méthodes), Enfants (idées proposées en premier, bibliothèque, missions ajoutées à la main), Retours et conseils,
+  Actions. Un chiffre rouge sur « Enfants » et une alerte dans « Semaine » signalent les idées à valider.
+  Longueur sur téléphone : 6,4 écrans avant, 1,2 à 2,7 écrans par onglet après.
+- **Retours des professeurs** : les 3 plus récents par enfant, « Voir les autres retours » déplie la suite.
+  « Modifier » et « En faire un conseil » ouvrent directement le formulaire dans l'onglet Actions.
+- **Conseils pour vous** sous Points difficiles, Méthodes et Retours : titre seul, « Lire le conseil » pour le texte.
+- **Actions** : grandes lignes faciles à toucher ; le formulaire ouvert passe en haut.
+- **Conseils** (onglet) : titre et source seulement, on touche un conseil pour le lire (4 écrans → 2,5).
+- **Paramètres** : rubriques repliées (2,6 écrans → 1).
+- Bandeau du haut sur une seule ligne sur téléphone dans Paramètres et Conseils.
+- Visites guidées mises à jour (nouvelle étape « Quatre onglets », une visite par onglet).
+- Pas de nouveau bloc SQL.
+
 ## [0.20.0] – 2026-11-25
 
 Validée par les parents et publiée sur le site principal.
