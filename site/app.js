@@ -396,11 +396,11 @@ function weeksNav(){
  if(others.length)h+='<select class="wk" id="oldweek" aria-label="Autres semaines"><option value="">Autres semaines…</option>'+others.map(function(i){return '<option value="'+i+'"'+(i===sel?" selected":"")+'>Semaine du '+lbl(i)+'</option>';}).join("")+'</select>';
  return h+'</nav>';
 }
-var FOLDS=[["tipf","Conseil","tip","Conseil"],["notef","Retour de professeur","note","Prof"],["stampf","Tampon","stamp","Tampon"],["senseif","Mot du sensei","sensei","Parchemin"],["addhw","Mission","addhw","Devoir"],["bulk","Saisie rapide de missions","bulk","Liste"],["idea","Idée de loisir ou de sortie","idea","Loisir"],["lockf","Code parent","lock",""],["themesf","Couleurs de héros","themes",""],["setinstall","Installer sur un téléphone","install",""],["setbackup","Sauvegarde","backup",""],["import","Restaurer ou importer","import",""],["settings","Réglages (avancé)","settings",""]];
+var FOLDS=[["tipf","Conseil","tip","Conseil","Une astuce de professeur ou de livre"],["notef","Retour de professeur","note","Prof","Message reçu, version pour l’enfant"],["stampf","Tampon","stamp","Tampon","Récompenser une évaluation réussie"],["senseif","Mot du sensei","sensei","Parchemin","Un message en haut de sa journée"],["addhw","Mission","addhw","Devoir","Un devoir absent d’EcoleDirecte"],["bulk","Saisie rapide","bulk","Liste","Coller une liste de devoirs"],["idea","Idée de loisir","idea","Loisir","Sortie, lecture plaisir, défi"],["lockf","Code parent","lock",""],["themesf","Couleurs de héros","themes",""],["setinstall","Installer sur un téléphone","install",""],["setbackup","Sauvegarde","backup",""],["import","Restaurer ou importer","import",""],["settings","Réglages (avancé)","settings",""]];
 function foldForms(){FOLDS.forEach(function(f){var el=document.getElementById(f[0]);if(!el||el.parentNode.tagName==="DETAILS")return;
  var d=document.createElement("details");d.className="fold"+(f[0]==="bulk"||f[0]==="notef"||f[0]==="tipf"?" wide":"");d.setAttribute("data-fold",f[0]);
  if((S.open||{})[f[0]]||S.msg[f[2]]||(f[0]==="bulk"&&S.bulk.items)||(f[0]==="notef"&&S.editNote)||(f[0]==="tipf"&&(S.editTip||S.tipDraft)))d.open=true;
- var sm=document.createElement("summary");sm.innerHTML=(f[3]?picto(f[3],28):"")+"<span>"+esc(f[1])+"</span><b class=\"fplus\" aria-hidden=\"true\">+</b>";d.appendChild(sm);el.parentNode.insertBefore(d,el);d.appendChild(el);});}
+ var sm=document.createElement("summary");sm.innerHTML=(f[3]?picto(f[3],28):"")+"<span>"+esc(f[1])+(f[4]?"<small class=\"fdesc\">"+esc(f[4])+"</small>":"")+"</span><b class=\"fplus\" aria-hidden=\"true\">+</b>";d.appendChild(sm);el.parentNode.insertBefore(d,el);d.appendChild(el);});}
 function renderHome(){
  var hr=new Date().getHours();
  var h='<div class="home"><div class="home-head">'+logo(72)+'<h1>'+(hr<18?"Bonjour":"Bonsoir")+' !</h1><p>Qui ouvre l’Académie ?</p></div><div class="home-grid">';
@@ -1028,10 +1028,11 @@ function renderParents(noFam){
   h+='<label for="i-detail">Détail (facultatif)<input id="i-detail" type="text"></label>';
   h+='<label for="i-link">Lien (facultatif)<input id="i-link" type="url" placeholder="https://…"></label>';
   h+='<div class="cols two"><label for="i-date">Date (facultatif)<input id="i-date" type="date"></label><label for="i-time">Heure (facultatif)<input id="i-time" type="time"></label></div>';
-  h+='<button class="btn" type="submit">Ajouter l’idée</button>'+msgHtml("idea")+'</form></div>';
+  h+='<button class="btn" type="submit">Ajouter l’idée</button>'+msgHtml("idea")+'</form>';
+  h+='<a class="act-tile" href="#parametres"><span class="pic gearpic">'+GEAR+'</span><span>Paramètres<small class="fdesc">Code parent, couleurs, sauvegarde</small></span><b class="fplus" aria-hidden="true">›</b></a></div>';
  }
  if(noFam)h+=renderSettings(true);
- else h+='<a class="setlink" href="#parametres">'+GEAR+'<span>Paramètres : couleurs de héros, import d’historique, réglages avancés</span></a>';
+ else if(pTab()!=="actions")h+='<a class="setlink" href="#parametres">'+GEAR+'<span>Paramètres : couleurs de héros, import d’historique, réglages avancés</span></a>';
  return h+'</div>';
 }
 function renderSettings(noFam){

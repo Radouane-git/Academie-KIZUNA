@@ -5,6 +5,17 @@ Numérotation : `MAJEUR.MINEUR.CORRECTIF` (ex. 0.2.1).
 - **mineur** (0.**2**.0) : une nouveauté (un réglage, un écran, une règle de planning) ;
 - **majeur** (**1**.0.0) : la version jugée stable après plusieurs semaines d'usage réel.
 
+## [0.21.1] – 2026-11-26
+
+Correction de présentation, publiée directement.
+- **Onglet Actions** : tuiles toutes de la même taille. Avant, « Retour de professeur », « Conseil » et « Saisie rapide »
+  prenaient toute la largeur parce que leur formulaire est grand ; les autres étaient petites.
+- Grille régulière : 4 colonnes sur ordinateur, 2 sur tablette, 1 sur téléphone. Chaque tuile a un pictogramme, un
+  nom court et une phrase d'explication.
+- Ordre par usage : Mission, Saisie rapide, Mot du sensei, Tampon, Retour de professeur, Conseil, Idée de loisir,
+  puis une tuile « Paramètres » qui complète la grille.
+- Pas de nouveau bloc SQL.
+
 ## [0.21.0] – 2026-11-25
 
 Validée par les parents et publiée sur le site principal. Suite de « Revoir la présentation finale » : moins de défilement sur téléphone.

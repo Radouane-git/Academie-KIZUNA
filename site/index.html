@@ -784,12 +784,25 @@ details.ptip[open]>summary::after{content:"Replier  −"}
 details.ptip>span{display:block;margin-top:6px}
 .more-notes>summary{cursor:pointer;font-weight:700;color:#B83E25;min-height:44px;display:flex;align-items:center}
 .acts-intro{grid-column:1/-1;margin:0;color:var(--muted)}
-.acts.big{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px}
-.acts.big>.fold,.acts.big>.fold[open]{border-radius:22px}
-.acts.big>.fold>summary{min-height:60px;padding:10px 18px 10px 10px;font-size:1rem;border-radius:22px;gap:12px}
-.acts.big>.fold>summary>span:not(.pic){flex:1}
-.acts.big>.fold[open]{grid-column:1/-1;order:-1}
-.acts.big>.fold[open]>summary{border-radius:22px 22px 0 0}
+.acts.big{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media (max-width:1100px){.acts.big{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:600px){.acts.big{grid-template-columns:1fr;gap:10px}.acts.big>.fold>summary,.act-tile{min-height:72px}}
+.acts.big>.fold,.acts.big>.fold.wide{grid-column:auto;border-radius:22px;min-width:0}
+.acts.big>.fold>summary{height:100%;min-height:88px;padding:14px 40px 14px 14px;border-radius:22px;gap:12px;align-items:center;position:relative;font-size:1rem}
+.acts.big>.fold>summary .pic{width:44px!important;height:44px!important}
+.acts.big>.fold>summary>span:not(.pic){flex:1;display:flex;flex-direction:column;gap:2px;line-height:1.25}
+.acts.big .fdesc{font-weight:400;font-size:.82rem;color:var(--muted)}
+.acts.big .fplus{position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:1.3rem}
+.acts.big>.fold[open] .fplus{transform:translateY(-50%) rotate(45deg)}
+.acts.big>.fold[data-fold=addhw]{order:1}.acts.big>.fold[data-fold=bulk]{order:2}.acts.big>.fold[data-fold=senseif]{order:3}.acts.big>.fold[data-fold=stampf]{order:4}
+.acts.big>.fold[data-fold=notef]{order:5}.acts.big>.fold[data-fold=tipf]{order:6}.acts.big>.fold[data-fold=idea]{order:7}
+.act-tile{order:8;display:flex;align-items:center;gap:12px;min-height:88px;padding:14px 40px 14px 14px;border-radius:22px;background:#fff;border:2px dashed var(--line);text-decoration:none;color:var(--ink);font-weight:700;position:relative;line-height:1.25}
+.act-tile:hover{background:var(--soft)}
+.act-tile>span:not(.pic){flex:1;display:flex;flex-direction:column;gap:2px}
+.act-tile .gearpic{width:44px;height:44px}
+.act-tile .fplus{position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:1.4rem;color:var(--muted)}
+.acts.big>.fold[open],.acts.big>.fold.wide[open]{grid-column:1/-1;order:0}
+.acts.big>.fold[open]>summary{border-radius:22px 22px 0 0;min-height:64px}
 .nk h3 small.cnt{display:inline;font-family:var(--body);font-weight:400;color:var(--muted);font-size:.85rem}
 .lockhint.nocode{font-size:.9rem;color:var(--muted)}
 .tips-grid.folded{gap:10px}
@@ -813,8 +826,8 @@ details.ptip>span{display:block;margin-top:6px}
 </head>
 <body>
 <div id="root"><p style="padding:2rem;font-family:sans-serif">Chargement de l’Académie…</p></div>
-<script src="config.js?v=0.21.0"></script>
+<script src="config.js?v=0.21.1"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script src="app.js?v=0.21.0"></script>
+<script src="app.js?v=0.21.1"></script>
 </body>
 </html>

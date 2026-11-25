@@ -83,7 +83,9 @@ Depuis la 0.21, quatre onglets (adresses `#parents`, `#parents/enfants`, `#paren
   - **Retours des professeurs** par enfant : les 3 plus récents, puis « Voir les autres retours » (privé / visible
     par l'enfant, objectif et suivi, message d'origine repliable ; Modifier, En faire un conseil, Supprimer) ;
   - **Conseils pour les parents** et **Conseils de la famille**.
-- **Actions** : une ligne par formulaire, replié ; le formulaire ouvert passe en haut. « Modifier » ou « En faire un
+- **Actions** : une grille de tuiles de même taille (4 colonnes sur ordinateur, 2 sur tablette, 1 sur téléphone),
+  chacune avec un pictogramme, un nom et une phrase d'explication ; ordre par usage, tuile « Paramètres » en dernier.
+  Le formulaire ouvert passe en haut, sur toute la largeur. « Modifier » ou « En faire un
   conseil » depuis l'onglet Retours ouvre directement le bon formulaire ici.
   - **Retour de professeur** (message d'origine privé + version pour l'enfant en trois parties + objectif +
     case « Montrer à l'enfant ») ; ne jamais y écrire le nom d'un autre élève ;
