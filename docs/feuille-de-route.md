@@ -157,3 +157,19 @@ sont saisis dans les conseils de la famille, dans Supabase). À mettre en place 
 - **Lien avec le reste** : les conseils « Lecture » s'affichent pendant les missions de lecture ;
   préparer l'évaluation = savoir raconter un passage clé.
 - Base : nouvelle table `reading_notes` (livre, enfant, chapitre, type de note, texte) ou champ JSON sur `books`.
+
+## Idée notée le 25/11 : conseils pour les parents
+
+Les livres de méthode contiennent aussi des conseils qui s'adressent aux adultes qui accompagnent les devoirs.
+À mettre en place plus tard.
+
+- **Où** : une rubrique « Conseils pour les parents » dans la Vue parents (jamais affichée aux enfants).
+- **Exemples** (reformulés d'après « Pourquoi les enfants n'aiment pas l'école ! » et « Mets-toi ça dans la tête ! ») :
+  doser la difficulté (ni trop facile, ni trop dur) · ouvrir une séance par une question qui donne envie de chercher ·
+  enrichir la culture générale par des lectures variées · traiter l'enfant en débutant, pas en expert ·
+  ne pas l'étiqueter « visuel » ou « auditif » · féliciter l'effort et la méthode plutôt que le talent ·
+  observer ce qui aide vraiment et s'ajuster.
+- **Au bon moment** : un conseil parent lié à ce que montre la Vue parents (par exemple, sur « Points difficiles »,
+  un conseil sur le dosage de la difficulté).
+- Base : valeur `parents` dans la colonne `child` de la table `tips` (ou nouveau moment « parents »),
+  exclue des écrans enfants.
