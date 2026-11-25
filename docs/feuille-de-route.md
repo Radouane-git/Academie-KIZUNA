@@ -158,7 +158,7 @@ sont saisis dans les conseils de la famille, dans Supabase). À mettre en place 
   préparer l'évaluation = savoir raconter un passage clé.
 - Base : nouvelle table `reading_notes` (livre, enfant, chapitre, type de note, texte) ou champ JSON sur `books`.
 
-## Idée notée le 25/11 : conseils pour les parents (en préversion 0.13.0)
+## Idée notée le 25/11 : conseils pour les parents (faite en v0.13.0)
 
 Les livres de méthode contiennent aussi des conseils qui s'adressent aux adultes qui accompagnent les devoirs.
 À mettre en place plus tard.

@@ -607,12 +607,18 @@ a{color:var(--child)}
   .streak{display:none}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+/* ===== 0.13.0 : conseils pour les parents ===== */
+.ptip{display:flex;flex-direction:column;gap:2px;background:#F1EFEA;border-left:4px solid var(--lagon,#0E5E6F);border-radius:12px;padding:10px 14px;margin-top:14px;font-size:.9rem}
+.ptip b{font-family:'Unbounded',sans-serif;font-size:.86rem}
+.ptips-all{margin-top:12px}
+.ptips-all summary{cursor:pointer;font-weight:700;color:#B83E25;min-height:44px;display:flex;align-items:center}
+.ptips-all .tips-grid{margin-top:8px}
 </style>
 </head>
 <body>
 <div id="root"><p style="padding:2rem;font-family:sans-serif">Chargement de l’Académie…</p></div>
-<script src="config.js?v=0.12.0"></script>
+<script src="config.js?v=0.13.0"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script src="app.js?v=0.12.0"></script>
+<script src="app.js?v=0.13.0"></script>
 </body>
 </html>

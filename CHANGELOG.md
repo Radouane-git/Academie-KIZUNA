@@ -5,9 +5,9 @@ Numérotation : `MAJEUR.MINEUR.CORRECTIF` (ex. 0.2.1).
 - **mineur** (0.**2**.0) : une nouveauté (un réglage, un écran, une règle de planning) ;
 - **majeur** (**1**.0.0) : la version jugée stable après plusieurs semaines d'usage réel.
 
-## [0.13.0] – préversion (non publiée)
+## [0.13.0] – 2026-11-25
 
-Visible uniquement sur `/preview/`.
+Validée par les parents et publiée sur le site principal.
 - **Conseils pour les parents** (Vue parents, jamais affichés aux enfants) : une rubrique avec le conseil de la semaine
   et la liste complète (11 conseils reformulés d'après des livres de méthode).
 - **Au bon moment** : un conseil pour les parents sous « Points difficiles », « Méthodes de travail » et

@@ -24,6 +24,20 @@ var TIPS = [
  ["Écrans coupés avant le coucher","Téléphones rechargés hors de la chambre : l’endormissement est plus rapide.","general"],
  ["Le rituel du dimanche","15 minutes pour regarder EcoleDirecte, vérifier le planning de la semaine et préparer les sacs.","general"]
 ];
+var PARENT_TIPS = [
+ ["Ni trop facile, ni trop difficile","Un enfant prend plaisir à apprendre quand son effort aboutit. Une mission souvent notée « très difficile » ? Découpez-la en petites étapes. Tout est « facile » ? Proposez un défi un peu plus grand.","diff","Pourquoi les enfants n’aiment pas l’école !"],
+ ["« C’est dur » veut dire « il apprend »","Une difficulté n’est pas un échec si l’enfant a les bases pour la surmonter. Votre rôle : doser l’effort, l’aider à corriger ses erreurs, et lui rappeler que c’est ainsi qu’on progresse.","diff","Mets-toi ça dans la tête !"],
+ ["Proposer de se tester plutôt que relire","Si les révisions se limitent à relire le cours, proposez une méthode plus active : questions, feuille blanche, explication à voix haute. C’est plus exigeant, et bien plus efficace.","meth","Mets-toi ça dans la tête !"],
+ ["Pas d’étiquette « visuel » ou « auditif »","La recherche ne confirme pas les styles d’apprentissage. Adaptez plutôt la façon de présenter au contenu : une carte pour la géographie, l’écoute pour une langue, un schéma pour les sciences.","meth","Pourquoi les enfants n’aiment pas l’école !"],
+ ["Un débutant n’est pas un expert","Un enfant voit d’abord les détails d’un problème, pas sa structure. Montrez-lui des exemples résolus et demandez-lui de comprendre et d’expliquer, pas de travailler comme un spécialiste.","meth","Pourquoi les enfants n’aiment pas l’école !"],
+ ["Observer ce qui aide vraiment","Accompagner les devoirs s’apprend aussi : essayez une façon de faire, regardez si elle aide votre enfant, puis ajustez. Un seul petit objectif à la fois.","meth","Pourquoi les enfants n’aiment pas l’école !"],
+ ["Féliciter l’effort, pas le talent","Dites « tu as bien révisé » plutôt que « tu es doué ». Félicité pour son travail, l’enfant ose les défis ; félicité pour son intelligence, il évite ce qui pourrait le mettre en échec.","notes","Mets-toi ça dans la tête !"],
+ ["Ouvrir par une question","Avant d’expliquer, demandez « à ton avis, pourquoi ? ». Une bonne question donne envie de chercher et prépare la mémoire à retenir la réponse.","general","Pourquoi les enfants n’aiment pas l’école !"],
+ ["Encourager les lectures variées","Les connaissances générales aident à comprendre tout ce qu’on lit. Romans, documentaires, journaux, visites : tout enrichit la culture qui sert ensuite en classe.","general","Pourquoi les enfants n’aiment pas l’école !"],
+ ["Le soir : « qu’as-tu appris ? »","Demander le soir ce que l’enfant a appris fait réviser sans en avoir l’air. Écoutez, posez une question, sans corriger tout de suite.","general","Mets-toi ça dans la tête !"],
+ ["Le sommeil passe avant tout","Un enfant reposé apprend plus vite et retient plus longtemps. Mieux vaut un devoir inachevé qu’une nuit écourtée, et des écrans coupés avant le coucher.","general","Apprendre à apprendre"]
+];
+var PARENT_CTX=[["general","Vue parents"],["diff","Points difficiles"],["meth","Méthodes de travail"],["notes","Retours des professeurs"]];
 var MOMENTS=[["general","Organisation"],["dev","Devoirs"],["rev","Révisions"],["app","Leçons"],["lec","Lecture"]];
 var TIP_SRC=[["prof","Conseil d’un professeur"],["livre","D’après un livre"],["famille","Conseil de la famille"]];
 
@@ -376,7 +390,7 @@ function renderNotesParents(){
  children().forEach(function(c){var ns=notesFor(c.id).filter(function(n){return n.child===c.id||n.child==="tous";});if(!ns.length)return;
   h+='<div class="nk"><h3>'+esc(c.name)+'</h3>'+ns.map(function(n){var gid=goalId(n);
    return '<div class="nrow"><div class="nr-txt"><b>'+esc(n.subject||"—")+(n.teacher?' · '+esc(n.teacher):'')+'</b><small>'+esc(fmtDate(n.date||TODAY))+' · '+esc(noteLabel(NOTE_SRC,n.source))+' · '+esc(noteLabel(NOTE_TONE,n.tone))+'</small><span class="nr-flag '+(n.shared?"on":"off")+'">'+(n.shared?"Visible par l’enfant":"Privé")+'</span>'+(n.kid_strengths||n.kid_expect?'<p>'+esc([n.kid_strengths,n.kid_expect].filter(Boolean).join(" · "))+'</p>':'<p class="none">Pas encore de version pour l’enfant.</p>')+(n.goal?'<small class="nr-goal">Objectif : '+esc(n.goal)+(n.goal_active===false?" (terminé)":S.done[gid]?" · tenu cette semaine ✓":" · pas encore coché cette semaine")+'</small>':'')+(n.original?'<details class="orig"><summary>Message d’origine</summary><p>'+esc(n.original)+'</p></details>':'')+'</div><div class="nr-btns"><button class="btn sec mini" data-editnote="'+esc(n.id)+'">Modifier</button><button class="btn sec mini" data-note2tip="'+esc(n.id)+'">En faire un conseil</button><button class="btn sec mini" data-delnote="'+esc(n.id)+'">Supprimer</button></div></div>';}).join("")+'</div>';});
- return h+'</section>';}
+ return h+parentTipFor("notes",weekNum())+'</section>';}
 function kidIdeaBlock(c){
  var h='<div class="kid-idea">';
  var mine=S.ideas.filter(function(x){return x.proposed_by===c.id;}).slice(-4).reverse();
@@ -406,7 +420,7 @@ function methStats(cid,plan){var cnt={},tot=0,mins=0;if(!plan)return null;var ch
  Object.keys(ch.blocks).forEach(function(d){ch.blocks[d].forEach(function(b){var v=b.id&&S.meth[b.id];if(!v)return;tot++;mins+=v.min||0;v.m.forEach(function(k){cnt[k]=(cnt[k]||0)+1;});});});
  return tot?{cnt:cnt,tot:tot,mins:mins}:null;}
 function allTips(cid){
- var fam=S.tips.filter(function(t){return t.active!==false&&(!cid||!t.child||t.child==="tous"||t.child===cid);}).map(function(t){return {id:t.id,title:t.title,body:t.body,moments:(t.moments||"general").split(","),src:t.source_type||"famille",from:t.source||"",subject:t.subject||"",fam:true};});
+ var fam=S.tips.filter(function(t){return t.active!==false&&t.child!=="parents"&&(!cid||!t.child||t.child==="tous"||t.child===cid);}).map(function(t){return {id:t.id,title:t.title,body:t.body,moments:(t.moments||"general").split(","),src:t.source_type||"famille",from:t.source||"",subject:t.subject||"",fam:true};});
  var def=TIPS.map(function(t,i){return {id:"d"+i,title:t[0],body:t[1],moments:t[2].split(","),src:"academie",from:"",subject:""};});
  return fam.concat(def);}
 function tipFor(cid,kind,salt){var list=allTips(cid).filter(function(t){return t.moments.indexOf(kind)>=0;});if(!list.length)return null;
@@ -414,6 +428,14 @@ function tipFor(cid,kind,salt){var list=allTips(cid).filter(function(t){return t
  return pool[Math.abs(salt||0)%pool.length];}
 function tipSrcLabel(t){if(t.src==="academie")return "Conseil de l’Académie";var l=(TIP_SRC.filter(function(x){return x[0]===t.src;})[0]||["","Conseil"])[1];return t.from?(t.src==="prof"?"Conseil de "+t.from:t.src==="livre"?"D’après « "+t.from+" »":l+" · "+t.from):l;}
 function tipCard(t,small){return '<article class="tip'+(small?" small":"")+' src-'+esc(t.src)+'"><span class="tip-src">'+esc(tipSrcLabel(t))+(t.subject?' · '+esc(t.subject):'')+'</span><h3>'+esc(t.title)+'</h3><p>'+esc(t.body)+'</p></article>';}
+function parentTips(){
+ var fam=S.tips.filter(function(t){return t.active!==false&&t.child==="parents";}).map(function(t){return {id:t.id,title:t.title,body:t.body,moments:(t.moments||"general").split(","),src:t.source_type||"famille",from:t.source||"",subject:t.subject||"",fam:true};});
+ var def=PARENT_TIPS.map(function(t,i){return {id:"p"+i,title:t[0],body:t[1],moments:t[2].split(","),src:"livre",from:t[3],subject:""};});
+ return fam.concat(def);}
+function parentTipFor(ctx,salt){var l=parentTips().filter(function(t){return t.moments.indexOf(ctx)>=0;});if(!l.length)return "";var t=l[Math.abs(salt)%l.length];
+ return '<div class="ptip"><span class="tip-src">Conseil pour les parents · '+esc(tipSrcLabel(t))+'</span><b>'+esc(t.title)+'</b><span>'+esc(t.body)+'</span></div>';}
+function renderParentTips(){var l=parentTips();var w=weekNum();var cur=l[w%l.length];
+ return '<section class="card wide ptips-card"><h2>Conseils pour les parents</h2><p class="det">Seulement ici : les enfants ne les voient pas.</p>'+tipCard(cur)+'<details class="ptips-all"><summary>Voir les '+l.length+' conseils</summary><div class="tips-grid">'+l.map(function(t){return tipCard(t,true);}).join("")+'</div></details></section>';}
 function weekNum(){var d=new Date(TODAY+"T12:00:00");var j=new Date(d.getFullYear(),0,1);return Math.floor((d-j)/604800000);}
 function tipForm(){
  var t=S.editTip?S.tips.filter(function(x){return String(x.id)===String(S.editTip);})[0]||{}:(S.tipDraft||{});
@@ -422,13 +444,15 @@ function tipForm(){
  h+='<label for="t-title">Titre<input id="t-title" type="text" required value="'+esc(t.title||"")+'" placeholder="ex. Lire le sujet deux fois"></label>';
  h+='<label for="t-body">Conseil<textarea id="t-body" required rows="3">'+esc(t.body||"")+'</textarea></label>';
  h+='<div class="cols three"><label for="t-src">Source<select id="t-src">'+TIP_SRC.map(function(o){return '<option value="'+o[0]+'"'+((t.source_type||"famille")===o[0]?" selected":"")+'>'+o[1]+'</option>';}).join("")+'</select></label><label for="t-from">Professeur ou livre (facultatif)<input id="t-from" type="text" value="'+esc(t.source||"")+'" placeholder="ex. M. Dupont, ou titre du livre"></label><label for="t-subj">Matière (facultatif)<input id="t-subj" type="text" value="'+esc(t.subject||"")+'"></label></div>';
- h+='<fieldset class="kidver"><legend>Quand l’afficher</legend><div class="m-chips">'+MOMENTS.map(function(m){return '<label class="mchip chk-chip"><input type="checkbox" class="t-mom" value="'+m[0]+'"'+(ms.indexOf(m[0])>=0?" checked":"")+'> '+m[1]+'</label>';}).join("")+'</div></fieldset>';
- h+='<label for="t-child">Pour<select id="t-child"><option value="tous">Tous</option>'+children().map(function(c){return '<option value="'+esc(c.id)+'"'+(t.child===c.id?" selected":"")+'>'+esc(c.name)+'</option>';}).join("")+'</select></label>';
+ var forP=t.child==="parents";
+ h+='<fieldset class="kidver" id="t-moms"'+(forP?' hidden':'')+'><legend>Quand l’afficher</legend><div class="m-chips">'+MOMENTS.map(function(m){return '<label class="mchip chk-chip"><input type="checkbox" class="t-mom" value="'+m[0]+'"'+(!forP&&ms.indexOf(m[0])>=0?" checked":"")+'> '+m[1]+'</label>';}).join("")+'</div></fieldset>';
+ h+='<fieldset class="kidver" id="t-pctx"'+(forP?'':' hidden')+'><legend>Où l’afficher dans la Vue parents</legend><div class="m-chips">'+PARENT_CTX.map(function(m){return '<label class="mchip chk-chip"><input type="checkbox" class="t-pc" value="'+m[0]+'"'+(forP&&ms.indexOf(m[0])>=0?" checked":"")+'> '+m[1]+'</label>';}).join("")+'</div></fieldset>';
+ h+='<label for="t-child">Pour<select id="t-child"><option value="tous">Tous</option>'+children().map(function(c){return '<option value="'+esc(c.id)+'"'+(t.child===c.id?" selected":"")+'>'+esc(c.name)+'</option>';}).join("")+'<option value="parents"'+(t.child==="parents"?" selected":"")+'>Les parents (invisible des enfants)</option></select></label>';
  h+='<div class="btnrow"><button class="btn" type="submit">'+(S.editTip?"Enregistrer les modifications":"Ajouter le conseil")+'</button>'+(S.editTip||S.tipDraft?'<button class="btn sec" type="button" data-act="tip-cancel">Annuler</button>':'')+'</div>'+msgHtml("tip")+(S.tipsMissing&&!DEMO?'<p class="msg err">Exécutez d’abord le bloc SQL « v0.12.0 » dans Supabase.</p>':'')+'</form>';
  return h;}
 function renderTipsParents(){
  var fam=S.tips;
- return '<section class="card wide tips-card"><h2>Conseils de la famille</h2>'+(fam.length?fam.map(function(t){var c=child(t.child);return '<div class="nrow"><div class="nr-txt"><b>'+esc(t.title)+'</b><small>'+esc(tipSrcLabel({src:t.source_type||"famille",from:t.source||""}))+(t.subject?' · '+esc(t.subject):'')+' · '+esc((t.moments||"general").split(",").map(function(k){return (MOMENTS.filter(function(m){return m[0]===k;})[0]||["",k])[1];}).join(", "))+' · '+esc(c?c.name:"tous")+'</small><p>'+esc(t.body)+'</p></div><div class="nr-btns"><button class="btn sec mini" data-edittip="'+esc(t.id)+'">Modifier</button><button class="btn sec mini" data-deltip="'+esc(t.id)+'">Supprimer</button></div></div>';}).join(""):'<p class="none">Ajoutez les conseils des professeurs ou vos fiches de livres de méthode : ils s’affichent dans l’onglet Conseils et au bon moment dans les missions.</p>')+'</section>';}
+ return '<section class="card wide tips-card"><h2>Conseils de la famille</h2>'+(fam.length?fam.map(function(t){var c=child(t.child);return '<div class="nrow"><div class="nr-txt"><b>'+esc(t.title)+'</b><small>'+esc(tipSrcLabel({src:t.source_type||"famille",from:t.source||""}))+(t.subject?' · '+esc(t.subject):'')+' · '+esc((t.moments||"general").split(",").map(function(k){return ((t.child==="parents"?PARENT_CTX:MOMENTS).filter(function(m){return m[0]===k;})[0]||["",k])[1];}).join(", "))+' · '+esc(c?c.name:t.child==="parents"?"les parents":"tous")+'</small><p>'+esc(t.body)+'</p></div><div class="nr-btns"><button class="btn sec mini" data-edittip="'+esc(t.id)+'">Modifier</button><button class="btn sec mini" data-deltip="'+esc(t.id)+'">Supprimer</button></div></div>';}).join(""):'<p class="none">Ajoutez les conseils des professeurs ou vos fiches de livres de méthode : ils s’affichent dans l’onglet Conseils et au bon moment dans les missions.</p>')+'</section>';}
 function footer(){return '<footer class="foot">'+syncLine()+'<a href="#conseils">Conseils</a></footer>';}
 function render(){
  if(!S.fam){root.innerHTML='<div class="wrap">'+topbar("parents")+renderParents(true)+footer()+'</div>';bindForms();return;}
@@ -621,10 +645,10 @@ function renderParents(noFam){
     h+='<td><b>'+pct(weekProg(c.id,plan))+' %</b></td></tr>';});
    h+='</tbody></table></div></section>';
    var hardAll=children().map(function(c){return [c,hardOf(c.id,plan)];}).filter(function(x){return x[1].length;});
-   h+='<section class="card hardcard"><h2>Points difficiles de la semaine</h2>'+(hardAll.length?hardAll.map(function(x){return '<div class="hard-kid"><b>'+esc(x[0].name)+'</b><ul>'+x[1].map(function(m){return '<li>'+diffBadge(m.n)+'<span>'+esc(m.l)+'<small>'+esc(fmtDate(m.date))+' · '+DIFF[m.n][0]+'</small></span></li>';}).join("")+'</ul></div>';}).join(""):'<p class="none">Aucune mission notée 4 ou 5 cette semaine. Les enfants notent la difficulté quand ils cochent un devoir, une leçon, une révision ou une lecture.</p>')+(S.diffMissing&&!DEMO?'<p class="msg err">Exécutez le bloc SQL « v0.9.0 » dans Supabase pour enregistrer les notes.</p>':'')+'</section>';
+   h+='<section class="card hardcard"><h2>Points difficiles de la semaine</h2>'+(hardAll.length?hardAll.map(function(x){return '<div class="hard-kid"><b>'+esc(x[0].name)+'</b><ul>'+x[1].map(function(m){return '<li>'+diffBadge(m.n)+'<span>'+esc(m.l)+'<small>'+esc(fmtDate(m.date))+' · '+DIFF[m.n][0]+'</small></span></li>';}).join("")+'</ul></div>';}).join(""):'<p class="none">Aucune mission notée 4 ou 5 cette semaine. Les enfants notent la difficulté quand ils cochent un devoir, une leçon, une révision ou une lecture.</p>')+(S.diffMissing&&!DEMO?'<p class="msg err">Exécutez le bloc SQL « v0.9.0 » dans Supabase pour enregistrer les notes.</p>':'')+parentTipFor("diff",weekNum())+'</section>';
    var msAll=children().map(function(c){return [c,methStats(c.id,plan)];}).filter(function(x){return x[1];});
    h+='<section class="card methcard"><h2>Méthodes de travail de la semaine</h2>'+(msAll.length?msAll.map(function(x){var st=x[1];var arr=Object.keys(st.cnt).sort(function(a,b){return st.cnt[b]-st.cnt[a];});
-    return '<div class="mk"><b>'+esc(x[0].name)+'</b><small>'+st.tot+' révision'+(st.tot>1?"s":"")+'/leçon'+(st.tot>1?"s":"")+' décrite'+(st.tot>1?"s":"")+(st.mins?' · '+st.mins+' min au total':'')+'</small><div class="m-bars">'+arr.map(function(k){return '<span class="mbar"><i style="width:'+Math.round(100*st.cnt[k]/st.tot)+'%"></i><em>'+esc(methLabel(k))+' · '+st.cnt[k]+'</em></span>';}).join("")+'</div>'+(arr.length===1&&arr[0]==="relu"?'<p class="det">Uniquement « relu le cours » : l’encourager à se faire interroger ou à refaire des exercices.</p>':'')+'</div>';}).join(""):'<p class="none">Les enfants décrivent leur méthode après une révision ou une leçon.</p>')+(S.methMissing&&!DEMO?'<p class="msg err">Exécutez le bloc SQL « v0.11.0 » pour enregistrer les méthodes.</p>':'')+'</section>';
+    return '<div class="mk"><b>'+esc(x[0].name)+'</b><small>'+st.tot+' révision'+(st.tot>1?"s":"")+'/leçon'+(st.tot>1?"s":"")+' décrite'+(st.tot>1?"s":"")+(st.mins?' · '+st.mins+' min au total':'')+'</small><div class="m-bars">'+arr.map(function(k){return '<span class="mbar"><i style="width:'+Math.round(100*st.cnt[k]/st.tot)+'%"></i><em>'+esc(methLabel(k))+' · '+st.cnt[k]+'</em></span>';}).join("")+'</div>'+(arr.length===1&&arr[0]==="relu"?'<p class="det">Uniquement « relu le cours » : l’encourager à se faire interroger ou à refaire des exercices.</p>':'')+'</div>';}).join(""):'<p class="none">Les enfants décrivent leur méthode après une révision ou une leçon.</p>')+(S.methMissing&&!DEMO?'<p class="msg err">Exécutez le bloc SQL « v0.11.0 » pour enregistrer les méthodes.</p>':'')+parentTipFor("meth",weekNum())+'</section>';
   }
  }
  h+='<div class="cols">';
@@ -646,6 +670,7 @@ function renderParents(noFam){
   // retours des professeurs
   h+=renderNotesParents();
   h+=renderTipsParents();
+  h+=renderParentTips();
   h+='<h2 class="acts-title">Actions</h2>';
   // tampon
   var evOpts=[];children().forEach(function(c){evalsFor(c.id).forEach(function(e){if(e[0]<=addDays(TODAY,1))evOpts.push([c.id,e[1]+" ("+fmtDate(e[0])+")"]);});});
@@ -850,7 +875,7 @@ function bindForms(){
  });
  if((f=document.getElementById("tipf")))f.addEventListener("submit",function(e){
   e.preventDefault();
-  var moms=[].slice.call(document.querySelectorAll(".t-mom:checked")).map(function(x){return x.value;});
+  var forP=val("t-child")==="parents";var moms=[].slice.call(document.querySelectorAll(forP?".t-pc:checked":".t-mom:checked")).map(function(x){return x.value;});
   var row={title:val("t-title"),body:val("t-body"),source_type:val("t-src"),source:val("t-from")||null,subject:val("t-subj")||null,moments:(moms.length?moms:["general"]).join(","),child:val("t-child")||"tous",active:true};
   var edit=S.editTip;
   var ok=function(x){if(edit)S.tips=S.tips.map(function(t){return String(t.id)===String(edit)?x:t;});else S.tips.unshift(x);S.editTip=null;S.tipDraft=null;S.open=S.open||{};S.open.tipf=false;flash("global",edit?"Conseil modifié.":"Conseil ajouté.");};
@@ -858,6 +883,7 @@ function bindForms(){
   var q=edit?sb.from("tips").update(row).eq("id",edit).select():sb.from("tips").insert(row).select();
   q.then(function(r){if(r.error)flash("tip","Erreur : "+r.error.message,true);else ok(r.data[0]);});
  });
+ var tch=document.getElementById("t-child");if(tch)tch.addEventListener("change",function(){var p=tch.value==="parents";document.getElementById("t-moms").hidden=p;document.getElementById("t-pctx").hidden=!p;});
  if((f=document.getElementById("notef")))f.addEventListener("submit",function(e){
   e.preventDefault();
   var row={child:val("n-child"),date:val("n-date")||TODAY,source:val("n-src"),subject:val("n-subj")||null,teacher:val("n-teacher")||null,tone:val("n-tone"),original:val("n-orig")||null,
