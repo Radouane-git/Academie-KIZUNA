@@ -132,6 +132,14 @@ Carte d'élève complète, **Mes objectifs** (bouton « Cette semaine, je l'ai t
 - Les parents voient les livres en cours, le nombre de notes du carnet et l'avancement de la fiche.
 - Inspirée d'une méthode transmise par une professeure de français (reformulée).
 
+## 4 septies. Visites guidées (0.20)
+
+- Une visite par écran (table `TOURS` dans `site/app.js` : sélecteur, titre, texte). Les étapes dont l'élément est
+  absent (par exemple pas de livre en cours) sont sautées.
+- Lancement automatique à la première ouverture de l'écran sur l'appareil (`localStorage` `kizuna-tour-<écran>`),
+  jamais sur l'écran du code parent ; relance par le bouton ampoule du bandeau.
+- Quand un écran change, mettre à jour ses étapes dans `TOURS`.
+
 ## 5. Règles du planning
 
 Le planning est recalculé à chaque synchronisation (7h et 18h). Réglages dans Paramètres → Réglages (avancé).

@@ -5,6 +5,17 @@ Numérotation : `MAJEUR.MINEUR.CORRECTIF` (ex. 0.2.1).
 - **mineur** (0.**2**.0) : une nouveauté (un réglage, un écran, une règle de planning) ;
 - **majeur** (**1**.0.0) : la version jugée stable après plusieurs semaines d'usage réel.
 
+## [0.20.0] – préversion (non publiée)
+
+Visible uniquement sur `/preview/`.
+- **Visites guidées** : sur chaque écran (accueil, Aujourd'hui, Ma semaine, Emploi du temps, Bibliothèque, Tampons,
+  Conseils, Vue parents, Bilan, Paramètres), une courte visite met en lumière 2 à 7 éléments, un par un, avec une
+  phrase d'explication (« Suivant », « Précédent », « Passer », Échap pour fermer, flèches du clavier).
+- Elle se lance toute seule à la première ouverture de l'écran sur l'appareil, puis se relance avec le bouton
+  **ampoule** du bandeau.
+- Textes au tutoiement pour les enfants, au vouvoiement pour les parents. Animations réduites si l'appareil le demande.
+- Pas de nouveau bloc SQL.
+
 ## [0.19.0] – 2026-11-25
 
 Validée par les parents et publiée sur le site principal.

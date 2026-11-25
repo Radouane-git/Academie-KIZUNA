@@ -201,6 +201,6 @@ et le sport, dans une section des pages enfants comme Bibliothèque ou Tampons.
    avant « Conseils de la famille », conseils de la famille limités à 3 ou 4 avec ascenseur, boutons « Actions »
    plus petits, « Mot du sensei » et « Ajouter une mission » rangés dans « Autres actions ») et bandeau du haut des
    pages enfants (place manquante).
-2. **0.20.0 – Visites guidées** : une courte visite par écran (bulles qui montrent les éléments un par un),
+2. **0.20.0 – Visites guidées** (en préversion le 25/11) : une courte visite par écran (bulles qui montrent les éléments un par un),
    affichée à la première ouverture et relançable avec un bouton ampoule.
 3. Puis la suite de « Revoir la présentation finale » avant la 1.0.
