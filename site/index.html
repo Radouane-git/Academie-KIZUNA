@@ -629,12 +629,45 @@ a{color:var(--child)}
 .lockhint{display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:space-between;margin:12px 0}
 div.lockhint:not(.card){justify-content:flex-end}
 .lk-ico.sm{width:44px;height:44px;margin:0}
+/* ===== 0.15.0 : bilan du dimanche ===== */
+.bilan-cta{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:10px 14px;margin:12px 0}
+.bilan-cta.hot{background:#FFF4D6;border-color:#F2D48A;font-weight:700}
+.bilan-bar{display:flex;gap:8px;justify-content:space-between;margin:12px 0}
+.bilan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin:12px 0}
+.bilan-kid{border-top:6px solid var(--child)}
+.bk-head{display:flex;gap:14px;align-items:center}
+.bk-head h2{margin:0}
+.bk-head small{color:var(--muted)}
+.bk-cats{display:grid;gap:6px;margin:12px 0}
+.bk-cat{display:grid;grid-template-columns:9.5em 1fr 3.2em;gap:8px;align-items:center;font-size:.9rem}
+.bk-cat .bar{display:block;height:8px;border-radius:99px;background:var(--soft);overflow:hidden}
+.bk-cat .bar i{display:block;height:100%;background:var(--child)}
+.bk-cat b{text-align:right}
+.bk-talk{background:#EEF4FF;border-radius:12px;padding:10px 14px}
+.bk-talk h3,.bk-more h3{font-family:'Unbounded',sans-serif;font-size:.82rem;margin:8px 0 4px}
+.bk-talk ul{margin:0;padding-left:1.1em}
+.bk-talk li{margin:3px 0}
+.bk-more{margin-top:10px}
+.bk-more summary{cursor:pointer;font-weight:700;color:#B83E25;min-height:44px;display:flex;align-items:center}
+.bk-list{margin:0;padding-left:1.1em;font-size:.92rem}
+.bk-list li{margin:3px 0}
+.bk-list small{color:var(--muted)}
+.bk-list .more{list-style:none;color:var(--muted)}
+.sun-list{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:6px}
+.sun-list label{display:flex;gap:12px;align-items:center;min-height:44px;font-weight:400;cursor:pointer}
+@media print{
+ .topbar,.foot,.noprint,.preview-flag,.bk-more summary,.weeks,.pmenu{display:none!important}
+ body{background:#fff}
+ .card{box-shadow:none;border:1px solid #ccc;break-inside:avoid}
+ .bilan-grid{grid-template-columns:1fr 1fr}
+ .hero{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
 </style>
 </head>
 <body>
 <div id="root"><p style="padding:2rem;font-family:sans-serif">Chargement de l’Académie…</p></div>
-<script src="config.js?v=0.14.0"></script>
+<script src="config.js?v=0.15.0"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script src="app.js?v=0.14.0"></script>
+<script src="app.js?v=0.15.0"></script>
 </body>
 </html>

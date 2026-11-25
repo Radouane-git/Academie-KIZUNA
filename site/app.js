@@ -462,6 +462,67 @@ function parentTipFor(ctx,salt){var l=parentTips().filter(function(t){return t.m
  return '<div class="ptip"><span class="tip-src">Conseil pour les parents · '+esc(tipSrcLabel(t))+'</span><b>'+esc(t.title)+'</b><span>'+esc(t.body)+'</span></div>';}
 function renderParentTips(){var l=parentTips();var w=weekNum();var cur=l[w%l.length];
  return '<section class="card wide ptips-card"><h2>Conseils pour les parents</h2><p class="det">Seulement ici : les enfants ne les voient pas.</p>'+tipCard(cur)+'<details class="ptips-all"><summary>Voir les '+l.length+' conseils</summary><div class="tips-grid">'+l.map(function(t){return tipCard(t,true);}).join("")+'</div></details></section>';}
+/* ------------------------------------------------------------ bilan du dimanche (0.15) */
+var BCAT=[["ecole","Devoirs et leçons"],["rev","Révisions"],["lec","Lecture"],["maison","Maison"]];
+var BKIND={dev:"ecole",app:"ecole",rel:"ecole",rev:"rev",lec:"lec",cor:"maison",ran:"maison",org:"maison"};
+var SUNDAY=[["sync","Lancer « Synchro planning » et vérifier la semaine prochaine"],["evals","Regarder les évaluations à venir avec chaque enfant"],["ideas","Valider les idées proposées par les enfants"],["goal","Choisir avec chaque enfant un objectif pour la semaine"],["sacs","Préparer les sacs, l’agenda et le matériel"]];
+function bilanKid(c,plan){
+ var lastD=plan.data.days[plan.data.days.length-1].date;var lim=lastD<=TODAY?lastD:addDays(TODAY,-1);
+ var days=plan.data.days.filter(function(d){return d.date<=lim;});
+ var cat={};BCAT.forEach(function(x){cat[x[0]]={n:0,t:0};});var miss=[],all={n:0,t:0};
+ days.forEach(function(d){blocksOf(c.id,d.date).forEach(function(b){var k=BKIND[b.k];if(!k)return;var ids=[];
+  if(b.k==="rel"){if(b.rel){subs(b.rel.today).forEach(function(x){ids.push(b.rel.idp+"|t|"+x);});subs(b.rel.tomorrow).forEach(function(x){ids.push(b.rel.idp+"|d|"+x);});}}
+  else if(b.id)ids.push(b.id);
+  ids.forEach(function(i){var ok=!!S.done[i];cat[k].t++;all.t++;if(ok){cat[k].n++;all.n++;}});
+  if(b.k!=="rel"&&b.id&&k!=="maison"&&!S.done[b.id])miss.push({l:b.l,date:d.date});});});
+ var first=plan.data.days[0].date,last=plan.data.days[plan.data.days.length-1].date;
+ var inW=function(x){return x&&x>=first&&x<=last;};
+ var st=stampsFor(c.id).filter(function(x){return inW(x.date||String(x.created_at||"").slice(0,10));});
+ var bk=booksFor(c.id).filter(function(x){return inW(x.finished);});
+ var goals=activeGoals(c.id).map(function(n){return {n:n,ok:!!S.done["goal|"+n.id+"|"+first]};});
+ var np=S.plans[S.plans.indexOf(plan)+1]||null,ev=[];
+ var nf=addDays(last,1),nl=addDays(last,7);
+ var seen={};S.plans.forEach(function(p){var ch=p.data.children[c.id]||{};(ch.evals||[]).concat(ch.evals_ed||[]).forEach(function(e){if(e[0]>=nf&&e[0]<=nl&&!seen[e[0]+e[1]]){seen[e[0]+e[1]]=1;ev.push(e);}});});
+ S.extras.forEach(function(e){if((e.child===c.id||e.child==="tous")&&e.kind==="rev"&&e.due>=nf&&e.due<=nl)ev.push([e.due,(e.subject?e.subject+" : ":"")+e.text]);});
+ ev.sort(function(a,b){return a[0]<b[0]?-1:1;});
+ return {all:all,cat:cat,miss:miss,hard:hardOf(c.id,plan).filter(function(m){return m.date<=lim;}),meth:methStats(c.id,plan),st:st,bk:bk,goals:goals,ev:ev,next:np?weekProg(c.id,np).t:null};}
+function bilanTalk(c,b,future,partial){var out=[],p=pct(b.all);if(future)return out;
+ if(b.st.length)out.push("Féliciter "+c.name+" pour ses efforts : "+b.st.length+" tampon"+(b.st.length>1?"s":"")+" cette semaine.");
+ else if(b.all.t&&p>=85)out.push("Féliciter "+c.name+" pour sa régularité ("+p+" % des missions faites).");
+ if(!partial&&b.all.t&&p<70)out.push("Seulement "+p+" % des missions faites : qu’est-ce qui a coincé ? Trop de choses le même soir, fatigue, oubli ?");
+ if(b.hard.length)out.push("Reprendre ensemble « "+b.hard[0].l+" », notée difficile.");
+ if(b.meth&&b.meth.cnt.relu&&b.meth.cnt.relu>=b.meth.tot*0.6)out.push("Les révisions sont surtout de la relecture : proposer de se tester (feuille blanche, questions).");
+ if(b.ev.length)out.push("Préparer "+(b.ev.length>1?"les "+b.ev.length+" évaluations":"l’évaluation")+" de la semaine prochaine : "+b.ev.slice(0,2).map(function(e){return e[1].split(" : ")[0]+" ("+fmtDate(e[0],{weekday:"long"})+")";}).join(", ")+".");
+ var g=b.goals.filter(function(x){return !x.ok;})[0];if(g)out.push("Faire le point sur l’objectif « "+g.n.goal+" ».");
+ return out.slice(0,4);}
+function renderBilan(){
+ var plan=planOf(S.day);var tp=THEMES[themeName(null)];
+ if(!plan)return '<div class="card"><p>Aucun planning pour cette semaine.</p></div>';
+ var first=plan.data.days[0].date,last=plan.data.days[plan.data.days.length-1].date,cur=first<=TODAY&&TODAY<=last,partial=cur&&TODAY!==last;
+ var data=children().map(function(c){return [c,bilanKid(c,plan)];});
+ var tot={n:0,t:0},nst=0,nbk=0;data.forEach(function(x){tot.n+=x[1].all.n;tot.t+=x[1].all.t;nst+=x[1].st.length;nbk+=x[1].bk.length;});
+ var h='<section class="hero bilan-hero" style="background-color:'+tp.bg+';color:'+tp.txt+'"><div class="hero-id"><div><span class="over">Bilan de la semaine'+(partial?" · jusqu’à hier soir":"")+'</span><h1>'+esc(plan.data.title.replace(/^Du /,"Semaine du "))+'</h1></div></div><div class="hero-stats parents"><div><b>'+pct(tot)+' %</b><small>missions faites</small></div><div><b>'+nst+'</b><small>tampon'+(nst>1?"s":"")+'</small></div><div><b>'+nbk+'</b><small>livre'+(nbk>1?"s":"")+' fini'+(nbk>1?"s":"")+'</small></div></div></section>';
+ h+='<div class="bilan-bar noprint"><a class="btn sec mini" href="#parents">← Vue parents</a><button class="btn sec mini" type="button" data-act="print">Imprimer</button></div>';
+ h+='<div class="noprint">'+weeksNav()+'</div>';
+ if(first>TODAY)h+='<p class="det">Cette semaine n’a pas encore commencé : le bilan se remplira au fil des jours.</p>';
+ h+='<div class="bilan-grid">';
+ data.forEach(function(x){var c=x[0],b=x[1],t=theme(c);
+  h+='<section class="card bilan-kid" style="--child:'+t.bg+'"><div class="bk-head">'+ring(b.all.t?b.all.n/b.all.t:0,64,8,pct(b.all)+"%")+'<div><h2>'+esc(c.name)+'</h2><small>'+b.all.n+' mission'+(b.all.n>1?"s":"")+' faite'+(b.all.n>1?"s":"")+' sur '+b.all.t+(partial?" jusqu’à hier":"")+'</small></div></div>';
+  h+='<div class="bk-cats">'+BCAT.filter(function(k){return b.cat[k[0]].t;}).map(function(k){var v=b.cat[k[0]];return '<div class="bk-cat"><span>'+k[1]+'</span><i class="bar"><i style="width:'+pct(v)+'%"></i></i><b>'+v.n+'/'+v.t+'</b></div>';}).join("")+'</div>';
+  var talk=bilanTalk(c,b,first>TODAY,partial);
+  if(talk.length)h+='<div class="bk-talk"><h3>À en parler ensemble</h3><ul>'+talk.map(function(z){return '<li>'+esc(z)+'</li>';}).join("")+'</ul></div>';
+  var det='';
+  if(b.miss.length)det+='<h3>Pas cochées ('+b.miss.length+')</h3><ul class="bk-list">'+b.miss.slice(0,5).map(function(m){return '<li>'+esc(m.l)+' <small>'+esc(fmtDate(m.date))+'</small></li>';}).join("")+(b.miss.length>5?'<li class="more">et '+(b.miss.length-5)+' autre'+(b.miss.length-5>1?"s":"")+'</li>':'')+'</ul>';
+  if(b.hard.length)det+='<h3>Notées difficiles</h3><ul class="bk-list">'+b.hard.slice(0,4).map(function(m){return '<li>'+diffBadge(m.n)+' '+esc(m.l)+'</li>';}).join("")+'</ul>';
+  if(b.meth){var arr=Object.keys(b.meth.cnt).sort(function(p,q){return b.meth.cnt[q]-b.meth.cnt[p];});det+='<h3>Méthodes</h3><p>'+b.meth.tot+' révision'+(b.meth.tot>1?"s":"")+' décrite'+(b.meth.tot>1?"s":"")+(b.meth.mins?' · '+b.meth.mins+' min':'')+' · surtout : '+esc(arr.slice(0,2).map(function(k){return noteLabel(METHODS,k).toLowerCase();}).join(", "))+'</p>';}
+  var pr=[];b.st.forEach(function(z){pr.push('Tampon : '+esc(z.title)+(z.note?' ('+esc(z.note)+')':''));});b.bk.forEach(function(z){pr.push('Livre fini : '+esc(z.title)+(z.pages?' ('+z.pages+' p.)':''));});b.goals.forEach(function(g){pr.push('Objectif '+(g.ok?'tenu':'pas encore tenu')+' : '+esc(g.n.goal));});
+  if(pr.length)det+='<h3>Fiertés et objectifs</h3><ul class="bk-list">'+pr.map(function(z){return '<li>'+z+'</li>';}).join("")+'</ul>';
+  det+='<h3>Semaine prochaine</h3>'+(b.ev.length?'<ul class="bk-list">'+b.ev.map(function(e){return '<li><b>'+esc(fmtDate(e[0]))+'</b> '+esc(e[1])+'</li>';}).join("")+'</ul>':'<p class="none">Aucune évaluation connue pour l’instant.</p>')+(b.next!=null?'<p class="det">'+b.next+' missions prévues.</p>':'<p class="det">Planning pas encore créé : il le sera à la prochaine synchro.</p>');
+  h+='<details class="bk-more"'+(S.printing?' open':'')+'><summary>Le détail</summary>'+det+'</details></section>';});
+ h+='</div>';
+ var nm=addDays(last,1);var pend=S.ideas.filter(function(x){return x.status==="proposee";}).length;
+ h+='<section class="card sunday"><h2>Préparer la semaine</h2><p class="det">15 minutes le dimanche, en famille.</p><ul class="sun-list">'+SUNDAY.map(function(z){var id="sunday|"+nm+"|"+z[0];return '<li><label><input type="checkbox" class="chk" data-id="'+esc(id)+'"'+(S.done[id]?" checked":"")+'> <span>'+esc(z[1])+(z[0]==="ideas"&&pend?' <b>('+pend+' à valider)</b>':'')+'</span></label></li>';}).join("")+'</ul></section>';
+ return h;}
 function weekNum(){var d=new Date(TODAY+"T12:00:00");var j=new Date(d.getFullYear(),0,1);return Math.floor((d-j)/604800000);}
 function tipForm(){
  var t=S.editTip?S.tips.filter(function(x){return String(x.id)===String(S.editTip);})[0]||{}:(S.tipDraft||{});
@@ -494,6 +555,7 @@ function render(){
   else if(sec==="semaine")h+=renderWeek(c,plan);
   else h+=renderChild(c,plan);}
  else if((v==="parents"||v==="parametres")&&!unlocked())h+=renderLock(v);
+ else if(v==="parents"&&(location.hash||"").split("/")[1]==="bilan")h+=renderBilan();
  else if(v==="parents")h+=renderParents(false);
  else if(v==="parametres")h+=renderSettings(false);
  else if(v==="accueil")h+=renderHome();
@@ -660,6 +722,8 @@ function renderParents(noFam){
   var tot={n:0,t:0};children().forEach(function(c){var w=weekProg(c.id,plan);tot.n+=w.n;tot.t+=w.t;});
   var evc=0;children().forEach(function(c){evc+=evalsFor(c.id).filter(function(e){return e[0]>=TODAY&&dDiff(e[0],TODAY)<=7;}).length;});
   h+='<section class="hero" style="background-color:'+tp.bg+';color:'+tp.txt+'"><div class="hero-id"><div><span class="over">Bureau du sensei</span><h1>'+esc(plan?plan.data.title.replace(/^Du /,"Semaine du "):"Semaine")+'</h1></div></div><div class="hero-stats parents"><div><b>'+pct(tot)+' %</b><small>de la semaine</small></div><div><b style="color:'+tp.acc+'">'+evc+'</b><small>évaluations à 7 jours</small></div><div><b>'+S.stamps.length+'</b><small>tampons</small></div></div></section>';
+  var wdn=new Date(TODAY+"T12:00:00").getDay();
+  h+='<div class="bilan-cta'+(wdn===0||wdn===6?" hot":"")+'"><span>'+(wdn===0?"C’est dimanche : le bilan de la semaine est prêt.":wdn===6?"Demain, c’est le bilan de la semaine.":"Où en est la semaine ?")+'</span><a class="btn mini" href="#parents/bilan">Bilan de la semaine</a></div>';
   h+=lockOn()?'<div class="lockhint"><button class="btn sec mini lockbtn" type="button" data-act="lock-now">Verrouiller l’espace parents</button></div>':'<div class="card lockhint"><span>Protégez cet espace des enfants avec un code parent.</span><a class="btn sec mini" href="#parametres">Créer le code</a></div>';
   h+='<div class="kidcards">'+children().map(function(c){var t=theme(c),mp=mprog(c.id,TODAY),w=weekProg(c.id,plan),ev=evalsFor(c.id).filter(function(e){return e[0]>=TODAY;})[0];
    return '<button class="kidcard" data-go="'+esc(c.id)+'" data-day="'+TODAY+'" style="--child:'+t.bg+'">'+ring(mp.t?mp.n/mp.t:0,58,7,mp.t?mp.n+"/"+mp.t:"–")+'<span class="kc-txt"><b>'+esc(c.name)+'</b><small>Aujourd’hui : '+(mp.t?(mp.t-mp.n?(mp.t-mp.n)+" mission"+(mp.t-mp.n>1?"s":"")+" à faire":"tout est fait"):"rien de prévu")+' · semaine '+pct(w)+' %</small>'+(ev?'<small class="evtxt">'+esc(fmtDate(ev[0]))+' : '+esc(ev[1])+'</small>':'')+(hardOf(c.id,plan).length?'<small class="hardtxt">'+hardOf(c.id,plan).length+' mission'+(hardOf(c.id,plan).length>1?"s":"")+' notée'+(hardOf(c.id,plan).length>1?"s":"")+' difficile'+(hardOf(c.id,plan).length>1?"s":"")+' cette semaine</small>':'')+'</span><span class="chev" aria-hidden="true">›</span></button>';}).join("")+'</div>';
@@ -1023,6 +1087,7 @@ root.addEventListener("click",function(e){
   sb.from("cancellations").insert(row).select().then(function(r){if(r.error)flash("global","Erreur : "+r.error.message,true);else okc(r.data[0]);});return;}
  if(t.hasAttribute("data-uncancel")){var uid=t.getAttribute("data-uncancel");var aftu=function(){S.cancels=S.cancels.filter(function(x){return String(x.id)!==uid;});render();};
   if(DEMO)aftu();else sb.from("cancellations").delete().eq("id",uid).then(function(r){if(!r.error)aftu();});return;}
+ if(t.getAttribute("data-act")==="print"){S.printing=true;render();setTimeout(function(){window.print();S.printing=false;render();},50);return;}
  if(t.getAttribute("data-act")==="lock-now"){relock();location.hash="#accueil";return;}
  if(t.getAttribute("data-act")==="lock-off"){if(!t.dataset.ok){t.dataset.ok="1";t.textContent="Confirmer : retirer le code";return;}saveLock(null,function(){relock();flash("lock","Code retiré : la Vue parents est de nouveau ouverte à tous.");});return;}
  if(t.getAttribute("data-act")==="install"){var ev=S.installEvt;if(ev){ev.prompt();ev.userChoice.then(function(){S.installEvt=null;render();});}return;}
