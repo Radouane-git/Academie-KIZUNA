@@ -97,6 +97,13 @@ Carte d'élève complète, **Mes objectifs** (bouton « Cette semaine, je l'ai t
   « Pour : Les parents » (`tips.child = 'parents'`, `tips.moments` = endroits : general, diff, meth, notes).
   Un conseil s'affiche aussi sous « Points difficiles », « Méthodes de travail » et « Retours des professeurs ».
 
+## 4 ter. Code parent (0.14)
+
+- Facultatif. S'il existe, la Vue parents et les Paramètres affichent d'abord l'écran « Espace parents ».
+- Toujours ouverts sans code : accueil, pages des enfants (y compris « Proposer une idée »), Conseils.
+- Déverrouillage valable jusqu'à la fermeture de l'appli, ou durablement sur l'appareil si la case est cochée.
+- Changer le code reverrouille les autres appareils. 5 codes faux : 30 secondes d'attente.
+
 ## 5. Règles du planning
 
 Le planning est recalculé à chaque synchronisation (7h et 18h). Réglages dans Paramètres → Réglages (avancé).

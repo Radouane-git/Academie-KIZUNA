@@ -67,7 +67,7 @@ Semaines calculées : semaine en cours + suivante (+ une troisième le week-end)
 
 | Table | Contenu | Écrit par |
 |---|---|---|
-| `settings` | clé `famille` : enfants, activités, coucher, corvées, couleurs, réglages | site (Paramètres), import |
+| `settings` | clé `famille` : enfants, activités, coucher, corvées, couleurs, réglages ; clé `parent_lock` : empreinte du code parent (`{h, s, at}`) | site (Paramètres), import |
 | `plans` | une ligne par semaine (`week_start`, `data` JSON, `source` : `auto` ou verrouillée) | synchro, import |
 | `checks` | une ligne par case cochée (`id` de la tâche, `difficulty` 1 à 5, `method` liste, `minutes` — facultatifs) | site |
 | `extras` | missions ajoutées à la main | site |
@@ -122,6 +122,11 @@ Marqueurs : `x` (mission ajoutée à la main), `over` (pas de place avant le cou
   inscriptions publiques désactivées ; droits accordés explicitement (`grant`).
 - La clé secrète contourne la RLS : elle ne sert qu'à la synchro.
 - Les journaux ne contiennent que des comptages et des messages courts ; les identifiants sont masqués dans les erreurs.
+- **Code parent** (0.14) : la Vue parents et les Paramètres demandent un code. Seule une empreinte SHA-256
+  (code + sel aléatoire) est enregistrée dans `settings.parent_lock`. Le déverrouillage est gardé pour la session
+  (`sessionStorage`) ou, si on le demande, sur l'appareil (`localStorage`). C'est une protection d'usage contre
+  l'ouverture par erreur ou par curiosité, pas un contrôle d'accès : toutes les données restent lisibles par le
+  compte famille.
 - Dépôt public : pas de prénoms, horaires d'activités ou fichiers d'historique (l'historique s'importe depuis le site).
 
 ## 4. Limites connues

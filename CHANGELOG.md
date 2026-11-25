@@ -5,6 +5,18 @@ Numérotation : `MAJEUR.MINEUR.CORRECTIF` (ex. 0.2.1).
 - **mineur** (0.**2**.0) : une nouveauté (un réglage, un écran, une règle de planning) ;
 - **majeur** (**1**.0.0) : la version jugée stable après plusieurs semaines d'usage réel.
 
+## [0.14.0] – préversion (non publiée)
+
+Visible uniquement sur `/preview/`.
+- **Code parent** : la Vue parents et les Paramètres peuvent être protégés par un code de 4 à 8 chiffres.
+  Les enfants gardent l'accès à leur page, à l'accueil et aux Conseils.
+- Créer, changer ou retirer le code : Paramètres → « Code parent ». Rappel dans la Vue parents tant qu'aucun code
+  n'est créé.
+- Écran « Espace parents » : saisie du code, case « Rester déverrouillé sur cet appareil » (téléphone des parents),
+  pause de 30 secondes après 5 codes faux, aide « Code oublié ? ».
+- Bouton « Verrouiller l'espace parents » en haut de la Vue parents.
+- Seule une empreinte du code est enregistrée (clé `parent_lock` de la table `settings`). Pas de nouveau bloc SQL.
+
 ## [0.13.0] – 2026-11-25
 
 Validée par les parents et publiée sur le site principal.
