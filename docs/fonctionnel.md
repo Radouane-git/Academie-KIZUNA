@@ -114,6 +114,14 @@ Carte d'élève complète, **Mes objectifs** (bouton « Cette semaine, je l'ai t
   7 jours suivants ; objectif de retour de professeur pas encore tenu).
 - « Préparer la semaine » : 5 gestes cochables, enregistrés dans `checks` (`sunday|<lundi suivant>|<geste>`).
 
+## 4 quinquies. Emploi du temps de la semaine (0.16)
+
+- Section « Emploi du temps » de chaque enfant (5e section, « Horaires » sur téléphone).
+- Sources : cours d'EcoleDirecte (`plans.data.children[id].lessons`, annulations comprises) et activités de
+  `settings.famille.children[].activities` (jour, début, fin, libellé, `sport`).
+- Couleurs : École ; Cours et soutien (toute activité non sportive) ; Sport (`sport: true` ou libellé sportif).
+- Les cours consécutifs de la même matière forment un seul bloc.
+
 ## 5. Règles du planning
 
 Le planning est recalculé à chaque synchronisation (7h et 18h). Réglages dans Paramètres → Réglages (avancé).

@@ -5,6 +5,18 @@ Numérotation : `MAJEUR.MINEUR.CORRECTIF` (ex. 0.2.1).
 - **mineur** (0.**2**.0) : une nouveauté (un réglage, un écran, une règle de planning) ;
 - **majeur** (**1**.0.0) : la version jugée stable après plusieurs semaines d'usage réel.
 
+## [0.16.0] – préversion (non publiée)
+
+Visible uniquement sur `/preview/`.
+- **Emploi du temps de la semaine** : nouvelle section des pages enfants (« Emploi du temps » sur ordinateur,
+  « Horaires » dans la barre du bas du téléphone). Une grille du lundi au dimanche réunit :
+  - les cours du collège ou du lycée (EcoleDirecte), cours consécutifs de la même matière regroupés, cours annulés barrés ;
+  - les cours et le soutien (anglais, cours du soir, arabe…) et le sport, lus dans les activités des réglages de la famille.
+- Trois couleurs (École, Cours et soutien, Sport), légende, total d'heures de la semaine, évaluations signalées
+  sous le jour, aujourd'hui mis en avant. Semaine dernière, cette semaine, semaine prochaine.
+- Téléphone : la grille défile de gauche à droite, les heures restent visibles et l'écran s'ouvre sur aujourd'hui.
+- Pas de nouveau bloc SQL.
+
 ## [0.15.0] – 2026-11-25
 
 Validée par les parents et publiée sur le site principal.
