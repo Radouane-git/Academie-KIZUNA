@@ -662,12 +662,39 @@ div.lockhint:not(.card){justify-content:flex-end}
  .bilan-grid{grid-template-columns:1fr 1fr}
  .hero{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 }
+/* ===== 0.16.0 : emploi du temps de la semaine ===== */
+.sec .ss{display:none}
+.tt-legend{display:flex;flex-wrap:wrap;gap:8px 14px;margin:10px 0;font-size:.88rem}
+.tt-legend span{display:inline-flex;align-items:center;gap:6px}
+.tt-legend i{width:14px;height:14px;border-radius:4px;border-left:4px solid var(--b);background:var(--bg);display:inline-block}
+.tt-sum{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 10px}
+.tt-sum b{background:var(--soft);border-radius:999px;padding:4px 10px;font-size:.85rem}
+.ttw{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:16px;background:#fff}
+.ttg{display:grid;grid-template-columns:44px repeat(7,minmax(90px,1fr));min-width:680px}
+.tt-hd{position:sticky;top:0;background:#fff;z-index:2;padding:8px 4px;text-align:center;border-bottom:1px solid var(--line);font-size:.85rem;line-height:1.2}
+.tt-hd b{display:block;font-family:'Unbounded',sans-serif;font-size:.8rem}
+.tt-hd.tt-today{background:var(--ink);color:#fff;border-radius:12px 12px 0 0}
+.tt-hd .tt-ev{display:block;margin-top:3px;font-size:.7rem;font-weight:700;color:#B83E25}
+.tt-hd.tt-today .tt-ev{color:#FF8A6E}
+.tt-hours{position:sticky;left:0;z-index:1;background:#fff;border-right:1px solid var(--line)}
+.tt-corner{left:0;z-index:3}
+.tt-hours span{position:absolute;right:4px;transform:translateY(-50%);font-size:.7rem;color:var(--muted)}
+.tt-col{position:relative;border-right:1px solid var(--soft);background-image:repeating-linear-gradient(to bottom,var(--soft) 0 1px,transparent 1px var(--hr))}
+.tt-col.tt-today{background-color:#F6FBFA}
+.tt-b{position:absolute;left:3px;right:3px;border-radius:8px;padding:3px 6px;font-size:.74rem;line-height:1.2;overflow:hidden;background:var(--bg);color:var(--fg);border-left:4px solid var(--b)}
+.tt-b b{display:block;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tt-b small{display:block;opacity:.9}
+.tt-b.x{opacity:.55}
+.tt-b.x b{text-decoration:line-through}
+.narrow.wide-tt{max-width:none}
+.tt-none{grid-column:2/-1;padding:16px;color:var(--muted)}
+@media (max-width:720px){.sec .sl{display:none}.sec .ss{display:inline}}
 </style>
 </head>
 <body>
 <div id="root"><p style="padding:2rem;font-family:sans-serif">Chargement de l’Académie…</p></div>
-<script src="config.js?v=0.15.0"></script>
+<script src="config.js?v=0.16.0"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script src="app.js?v=0.15.0"></script>
+<script src="app.js?v=0.16.0"></script>
 </body>
 </html>

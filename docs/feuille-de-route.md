@@ -186,7 +186,7 @@ Les écrans se chargent (Conseils, Retours des professeurs, Vue parents…) et i
 - Vérifier sur téléphone : une action principale par écran, le moins de défilement possible.
 - Faire tester par les enfants et les parents, puis valider en préversion.
 
-## Idée notée le 25/11 : emploi du temps de la semaine (en préversion 0.16.0)
+## Idée notée le 25/11 : emploi du temps de la semaine (fait en v0.16.0)
 
 Vue synthétique sur une semaine qui mélange l'emploi du temps EcoleDirecte, les cours d'anglais, les cours du soir
 et le sport, dans une section des pages enfants comme Bibliothèque ou Tampons.
