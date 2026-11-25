@@ -5,6 +5,19 @@ Numérotation : `MAJEUR.MINEUR.CORRECTIF` (ex. 0.2.1).
 - **mineur** (0.**2**.0) : une nouveauté (un réglage, un écran, une règle de planning) ;
 - **majeur** (**1**.0.0) : la version jugée stable après plusieurs semaines d'usage réel.
 
+## [0.18.0] – préversion (non publiée)
+
+Visible uniquement sur `/preview/`. **Nouveau bloc SQL « v0.18.0 »** (table `reading`) à exécuter dans Supabase.
+- **Carnet de lecture** (Bibliothèque de l'enfant → « Je commence un livre ») : pendant la lecture, l'enfant note
+  l'époque, qui raconte, les personnages, les lieux, le résumé de chaque chapitre et les passages clés.
+  Un conseil de lecture s'affiche dans le carnet.
+- **Fiche de lecture guidée** : « J'ai fini ce livre » range le livre dans la bibliothèque et ouvre une fiche en
+  5 parties (carte d'identité, histoire et narration, personnage principal, lieux et époque, avis avec trois raisons),
+  pré-remplie à partir du carnet. Enregistrable en plusieurs fois ; vue propre et bouton « Imprimer ».
+- Liste des livres : bouton « Ma fiche de lecture · 3/5 ».
+- Vue parents, Bibliothèque des enfants : livres en cours et avancement du carnet et de la fiche.
+- « J'ai fini un livre (sans carnet) » reste possible.
+
 ## [0.17.0] – 2026-11-25
 
 Validée par les parents et publiée sur le site principal.

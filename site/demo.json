@@ -3863,7 +3863,7 @@
  "checks": {},
  "sync": {
   "status": "ok",
-  "ran_at": "2026-11-24T17:05:00",
+  "ran_at": "2026-11-25T17:05:00",
   "message": "Démo : données fictives."
  },
  "ideas": [
@@ -3910,6 +3910,63 @@
    "message": "Tes révisions ont payé !",
    "date": "2026-11-20",
    "created_at": "2026-11-20T19:00:00"
+  }
+ ],
+ "reading": [
+  {
+   "id": "r1",
+   "child": "ines",
+   "title": "Le Comte de Monte-Cristo (version abrégée)",
+   "author": "Alexandre Dumas",
+   "pages": 250,
+   "started": "2026-11-17",
+   "status": "en_cours",
+   "book_id": null,
+   "sheet": {},
+   "notes": {
+    "epoque": "1815, sous la Restauration",
+    "narrateur": "il",
+    "persos": [
+     {
+      "c": "Edmond Dantès",
+      "t": "jeune marin de 19 ans, héros de l'histoire"
+     },
+     {
+      "c": "Mercédès",
+      "t": "sa fiancée"
+     },
+     {
+      "c": "Fernand",
+      "t": "cousin de Mercédès, jaloux d'Edmond"
+     }
+    ],
+    "lieux": [
+     {
+      "c": "Marseille",
+      "t": "là où tout commence"
+     },
+     {
+      "c": "Château d'If",
+      "t": "la prison sur une île"
+     }
+    ],
+    "chapitres": [
+     {
+      "c": "1",
+      "t": "Edmond rentre au port et doit devenir capitaine."
+     },
+     {
+      "c": "2",
+      "t": "Il retrouve son père et prépare son mariage."
+     }
+    ],
+    "passages": [
+     {
+      "c": "31",
+      "t": "L'arrestation pendant le repas de fiançailles : tout bascule."
+     }
+    ]
+   }
   }
  ],
  "tips": [

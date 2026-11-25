@@ -233,3 +233,23 @@ alter table public.tips enable row level security;
 drop policy if exists "famille tips" on public.tips;
 create policy "famille tips" on public.tips for all to authenticated using (public.is_family()) with check (public.is_family());
 grant select, insert, update, delete on public.tips to authenticated;
+
+-- ============================================================ v0.18.0 : carnet et fiche de lecture
+create table if not exists public.reading (
+  id uuid primary key default gen_random_uuid(),
+  child text not null,
+  title text not null,
+  author text,
+  pages integer check (pages is null or pages between 1 and 5000),
+  started date default current_date,
+  notes jsonb default '{}'::jsonb,
+  sheet jsonb default '{}'::jsonb,
+  status text default 'en_cours',
+  book_id uuid,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+alter table public.reading enable row level security;
+drop policy if exists "famille reading" on public.reading;
+create policy "famille reading" on public.reading for all to authenticated using (public.is_family()) with check (public.is_family());
+grant select, insert, update, delete on public.reading to authenticated;

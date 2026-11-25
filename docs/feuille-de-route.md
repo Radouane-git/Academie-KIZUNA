@@ -142,7 +142,7 @@ Transformer l'onglet Conseils en une petite bibliothèque de méthodes, aliment�
 1 (retours des professeurs, jugé prioritaire par les parents le 24/11) → 2 (méthode de révision) → 3 (conseils au bon moment).
 Les trois idées du 24/11 sont faites (v0.10.0, v0.11.0, v0.12.0).
 
-## Idée notée le 25/11 : carnet de lecture et fiche de lecture guidée
+## Idée notée le 25/11 : carnet de lecture et fiche de lecture guidée (en préversion 0.18.0)
 
 Inspirée de la méthode de lecture transmise par une professeure de français de 4e (ses conseils, reformulés,
 sont saisis dans les conseils de la famille, dans Supabase). À mettre en place plus tard.

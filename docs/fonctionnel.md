@@ -122,6 +122,16 @@ Carte d'élève complète, **Mes objectifs** (bouton « Cette semaine, je l'ai t
 - Couleurs : École ; Cours et soutien (toute activité non sportive) ; Sport (`sport: true` ou libellé sportif).
 - Les cours consécutifs de la même matière forment un seul bloc.
 
+## 4 sexies. Carnet et fiche de lecture (0.18)
+
+- Bibliothèque → « Je commence un livre » : un livre en cours avec son carnet (époque, narrateur, personnages, lieux,
+  résumé des chapitres, passages clés). Plusieurs livres en cours possibles ; « Abandonner ce livre » le retire.
+- « J'ai fini ce livre » : ajoute le livre aux livres lus (même règle que « J'ai fini un livre ») et ouvre la fiche.
+- Fiche en 5 parties, pré-remplie depuis le carnet ; une partie est « complète » quand ses champs principaux sont
+  remplis (titre et genre ; narrateur et résumé ; personnage et but ; lieux et époque ; trois raisons).
+- Les parents voient les livres en cours, le nombre de notes du carnet et l'avancement de la fiche.
+- Inspirée d'une méthode transmise par une professeure de français (reformulée).
+
 ## 5. Règles du planning
 
 Le planning est recalculé à chaque synchronisation (7h et 18h). Réglages dans Paramètres → Réglages (avancé).

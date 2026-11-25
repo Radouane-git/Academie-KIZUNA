@@ -75,6 +75,7 @@ Semaines calculées : semaine en cours + suivante (+ une troisième le week-end)
 
 | Table | Contenu | Écrit par |
 |---|---|---|
+| `reading` | livres en cours : carnet (`notes` jsonb : epoque, narrateur, persos, lieux, chapitres, passages), fiche (`sheet` jsonb), `status` en_cours / fini, `book_id` vers `books` | site (Bibliothèque) |
 | `settings` | clé `famille` : enfants, activités, coucher, corvées, couleurs, réglages ; clé `parent_lock` : empreinte du code parent (`{h, s, at}`) | site (Paramètres), import |
 | `plans` | une ligne par semaine (`week_start`, `data` JSON, `source` : `auto` ou verrouillée) | synchro, import |
 | `checks` | une ligne par case cochée (`id` de la tâche, `difficulty` 1 à 5, `method` liste, `minutes` — facultatifs) | site |
