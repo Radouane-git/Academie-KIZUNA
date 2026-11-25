@@ -90,3 +90,10 @@ Règle pour une nouvelle couleur : contraste d'au moins **4,5:1** entre le texte
 - Contour de sélection clavier visible (3 px, couleur d'accent).
 - Animations courtes et désactivées si le système demande « réduire les animations ».
 - Ne jamais transmettre une information par la couleur seule (toujours un mot, un chiffre ou une icône).
+
+## Bandeau du haut (0.19)
+
+- Pages enfants : logo, sections (pictogramme + nom), bouton de profil unique (menu), série de jours.
+- Écran moyen (901 à 1120 px) : pictogrammes seuls sauf la section ouverte ; nom en bulle (`title`) et pour les
+  lecteurs d'écran. Téléphone : barre du bas (Aujourd'hui, Semaine, Horaires, Livres, Tampons).
+- Ne pas revenir aux pictogrammes seuls partout : le survol n'existe pas sur téléphone et le nom aide les enfants.

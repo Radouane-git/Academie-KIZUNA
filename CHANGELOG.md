@@ -5,6 +5,22 @@ Numérotation : `MAJEUR.MINEUR.CORRECTIF` (ex. 0.2.1).
 - **mineur** (0.**2**.0) : une nouveauté (un réglage, un écran, une règle de planning) ;
 - **majeur** (**1**.0.0) : la version jugée stable après plusieurs semaines d'usage réel.
 
+## [0.19.0] – préversion (non publiée)
+
+Visible uniquement sur `/preview/`.
+- **Bandeau des pages enfants** : les avatars, Parents, Conseils et la roue dentée laissent place à un seul bouton de
+  profil (« L Léo ▾ ») qui ouvre le menu (autres enfants, Vue parents, Conseils, Paramètres). Les sections gardent
+  leur pictogramme et leur nom ; sur un écran moyen (petit portable, tablette), seule la section ouverte garde son
+  nom, les autres montrent leur pictogramme (nom en bulle au survol).
+- **Vue parents** :
+  - espace entre « Avancement », « Points difficiles » et « Méthodes de travail » ;
+  - « Conseils pour les parents » avant « Conseils de la famille » ;
+  - « Conseils de la famille » : nombre de conseils affiché, liste avec ascenseur (3 ou 4 visibles) ;
+  - « Actions » : petits boutons sur une ligne (Retour de professeur, Conseil, Tampon, Mot du sensei, Mission,
+    Saisie rapide, Idée) ; le formulaire ouvert s'affiche en dessous, sur toute la largeur ;
+  - bouton « Bilan de la semaine » sans soulignement.
+- Pas de nouveau bloc SQL.
+
 ## [0.18.0] – 2026-11-25
 
 Validée par les parents et publiée sur le site principal. **Nouveau bloc SQL « v0.18.0 »** (table `reading`) à exécuter dans Supabase.
