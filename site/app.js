@@ -396,7 +396,7 @@ function weeksNav(){
  if(others.length)h+='<select class="wk" id="oldweek" aria-label="Autres semaines"><option value="">Autres semaines…</option>'+others.map(function(i){return '<option value="'+i+'"'+(i===sel?" selected":"")+'>Semaine du '+lbl(i)+'</option>';}).join("")+'</select>';
  return h+'</nav>';
 }
-var FOLDS=[["tipf","Conseil","tip","Conseil"],["notef","Retour de professeur","note","Prof"],["stampf","Tampon","stamp","Tampon"],["senseif","Mot du sensei","sensei","Parchemin"],["addhw","Mission","addhw","Devoir"],["bulk","Saisie rapide de missions","bulk","Liste"],["idea","Idée de loisir ou de sortie","idea","Loisir"]];
+var FOLDS=[["tipf","Conseil","tip","Conseil"],["notef","Retour de professeur","note","Prof"],["stampf","Tampon","stamp","Tampon"],["senseif","Mot du sensei","sensei","Parchemin"],["addhw","Mission","addhw","Devoir"],["bulk","Saisie rapide de missions","bulk","Liste"],["idea","Idée de loisir ou de sortie","idea","Loisir"],["lockf","Code parent","lock",""],["themesf","Couleurs de héros","themes",""],["setinstall","Installer sur un téléphone","install",""],["setbackup","Sauvegarde","backup",""],["import","Restaurer ou importer","import",""],["settings","Réglages (avancé)","settings",""]];
 function foldForms(){FOLDS.forEach(function(f){var el=document.getElementById(f[0]);if(!el||el.parentNode.tagName==="DETAILS")return;
  var d=document.createElement("details");d.className="fold"+(f[0]==="bulk"||f[0]==="notef"||f[0]==="tipf"?" wide":"");d.setAttribute("data-fold",f[0]);
  if((S.open||{})[f[0]]||S.msg[f[2]]||(f[0]==="bulk"&&S.bulk.items)||(f[0]==="notef"&&S.editNote)||(f[0]==="tipf"&&(S.editTip||S.tipDraft)))d.open=true;
@@ -454,8 +454,9 @@ function renderNotesParents(){
  var h='<section class="card wide notes-card"><div class="ftitle">'+picto("Prof",36)+'<h2>Retours des professeurs</h2></div><p class="det">Le message d’origine reste privé. L’enfant ne voit que la version pour lui, et seulement si vous cochez « Montrer ».</p>';
  if(!S.notes.length)h+='<p class="none">Aucun retour pour le moment.</p>';
  children().forEach(function(c){var ns=notesFor(c.id).filter(function(n){return n.child===c.id||n.child==="tous";});if(!ns.length)return;
-  h+='<div class="nk"><h3>'+esc(c.name)+'</h3>'+ns.map(function(n){var gid=goalId(n);
-   return '<div class="nrow"><div class="nr-txt"><b>'+esc(n.subject||"—")+(n.teacher?' · '+esc(n.teacher):'')+'</b><small>'+esc(fmtDate(n.date||TODAY))+' · '+esc(noteLabel(NOTE_SRC,n.source))+' · '+esc(noteLabel(NOTE_TONE,n.tone))+'</small><span class="nr-flag '+(n.shared?"on":"off")+'">'+(n.shared?"Visible par l’enfant":"Privé")+'</span>'+(n.kid_strengths||n.kid_expect?'<p>'+esc([n.kid_strengths,n.kid_expect].filter(Boolean).join(" · "))+'</p>':'<p class="none">Pas encore de version pour l’enfant.</p>')+(n.goal?'<small class="nr-goal">Objectif : '+esc(n.goal)+(n.goal_active===false?" (terminé)":S.done[gid]?" · tenu cette semaine ✓":" · pas encore coché cette semaine")+'</small>':'')+(n.original?'<details class="orig"><summary>Message d’origine</summary><p>'+esc(n.original)+'</p></details>':'')+'</div><div class="nr-btns"><button class="btn sec mini" data-editnote="'+esc(n.id)+'">Modifier</button><button class="btn sec mini" data-note2tip="'+esc(n.id)+'">En faire un conseil</button><button class="btn sec mini" data-delnote="'+esc(n.id)+'">Supprimer</button></div></div>';}).join("")+'</div>';});
+  var row=function(n){var gid=goalId(n);
+   return '<div class="nrow"><div class="nr-txt"><b>'+esc(n.subject||"—")+(n.teacher?' · '+esc(n.teacher):'')+'</b><small>'+esc(fmtDate(n.date||TODAY))+' · '+esc(noteLabel(NOTE_SRC,n.source))+' · '+esc(noteLabel(NOTE_TONE,n.tone))+'</small><span class="nr-flag '+(n.shared?"on":"off")+'">'+(n.shared?"Visible par l’enfant":"Privé")+'</span>'+(n.kid_strengths||n.kid_expect?'<p>'+esc([n.kid_strengths,n.kid_expect].filter(Boolean).join(" · "))+'</p>':'<p class="none">Pas encore de version pour l’enfant.</p>')+(n.goal?'<small class="nr-goal">Objectif : '+esc(n.goal)+(n.goal_active===false?" (terminé)":S.done[gid]?" · tenu cette semaine ✓":" · pas encore coché cette semaine")+'</small>':'')+(n.original?'<details class="orig"><summary>Message d’origine</summary><p>'+esc(n.original)+'</p></details>':'')+'</div><div class="nr-btns"><button class="btn sec mini" data-editnote="'+esc(n.id)+'">Modifier</button><button class="btn sec mini" data-note2tip="'+esc(n.id)+'">En faire un conseil</button><button class="btn sec mini" data-delnote="'+esc(n.id)+'">Supprimer</button></div></div>';};
+  h+='<div class="nk"><h3>'+esc(c.name)+' <small class="cnt">('+ns.length+')</small></h3>'+ns.slice(0,3).map(row).join("")+(ns.length>3?'<details class="more-notes"'+(S.open&&S.open["nk-"+c.id]?" open":"")+' data-more="nk-'+esc(c.id)+'"><summary>Voir les '+(ns.length-3)+' autre'+(ns.length-3>1?"s":"")+' retour'+(ns.length-3>1?"s":"")+'</summary>'+ns.slice(3).map(row).join("")+'</details>':'')+'</div>';});
  return h+parentTipFor("notes",weekNum())+'</section>';}
 function kidIdeaBlock(c){
  var h='<div class="kid-idea">';
@@ -499,7 +500,7 @@ function parentTips(){
  var def=PARENT_TIPS.map(function(t,i){return {id:"p"+i,title:t[0],body:t[1],moments:t[2].split(","),src:"livre",from:t[3],subject:""};});
  return fam.concat(def);}
 function parentTipFor(ctx,salt){var l=parentTips().filter(function(t){return t.moments.indexOf(ctx)>=0;});if(!l.length)return "";var t=l[Math.abs(salt)%l.length];
- return '<div class="ptip"><span class="tip-src">Conseil pour les parents · '+esc(tipSrcLabel(t))+'</span><b>'+esc(t.title)+'</b><span>'+esc(t.body)+'</span></div>';}
+ return '<details class="ptip"><summary><span class="tip-src">Conseil pour vous · '+esc(tipSrcLabel(t))+'</span><b>'+esc(t.title)+'</b></summary><span>'+esc(t.body)+'</span></details>';}
 function renderParentTips(){var l=parentTips();var w=weekNum();var cur=l[w%l.length];
  return '<section class="card wide ptips-card"><div class="ftitle">'+picto("Conseil",36)+'<h2>Conseils pour les parents</h2></div><p class="det">Seulement ici : les enfants ne les voient pas.</p>'+tipCard(cur)+'<details class="ptips-all"><summary>Voir les '+l.length+' conseils</summary><div class="tips-grid">'+l.map(function(t){return tipCard(t,true);}).join("")+'</div></details></section>';}
 /* ------------------------------------------------------------ bilan du dimanche (0.15) */
@@ -685,10 +686,13 @@ var TOURS={
  livres:[[".read-card","Ton livre en cours","Ouvre ton carnet pour noter les personnages, les lieux, l’époque et le résumé de chaque chapitre."],["[data-rstart]","Commencer un livre","Un nouveau livre ? Ouvre son carnet de lecture : il remplira presque tout seul ta fiche de lecture."],[".books","Tes livres lus","Chaque livre fini compte pour tes badges. Le bouton « Ma fiche de lecture » ouvre ta fiche, prête à imprimer."]],
  tampons:[["h2=Mes tampons","Tes tampons","Une bonne note préparée avec tes révisions ? Tes parents te donnent le tampon de l’Académie."],["h2=Mes objectifs","Tes objectifs","Un objectif choisi avec tes parents ou tes professeurs. Coche-le quand tu l’as tenu cette semaine."],["h2=Ce que pensent","Ce que pensent tes professeurs","Les messages que tes parents choisissent de partager avec toi : tes points forts d’abord."]],
  conseils:[[".tipfilter","Trier les conseils","Organisation, devoirs, révisions, leçons, lecture : choisis ce qui t’intéresse."],[".tips-grid","Les conseils","Conseils de l’Académie, de tes professeurs et de livres sur l’art d’apprendre."]],
- parents:[[".kidcards","Les enfants aujourd’hui","Un coup d’œil sur la journée de chacun. Touchez une carte pour ouvrir sa page."],[".bilan-cta","Le bilan de la semaine","Le dimanche, faites le point en famille : ce qui a marché, ce qui a coincé, la semaine qui vient."],[".ovcard","Avancement de la semaine","Le pourcentage de missions faites, jour par jour et pour chaque enfant."],[".hardcard","Points difficiles","Les missions que les enfants ont notées difficiles, avec un conseil pour vous."],[".methcard","Méthodes de travail","Comment les enfants ont révisé. Une méthode trop passive est signalée."],[".acts","Actions","Ajouter un retour de professeur, un conseil, donner un tampon, écrire le mot du sensei, ajouter une mission ou une idée."],["#tour-btn","Revoir la visite","L’ampoule relance la visite de chaque écran."]],
+ parents:[[".ptabs","Quatre onglets","La Vue parents est rangée en quatre onglets : Semaine, Enfants, Retours et conseils, Actions. Un chiffre signale ce qui attend votre réponse."],[".kidcards","Les enfants aujourd’hui","Un coup d’œil sur la journée de chacun. Touchez une carte pour ouvrir sa page."],[".bilan-cta","Le bilan de la semaine","Le dimanche, faites le point en famille : ce qui a marché, ce qui a coincé, la semaine qui vient."],[".ovcard","Avancement de la semaine","Le pourcentage de missions faites, jour par jour et pour chaque enfant."],[".hardcard","Points difficiles","Les missions que les enfants ont notées difficiles, avec un conseil pour vous."],[".methcard","Méthodes de travail","Comment les enfants ont révisé. Une méthode trop passive est signalée."],["#tour-btn","Revoir la visite","L’ampoule relance la visite de chaque écran."]],
+ "parents-enfants":[[".pend-ideas","Idées à valider","Les idées proposées par les enfants : choisissez une date, puis acceptez ou refusez."],["h2=Bibliothèque","La bibliothèque","Les livres lus et la lecture en cours de chaque enfant."],["h2=Missions ajoutées","Missions ajoutées à la main","Les devoirs que vous avez saisis vous-même, à venir."]],
+ "parents-retours":[[".notes-card","Retours des professeurs","Les trois plus récents par enfant ; « Voir les autres » déplie la suite."],[".ptips-card","Conseils pour les parents","Un conseil par semaine, et tous les autres dépliables. Les enfants ne les voient pas."],[".tips-card","Conseils de la famille","Ceux que vous avez ajoutés : professeurs, livres de méthode."]],
+ "parents-actions":[[".acts","Les actions","Retour de professeur, conseil, tampon, mot du sensei, mission, saisie rapide, idée : touchez-en une pour ouvrir son formulaire."]],
  bilan:[[".bilan-kid","Une carte par enfant","Les missions faites par catégorie, et quelques points proposés pour en parler ensemble."],[".bk-more","Le détail","Missions pas cochées, missions difficiles, méthodes, fiertés, semaine prochaine."],[".sunday","Préparer la semaine","Cinq gestes à cocher le dimanche, en famille."]],
- parametres:[["#lockf","Code parent","Protégez la Vue parents et les Paramètres des curieux."],["[data-act=backup]","Sauvegarde","Une fois par trimestre, téléchargez une sauvegarde et rangez-la hors de GitHub."],["#themesf","Couleurs de héros","Chaque profil choisit sa couleur."]]};
-function tourKey(){var v=curView();if(child(v))return curSection();if(v==="parents"&&(location.hash||"").split("/")[1]==="bilan")return "bilan";return v;}
+ parametres:[["[data-fold=lockf]","Code parent","Protégez la Vue parents et les Paramètres des curieux."],["[data-fold=setbackup]","Sauvegarde","Une fois par trimestre, téléchargez une sauvegarde et rangez-la hors de GitHub."],["[data-fold=themesf]","Couleurs de héros","Chaque profil choisit sa couleur."]]};
+function tourKey(){var v=curView();if(child(v))return curSection();if(v==="parents"&&(location.hash||"").split("/")[1]==="bilan")return "bilan";if(v==="parents"&&pTab()!=="semaine")return "parents-"+pTab();return v;}
 function tourFind(sel){var el=null;
  if(sel.indexOf("h2=")===0){var t=sel.slice(3);[].slice.call(document.querySelectorAll("#root h2")).some(function(h){if(h.textContent.indexOf(t)===0){el=h.closest(".card")||h;return true;}});}
  else el=document.querySelector(sel);
@@ -913,18 +917,26 @@ function renderFocus(c){
 }
 function msgHtml(k){var m=S.msg[k];return m?'<p class="msg'+(m.e?" err":"")+'">'+esc(m.t)+'</p>':"";}
 function kidOptions(withAll){return children().map(function(c){return '<option value="'+esc(c.id)+'">'+esc(c.name)+'</option>';}).join("")+(withAll?'<option value="tous">Tous</option>':'');}
+var PTABS=[["semaine","Semaine","Avancement"],["enfants","Enfants","Loisir"],["retours","Retours et conseils","Prof"],["actions","Actions","Devoir"]];
+function pTab(){var s=(location.hash||"").replace("#","").split("/");return s[0]==="parents"&&["enfants","retours","actions"].indexOf(s[1])>=0?s[1]:"semaine";}
+function pTabsNav(cur){var pend=S.ideas.filter(function(x){return x.status==="proposee";}).length;
+ return '<nav class="ptabs" aria-label="Sections de la Vue parents">'+PTABS.map(function(t){var n=t[0]==="enfants"?pend:0;return '<a class="ptab" href="#parents'+(t[0]==="semaine"?"":"/"+t[0])+'"'+(t[0]===cur?' aria-current="page"':'')+'>'+picto(t[2],26)+'<span>'+esc(t[1])+'</span>'+(n?'<b class="pbadge" aria-label="'+n+' à valider">'+n+'</b>':'')+'</a>';}).join("")+'</nav>';}
+function goForm(id){if(pTab()!=="actions"){S.afterRender=id;location.hash="#parents/actions";return;}render();var el=document.getElementById(id);if(el)(el.closest("details")||el).scrollIntoView({block:"start"});}
 function renderParents(noFam){
- var h="";var tp=THEMES[themeName(null)];
+ var h="";var tp=THEMES[themeName(null)];var tab=noFam?"semaine":pTab();
+ if(!noFam)h+=pTabsNav(tab);
  if(noFam){
   h+='<div class="card warn"><h2>Il manque les réglages de la famille</h2><p>Importez le fichier d’historique (réglages, semaines déjà faites et coches).</p></div>';
- } else {
+ } else if(tab==="semaine"){
   var plan=planOf(S.day);
   var tot={n:0,t:0};children().forEach(function(c){var w=weekProg(c.id,plan);tot.n+=w.n;tot.t+=w.t;});
   var evc=0;children().forEach(function(c){evc+=evalsFor(c.id).filter(function(e){return e[0]>=TODAY&&dDiff(e[0],TODAY)<=7;}).length;});
   h+='<section class="hero" style="background-color:'+tp.bg+';color:'+tp.txt+'"><div class="hero-id"><div><span class="over">Bureau du sensei</span><h1>'+esc(plan?plan.data.title.replace(/^Du /,"Semaine du "):"Semaine")+'</h1></div></div><div class="hero-stats parents"><div><b>'+pct(tot)+' %</b><small>de la semaine</small></div><div><b style="color:'+tp.acc+'">'+evc+'</b><small>évaluations à 7 jours</small></div><div><b>'+S.stamps.length+'</b><small>tampons</small></div></div></section>';
   var wdn=new Date(TODAY+"T12:00:00").getDay();
   h+='<div class="bilan-cta'+(wdn===0||wdn===6?" hot":"")+'"><span>'+(wdn===0?"C’est dimanche : le bilan de la semaine est prêt.":wdn===6?"Demain, c’est le bilan de la semaine.":"Où en est la semaine ?")+'</span><a class="btn mini" href="#parents/bilan">Bilan de la semaine</a></div>';
-  h+=lockOn()?'<div class="lockhint"><button class="btn sec mini lockbtn" type="button" data-act="lock-now">Verrouiller l’espace parents</button></div>':'<div class="card lockhint"><span>Protégez cet espace des enfants avec un code parent.</span><a class="btn sec mini" href="#parametres">Créer le code</a></div>';
+  var pendN=S.ideas.filter(function(x){return x.status==="proposee";}).length;
+  if(pendN)h+='<a class="palert" href="#parents/enfants">'+picto("Loisir",28)+'<span><b>'+pendN+' idée'+(pendN>1?"s":"")+' proposée'+(pendN>1?"s":"")+'</b> par les enfants attend'+(pendN>1?"ent":"")+' votre réponse</span><span class="chev" aria-hidden="true">›</span></a>';
+  h+=lockOn()?'<div class="lockhint"><button class="btn sec mini lockbtn" type="button" data-act="lock-now">Verrouiller l’espace parents</button></div>':'<div class="lockhint nocode"><span>Pas encore de code parent pour protéger cet espace.</span><a class="btn sec mini" href="#parametres">Créer le code</a></div>';
   h+='<div class="kidcards">'+children().map(function(c){var t=theme(c),mp=mprog(c.id,TODAY),w=weekProg(c.id,plan),ev=evalsFor(c.id).filter(function(e){return e[0]>=TODAY;})[0];
    return '<button class="kidcard" data-go="'+esc(c.id)+'" data-day="'+TODAY+'" style="--child:'+t.bg+'">'+ring(mp.t?mp.n/mp.t:0,58,7,mp.t?mp.n+"/"+mp.t:"–")+'<span class="kc-txt"><b>'+esc(c.name)+'</b><small>Aujourd’hui : '+(mp.t?(mp.t-mp.n?(mp.t-mp.n)+" mission"+(mp.t-mp.n>1?"s":"")+" à faire":"tout est fait"):"rien de prévu")+' · semaine '+pct(w)+' %</small>'+(ev?'<small class="evtxt">'+esc(fmtDate(ev[0]))+' : '+esc(ev[1])+'</small>':'')+(hardOf(c.id,plan).length?'<small class="hardtxt">'+hardOf(c.id,plan).length+' mission'+(hardOf(c.id,plan).length>1?"s":"")+' notée'+(hardOf(c.id,plan).length>1?"s":"")+' difficile'+(hardOf(c.id,plan).length>1?"s":"")+' cette semaine</small>':'')+'</span><span class="chev" aria-hidden="true">›</span></button>';}).join("")+'</div>';
   h+=weeksNav();
@@ -945,12 +957,16 @@ function renderParents(noFam){
   }
  }
  h+='<div class="cols">';
- if(S.sync&&S.sync.status==="mfa"&&S.sync.details){
+ if(tab!=="semaine"){}
+ else if(S.sync&&S.sync.status==="mfa"&&S.sync.details){
   h+='<div class="card warn"><h2>Question de sécurité EcoleDirecte</h2><p>Double-cliquez sur « Synchro planning » sur le PC : la question s’affiche dans la fenêtre, tapez le numéro de la bonne réponse.</p></div>';
  } else if(S.sync&&S.sync.status==="error"){
   h+='<div class="card warn"><h2>La dernière synchronisation a échoué</h2><p>'+esc(S.sync.message||"")+'</p></div>';
  }
- if(!noFam){
+ if(!noFam&&tab==="enfants"){
+  var pendI=S.ideas.filter(function(x){return x.status==="proposee";});
+  h+='<section class="card"><div class="ftitle">'+picto("Loisir",36)+'<h2>Idées proposées</h2></div>'+(pendI.length?'<div class="pend-ideas"><p class="ki-title">À valider ('+pendI.length+')</p>'+pendI.map(function(x){var c=child(x.proposed_by||x.child);var k=(IDEA_KINDS.filter(function(z){return z[0]===x.kind;})[0]||["","Idée"])[1];
+   return '<div class="pi-row"><span><b>'+esc(x.title)+'</b><small>Proposée par '+esc(c?c.name:"un enfant")+' · '+esc(k)+(x.detail?' · '+esc(x.detail):'')+(x.date?' · souhaitée le '+esc(fmtDate(x.date)):'')+'</small></span><div class="pi-act"><label class="pi-date">Date<input type="date" data-idate="'+esc(x.id)+'" value="'+esc(x.date||"")+'"></label><button class="btn mini" data-ideaok="'+esc(x.id)+'">Accepter</button><button class="btn sec mini" data-ideano="'+esc(x.id)+'">Refuser</button></div></div>';}).join("")+'</div>':'')+(S.ideas.filter(ideaOk).length?S.ideas.filter(ideaOk).map(function(x){var c=child(x.child);return '<div class="xl"><span><b>'+esc(c?c.name:"Tous")+'</b> · '+esc(x.title)+(x.date?' · '+esc(fmtDate(x.date)):'')+(S.done["idea|"+x.id]?' · fait':'')+'</span><button class="btn sec" data-delidea="'+esc(x.id)+'">Supprimer</button></div>';}).join(""):'<p class="none">Aucune idée pour le moment.</p>')+'</section>';
   h+='<section class="card"><div class="ftitle">'+picto("Lecture",44)+'<h2>Bibliothèque des enfants</h2></div>'+children().map(function(c){var bk=booksFor(c.id);var sum='<b>'+esc(c.name)+'</b><small>'+bk.length+' livre'+(bk.length>1?"s":"")+' · '+fmtN(pagesOf(bk))+' pages</small>';
    var rp=readingParents(c);
    if(!bk.length&&!rp)return '<div class="xl"><span>'+sum+'</span></div>';
@@ -958,14 +974,14 @@ function renderParents(noFam){
   // liste des ajouts
   var up=S.extras.filter(function(e){return e.due>=TODAY;});
   h+='<section class="card"><div class="ftitle">'+picto("Devoir",36)+'<h2>Missions ajoutées à la main</h2></div>'+(up.length?'<p>Date affichée : jour de <b>rendu</b>.</p><button class="btn sec wrapbtn" type="button" id="shift-extras">Dates « à faire » ? Tout décaler d’un jour</button>'+msgHtml("shift"):'')+(up.length?'<div class="scrollbox" tabindex="0" role="region" aria-label="Liste des missions ajoutées ('+up.length+')">'+up.map(function(e){var c=child(e.child);return '<div class="xl"><span><span class="xl-h"><b>'+esc(c?c.name:"Tous")+'</b> · à rendre le '+esc(fmtDate(e.due))+'</span><small>'+esc((e.subject?e.subject+" : ":"")+e.text)+'</small></span><button class="btn sec mini" data-del="'+esc(e.id)+'">Supprimer</button></div>';}).join("")+'</div>'+(up.length>5?'<p class="det">'+up.length+' missions : faites défiler la liste.</p>':''):'<p class="none">Aucune pour le moment.</p>')+'</section>';
-  var pendI=S.ideas.filter(function(x){return x.status==="proposee";});
-  h+='<section class="card"><div class="ftitle">'+picto("Loisir",36)+'<h2>Idées proposées</h2></div>'+(pendI.length?'<div class="pend-ideas"><p class="ki-title">À valider ('+pendI.length+')</p>'+pendI.map(function(x){var c=child(x.proposed_by||x.child);var k=(IDEA_KINDS.filter(function(z){return z[0]===x.kind;})[0]||["","Idée"])[1];
-   return '<div class="pi-row"><span><b>'+esc(x.title)+'</b><small>Proposée par '+esc(c?c.name:"un enfant")+' · '+esc(k)+(x.detail?' · '+esc(x.detail):'')+(x.date?' · souhaitée le '+esc(fmtDate(x.date)):'')+'</small></span><div class="pi-act"><label class="pi-date">Date<input type="date" data-idate="'+esc(x.id)+'" value="'+esc(x.date||"")+'"></label><button class="btn mini" data-ideaok="'+esc(x.id)+'">Accepter</button><button class="btn sec mini" data-ideano="'+esc(x.id)+'">Refuser</button></div></div>';}).join("")+'</div>':'')+(S.ideas.filter(ideaOk).length?S.ideas.filter(ideaOk).map(function(x){var c=child(x.child);return '<div class="xl"><span><b>'+esc(c?c.name:"Tous")+'</b> · '+esc(x.title)+(x.date?' · '+esc(fmtDate(x.date)):'')+(S.done["idea|"+x.id]?' · fait':'')+'</span><button class="btn sec" data-delidea="'+esc(x.id)+'">Supprimer</button></div>';}).join(""):'<p class="none">Aucune idée pour le moment.</p>')+'</section>';
-  // retours des professeurs
+ }
+ if(!noFam&&tab==="retours"){
   h+=renderNotesParents();
   h+=renderParentTips();
   h+=renderTipsParents();
-  h+='<h2 class="acts-title">Actions</h2><div class="acts">';
+ }
+ if(!noFam&&tab==="actions"){
+  h+='<p class="acts-intro">Touchez une action pour ouvrir son formulaire.</p><div class="acts big">';
   // tampon
   var evOpts=[];children().forEach(function(c){evalsFor(c.id).forEach(function(e){if(e[0]<=addDays(TODAY,1))evOpts.push([c.id,e[1]+" ("+fmtDate(e[0])+")"]);});});
   h+=noteForm();
@@ -1019,7 +1035,7 @@ function renderParents(noFam){
  return h+'</div>';
 }
 function renderSettings(noFam){
- var h='<div class="narrow"><section class="hero" style="background-color:#3A4250;color:#fff"><div class="hero-id"><div><span class="over">Réservé aux parents</span><h1>Paramètres</h1></div></div></section><div class="cols">';
+ var h='<div class="narrow"><section class="hero" style="background-color:#3A4250;color:#fff"><div class="hero-id"><div><span class="over">Réservé aux parents</span><h1>Paramètres</h1></div></div></section><p class="acts-intro set-intro">Touchez une rubrique pour l’ouvrir.</p><div class="cols setfolds">';
  if(!noFam){
   h+=lockForm();
   h+='<form class="card f" id="themesf"><h2>Couleurs de héros</h2><p>Chaque profil choisit sa couleur.</p>';
@@ -1027,8 +1043,8 @@ function renderSettings(noFam){
   h+='<label for="th-parents">Parents<select id="th-parents" data-theme-for="__parents">'+Object.keys(THEMES).map(function(n){return '<option'+(n===themeName(null)?" selected":"")+'>'+n+'</option>';}).join("")+'</select></label>';
   h+='<button class="btn" type="submit">Enregistrer les couleurs</button>'+msgHtml("themes")+'</form>';
  }
- h+='<section class="card"><h2>Installer sur un téléphone</h2>'+(S.installEvt?'<p>Ce téléphone peut installer l’Académie comme une appli.</p><button class="btn" type="button" data-act="install">Installer l’appli</button>':S.standalone?'<p class="msg">L’Académie est déjà installée sur cet appareil.</p>':'')+'<p><b>iPhone (Safari ou Brave)</b> : bouton Partager, puis « Sur l’écran d’accueil ».</p><p><b>Android (Brave ou Chrome)</b> : menu ⋮, puis « Installer l’application » ou « Ajouter à l’écran d’accueil », puis « Installer ».</p><p><b>Ordinateur (Brave ou Chrome)</b> : icône d’installation à droite de la barre d’adresse.</p><p class="det">Le mot de passe familial est demandé une seule fois par appareil.</p></section>';
- h+='<section class="card"><h2>Sauvegarde</h2><p>Un seul fichier avec toutes les données de l’Académie : réglages, semaines, coches, missions ajoutées, idées, tampons, livres, retours des professeurs, conseils. À garder sur un ordinateur ou un espace privé, <b>jamais sur GitHub</b>. Conseillé une fois par trimestre.</p><button class="btn" type="button" data-act="backup">Télécharger une sauvegarde</button>'+msgHtml("backup")+'</section>';
+ h+='<section class="card" id="setinstall"><h2>Installer sur un téléphone</h2>'+(S.installEvt?'<p>Ce téléphone peut installer l’Académie comme une appli.</p><button class="btn" type="button" data-act="install">Installer l’appli</button>':S.standalone?'<p class="msg">L’Académie est déjà installée sur cet appareil.</p>':'')+'<p><b>iPhone (Safari ou Brave)</b> : bouton Partager, puis « Sur l’écran d’accueil ».</p><p><b>Android (Brave ou Chrome)</b> : menu ⋮, puis « Installer l’application » ou « Ajouter à l’écran d’accueil », puis « Installer ».</p><p><b>Ordinateur (Brave ou Chrome)</b> : icône d’installation à droite de la barre d’adresse.</p><p class="det">Le mot de passe familial est demandé une seule fois par appareil.</p></section>';
+ h+='<section class="card" id="setbackup"><h2>Sauvegarde</h2><p>Un seul fichier avec toutes les données de l’Académie : réglages, semaines, coches, missions ajoutées, idées, tampons, livres, retours des professeurs, conseils. À garder sur un ordinateur ou un espace privé, <b>jamais sur GitHub</b>. Conseillé une fois par trimestre.</p><button class="btn" type="button" data-act="backup">Télécharger une sauvegarde</button>'+msgHtml("backup")+'</section>';
  h+='<form class="card f" id="import"><h2>Restaurer ou importer</h2><p>Fichier de sauvegarde ou d’historique (JSON). Les données du fichier sont ajoutées ou remplacées ; rien n’est supprimé.</p><label for="imp-file">Fichier<input id="imp-file" type="file" accept="application/json,.json" required></label><button class="btn" type="submit">Importer</button>'+msgHtml("import")+'</form>';
  if(!noFam&&!DEMO){
   h+='<form class="card f wide" id="settings"><h2>Réglages (avancé)</h2><p>Enfants, activités, heures de coucher, tâches récurrentes. Format JSON : modifiez avec précaution.</p><label for="set-json">Réglages<textarea id="set-json" spellcheck="false" style="min-height:220px;font-family:ui-monospace,monospace;font-size:.8rem">'+esc(JSON.stringify(S.fam,null,2))+'</textarea></label><button class="btn" type="submit">Enregistrer les réglages</button>'+msgHtml("settings")+'</form>';
@@ -1041,7 +1057,7 @@ function renderTips(plan){
  if(notes.length)h+='<div class="cols">'+notes.map(function(n){return '<div class="card warn"><h2>À vérifier : '+esc(n[0])+'</h2><p>'+esc(n[1])+'</p></div>';}).join("")+'</div>';
  h+='<nav class="tipfilter" aria-label="Filtrer les conseils">'+[["tous","Tous"]].concat(MOMENTS).map(function(m){return '<button class="wk" data-tipf="'+m[0]+'" aria-pressed="'+(S.tipFilter===m[0])+'">'+m[1]+'</button>';}).join("")+'</nav>';
  var list=allTips(null).filter(function(t){return S.tipFilter==="tous"||t.moments.indexOf(S.tipFilter)>=0;});
- h+='<div class="tips-grid">'+list.map(function(t){return tipCard(t);}).join("")+'</div>';
+ h+='<p class="acts-intro tips-count">'+list.length+' conseil'+(list.length>1?"s":"")+' · touchez un titre pour le lire.</p><div class="tips-grid folded">'+list.map(function(t){return '<details class="tip src-'+esc(t.src)+'"><summary><span class="tip-src">'+esc(tipSrcLabel(t))+(t.subject?' · '+esc(t.subject):'')+'</span><h3>'+esc(t.title)+'</h3></summary><p>'+esc(t.body)+'</p></details>';}).join("")+'</div>';
  return h;
 }
 
@@ -1252,15 +1268,15 @@ root.addEventListener("click",function(e){
   var din=document.querySelector('[data-idate="'+iid+'"]');var upd=okI?{status:"ok",date:din&&din.value?din.value:null}:{status:"non"};
   var aft=function(){S.ideas=S.ideas.map(function(x){if(String(x.id)===iid){for(var k in upd)x[k]=upd[k];}return x;});flash("global",okI?"Idée acceptée : elle apparaît chez l’enfant.":"Idée refusée.");};
   if(DEMO)aft();else sb.from("ideas").update(upd).eq("id",iid).then(function(r){if(r.error)flash("global","Erreur : "+r.error.message,true);else aft();});return;}
- if(t.hasAttribute("data-editnote")){S.editNote=t.getAttribute("data-editnote");S.open=S.open||{};S.open.notef=true;render();var nf=document.getElementById("notef");if(nf)nf.scrollIntoView({block:"start"});return;}
+ if(t.hasAttribute("data-editnote")){S.editNote=t.getAttribute("data-editnote");S.open=S.open||{};S.open.notef=true;goForm("notef");return;}
  if(t.hasAttribute("data-delnote")){var nid=t.getAttribute("data-delnote");if(!t.dataset.ok){t.dataset.ok="1";t.textContent="Confirmer";return;}
   var aftn=function(){S.notes=S.notes.filter(function(n){return String(n.id)!==nid;});if(String(S.editNote)===nid)S.editNote=null;render();};
   if(DEMO)aftn();else sb.from("teacher_notes").delete().eq("id",nid).then(function(r){if(!r.error)aftn();});return;}
  if(t.hasAttribute("data-rate")){var rid=t.getAttribute("data-rate"),rn=+t.getAttribute("data-n");if(rn)setDiff(rid,rn);S.rate=null;var cvr=child(curView()),bkr=cvr&&blockById(cvr.id,rid);if(bkr&&METH_KINDS[bkr.k]&&!S.meth[rid]&&!S.focus)S.methOpen=rid;render();return;}
  if(t.hasAttribute("data-tipf")){S.tipFilter=t.getAttribute("data-tipf");render();return;}
- if(t.hasAttribute("data-edittip")){S.editTip=t.getAttribute("data-edittip");S.tipDraft=null;render();var tf=document.getElementById("tipf");if(tf)tf.scrollIntoView({block:"start"});return;}
+ if(t.hasAttribute("data-edittip")){S.editTip=t.getAttribute("data-edittip");S.tipDraft=null;goForm("tipf");return;}
  if(t.hasAttribute("data-note2tip")){var n2=S.notes.filter(function(n){return String(n.id)===t.getAttribute("data-note2tip");})[0];if(!n2)return;
-  S.editTip=null;S.tipDraft={title:n2.goal||"Conseil de "+(n2.teacher||"professeur"),body:n2.kid_expect||n2.original||"",source_type:"prof",source:n2.teacher||"",subject:n2.subject||"",moments:"general",child:n2.child};render();var tf2=document.getElementById("tipf");if(tf2)tf2.scrollIntoView({block:"start"});return;}
+  S.editTip=null;S.tipDraft={title:n2.goal||"Conseil de "+(n2.teacher||"professeur"),body:n2.kid_expect||n2.original||"",source_type:"prof",source:n2.teacher||"",subject:n2.subject||"",moments:"general",child:n2.child};goForm("tipf");return;}
  if(t.hasAttribute("data-deltip")){var tid=t.getAttribute("data-deltip");if(!t.dataset.ok){t.dataset.ok="1";t.textContent="Confirmer";return;}
   var aftt=function(){S.tips=S.tips.filter(function(x){return String(x.id)!==tid;});render();};
   if(DEMO)aftt();else sb.from("tips").delete().eq("id",tid).then(function(r){if(!r.error)aftt();});return;}
@@ -1324,7 +1340,8 @@ root.addEventListener("keydown",function(e){
  if(e.key==="Tab"&&S.focus){var dlg=document.querySelector(".focus");if(dlg){var fs=[].slice.call(dlg.querySelectorAll('button,a[href],input,select,textarea,[tabindex]:not([tabindex="-1"])')).filter(function(x){return !x.disabled&&x.offsetParent!==null;});
   if(fs.length){var f0=fs[0],fl=fs[fs.length-1];if(!dlg.contains(document.activeElement)){e.preventDefault();f0.focus();return;}if(e.shiftKey&&document.activeElement===f0){e.preventDefault();fl.focus();return;}if(!e.shiftKey&&document.activeElement===fl){e.preventDefault();f0.focus();return;}}}}
  if(e.key==="Escape"&&S.focus){var fk=S.focus;S.focus=null;render();var back=document.querySelector('[data-focus="'+(fk||"").replace(/"/g,'\\"')+'"]');if(back)back.focus();return;}if(e.key==="Escape"&&S.bookOpen&&e.target.closest&&e.target.closest("#bookf")){S.bookOpen=false;render();var ob=document.querySelector('[data-act="book-open"]');if(ob)ob.focus();}});
-window.addEventListener("hashchange",function(){S.pmenu=false;S.sheetFor=null;S.rstartOpen=false;S.ideaOpen=false;var hv=(location.hash||"").replace("#","").split("/")[0];if(hv&&hv!=="parametres"&&hv!=="conseils")lsSet("kizuna-view",hv);S.bookOpen=false;S.focus=null;render();window.scrollTo(0,0);});
+window.addEventListener("hashchange",function(){S.pmenu=false;S.sheetFor=null;S.rstartOpen=false;S.ideaOpen=false;var hv=(location.hash||"").replace("#","").split("/")[0];if(hv&&hv!=="parametres"&&hv!=="conseils")lsSet("kizuna-view",hv);S.bookOpen=false;S.focus=null;render();var ar=S.afterRender&&document.getElementById(S.afterRender);S.afterRender=null;if(ar)(ar.closest("details")||ar).scrollIntoView({block:"start"});else window.scrollTo(0,0);});
+document.addEventListener("toggle",function(e){var d=e.target;if(d&&d.getAttribute&&d.getAttribute("data-more")){S.open=S.open||{};S.open[d.getAttribute("data-more")]=d.open;}},true);
 
 /* ------------------------------------------------------------ démarrage */
 if(DEMO){loadAll();}

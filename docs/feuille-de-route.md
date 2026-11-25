@@ -189,7 +189,7 @@ Les écrans se chargent (Conseils, Retours des professeurs, Vue parents…) et i
   un seul conseil visible à la fois avec « suivant » ; retours des professeurs groupés par enfant puis par matière.
 - Vérifier sur téléphone : une action principale par écran, le moins de défilement possible.
 - Faire tester par les enfants et les parents, puis valider en préversion.
-- Deuxième passe en préversion 0.21.0 : Vue parents en 4 onglets (Semaine · Enfants · Retours et conseils ·
+- Deuxième passe publiée en 0.21.0 : Vue parents en 4 onglets (Semaine · Enfants · Retours et conseils ·
   Actions), retours limités aux 3 plus récents par enfant, conseils et Paramètres repliés.
 
 ## Idée notée le 25/11 : emploi du temps de la semaine (fait en v0.16.0)

@@ -766,12 +766,55 @@ h2 small.cnt{display:inline;font-weight:400;color:var(--muted);font-size:.85rem;
 .tour-btns span{display:flex;gap:8px}
 @media (prefers-reduced-motion:reduce){.tour-hole,.tour-pop{transition:none}}
 @media print{#tour,.tourbtn{display:none!important}}
+/* ===== 0.21.0 : présentation allégée ===== */
+.ptabs{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;background:#fff;border:2px solid var(--line);border-radius:18px;padding:4px;margin:4px 0 14px}
+.ptab{position:relative;display:flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:6px 8px;border-radius:14px;text-decoration:none;color:var(--muted);font-weight:700;font-size:.92rem;line-height:1.15;text-align:center}
+.ptab:hover{background:var(--soft)}
+.ptab[aria-current="page"]{background:var(--ink);color:#fff}
+.ptab .pic{width:26px!important;height:26px!important;border-width:1.5px;box-shadow:1px 1px 0 var(--ink);border-radius:8px}
+.pbadge{position:static;background:#C62E3A;color:#fff;border-radius:999px;min-width:20px;height:20px;font-size:.72rem;display:flex;align-items:center;justify-content:center;padding:0 5px;border:2px solid #fff}
+@media (max-width:600px){.pbadge{position:absolute;top:3px;right:5px}.ptab{flex-direction:column;gap:3px;font-size:.72rem;padding:6px 2px;min-height:56px}}
+.palert{display:flex;align-items:center;gap:12px;background:#FFF0EC;border:2px solid #FF8A6E;border-radius:16px;padding:10px 14px;margin:12px 0;min-height:48px;text-decoration:none;color:var(--ink)}
+.palert span:nth-child(2){flex:1}
+.palert .chev{font-size:1.4rem;color:#B83E25}
+details.ptip>summary{list-style:none;cursor:pointer;display:flex;flex-direction:column;gap:2px;min-height:44px;justify-content:center}
+details.ptip>summary::-webkit-details-marker{display:none}
+details.ptip>summary::after{content:"Lire le conseil  +";color:#B83E25;font-weight:700;font-size:.8rem;margin-top:2px}
+details.ptip[open]>summary::after{content:"Replier  −"}
+details.ptip>span{display:block;margin-top:6px}
+.more-notes>summary{cursor:pointer;font-weight:700;color:#B83E25;min-height:44px;display:flex;align-items:center}
+.acts-intro{grid-column:1/-1;margin:0;color:var(--muted)}
+.acts.big{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px}
+.acts.big>.fold,.acts.big>.fold[open]{border-radius:22px}
+.acts.big>.fold>summary{min-height:60px;padding:10px 18px 10px 10px;font-size:1rem;border-radius:22px;gap:12px}
+.acts.big>.fold>summary>span:not(.pic){flex:1}
+.acts.big>.fold[open]{grid-column:1/-1;order:-1}
+.acts.big>.fold[open]>summary{border-radius:22px 22px 0 0}
+.nk h3 small.cnt{display:inline;font-family:var(--body);font-weight:400;color:var(--muted);font-size:.85rem}
+.lockhint.nocode{font-size:.9rem;color:var(--muted)}
+.tips-grid.folded{gap:10px}
+.tips-grid.folded>.tip{padding:0}
+.tip>summary{list-style:none;cursor:pointer;padding:12px 44px 12px 18px;min-height:56px;position:relative;border-radius:20px}
+.tip>summary::-webkit-details-marker{display:none}
+.tip>summary::after{content:"+";position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:1.4rem;font-weight:700;color:var(--muted)}
+.tip[open]>summary::after{content:"−"}
+.tip>summary h3{margin:4px 0 0}
+.tip>summary:hover{background:var(--soft)}
+.tip[open]>p{padding:0 18px 16px}
+.fold,.acts .fold{scroll-margin-top:84px}
+.set-intro{margin:4px 0 12px}
+.setfolds>.fold>summary{font-size:1.02rem;gap:12px}
+.setfolds>.fold>summary>span{flex:1}
+.setfolds .fplus{font-size:1.3rem;color:var(--muted)}
+.setfolds>.fold[open] .fplus{transform:rotate(45deg)}
+@media (max-width:600px){.topbar{gap:8px 10px;flex-wrap:nowrap}}
+.setfolds>.fold>form>.ftitle:first-child,.setfolds>.fold>.card>h2:first-child,.setfolds>.fold>form>h2:first-child{display:none}
 </style>
 </head>
 <body>
 <div id="root"><p style="padding:2rem;font-family:sans-serif">Chargement de l’Académie…</p></div>
-<script src="config.js?v=0.20.0"></script>
+<script src="config.js?v=0.21.0"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script src="app.js?v=0.20.0"></script>
+<script src="app.js?v=0.21.0"></script>
 </body>
 </html>

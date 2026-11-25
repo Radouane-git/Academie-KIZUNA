@@ -5,9 +5,9 @@ Numérotation : `MAJEUR.MINEUR.CORRECTIF` (ex. 0.2.1).
 - **mineur** (0.**2**.0) : une nouveauté (un réglage, un écran, une règle de planning) ;
 - **majeur** (**1**.0.0) : la version jugée stable après plusieurs semaines d'usage réel.
 
-## [0.21.0] – préversion (non publiée)
+## [0.21.0] – 2026-11-25
 
-Visible uniquement sur `/preview/`. Suite de « Revoir la présentation finale » : moins de défilement sur téléphone.
+Validée par les parents et publiée sur le site principal. Suite de « Revoir la présentation finale » : moins de défilement sur téléphone.
 - **Vue parents en 4 onglets** : Semaine (bureau du sensei, cartes des enfants, avancement, points difficiles,
   méthodes), Enfants (idées proposées en premier, bibliothèque, missions ajoutées à la main), Retours et conseils,
   Actions. Un chiffre rouge sur « Enfants » et une alerte dans « Semaine » signalent les idées à valider.
