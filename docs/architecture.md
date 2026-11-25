@@ -47,6 +47,14 @@ Principes :
 - Temps réel : abonnement aux changements de la table `checks` ; relecture toutes les 60 s et au retour sur l'onglet.
 - Publication : workflow `.github/workflows/pages.yml` à chaque push touchant `site/`.
 
+- **Hors ligne (0.17)** : `site/sw.js` (service worker) garde une copie des pages, scripts, icônes, de la bibliothèque
+  Supabase et des polices ; réseau d'abord pour le site (les mises à jour passent toujours), jamais pour les données.
+  L'appli enregistre une copie des données après chaque chargement (`localStorage`, clé `kizuna-snap`) et l'utilise
+  si Supabase est injoignable ; les coches hors ligne vont dans `kizuna-queue`, envoyées à l'événement `online`.
+- **Sauvegarde (0.17)** : fichier `kizuna-sauvegarde-<date>.json` = `{format, version, at, settings, plans, checks,
+  tables:{checks, extras, ideas, stamps, sensei_messages, books, cancellations, teacher_notes, tips}}` ; l'import
+  accepte ce format et l'ancien format d'historique.
+
 ### 2.2 Synchronisation (`scripts/`, `windows/`)
 | Fichier | Rôle |
 |---|---|
@@ -135,7 +143,7 @@ Marqueurs : `x` (mission ajoutée à la main), `over` (pas de place avant le cou
   les ajouts à la main aussi).
 - La synchro dépend du PC de la maison (allumé au moins une fois par jour ; la tâche est rattrapée au démarrage).
 - Supabase gratuit met en pause un projet inactif 7 jours : la synchro quotidienne l'en empêche.
-- Pas de copie hors ligne : sans réseau, l'appli ne charge pas.
+- Hors ligne (0.17) : lecture des données de la dernière ouverture (copie `kizuna-snap` dans le navigateur) et coches mises en file (`kizuna-queue`) ; les formulaires demandent le réseau.
 
 ## 5. Évolution prévue
 

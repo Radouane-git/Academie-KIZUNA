@@ -5,6 +5,21 @@ Numérotation : `MAJEUR.MINEUR.CORRECTIF` (ex. 0.2.1).
 - **mineur** (0.**2**.0) : une nouveauté (un réglage, un écran, une règle de planning) ;
 - **majeur** (**1**.0.0) : la version jugée stable après plusieurs semaines d'usage réel.
 
+## [0.17.0] – préversion (non publiée)
+
+Visible uniquement sur `/preview/`.
+- **Copie hors ligne** : l'appli s'ouvre sans réseau (métro, car, wifi coupé) avec les données de la dernière
+  ouverture. Un bandeau indique l'heure de ces données. Les coches faites hors ligne sont gardées sur l'appareil
+  et envoyées au retour du réseau ; les autres changements attendent le réseau.
+  (Nouveau fichier `site/sw.js` : copie des pages, des scripts et des icônes ; les données ne passent jamais par là.)
+- **Sauvegarde** (Paramètres) : bouton « Télécharger une sauvegarde » : un seul fichier JSON avec toutes les données
+  (réglages, semaines, coches, missions ajoutées, idées, tampons, mot du sensei, livres, annulations, retours des
+  professeurs, conseils). « Restaurer ou importer » relit ce fichier (ajoute ou remplace, ne supprime rien).
+- **Bande des 7 jours** : les pastilles ne reposent plus sur la couleur seule (rond vide = rien de coché, demi-rond =
+  commencé, rond plein = tout fait), avec une légende ; lecteur d'écran : « tout fait », « 2 sur 5 faits »…
+- **Fenêtre « mission en cours »** : la touche Tab reste dans la fenêtre ; Échap la ferme et rend la main à la mission.
+- Pas de nouveau bloc SQL.
+
 ## [0.16.0] – 2026-11-25
 
 Validée par les parents et publiée sur le site principal.
