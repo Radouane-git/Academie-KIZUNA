@@ -700,12 +700,36 @@ div.lockhint:not(.card){justify-content:flex-end}
 .dlegend i.full{border-color:var(--child);background:var(--child)}
 .offbar{background:#FFF4D6;border:1px solid #F2D48A;border-radius:14px;padding:10px 14px;margin:10px 0;font-size:.9rem}
 .offbar b{font-weight:700}
+/* ===== 0.18.0 : carnet et fiche de lecture ===== */
+.read-card{border-top:6px solid var(--child)}
+.rc-head{display:flex;gap:12px;align-items:center;margin-bottom:8px}
+.rc-head h2{margin:2px 0}
+.rc-head small{color:var(--muted)}
+.rmeta{margin:10px 0}
+.rlist{border-top:1px solid var(--line);padding:4px 0}
+.rlist summary{cursor:pointer;font-weight:700;min-height:44px;display:flex;align-items:center;gap:6px}
+.rlist summary small{color:var(--muted);font-weight:400}
+.rl-items{list-style:none;margin:0 0 8px;padding:0;display:grid;gap:6px}
+.rl-items li{display:flex;gap:10px;align-items:flex-start;justify-content:space-between;background:var(--soft);border-radius:10px;padding:8px 10px;font-size:.92rem}
+.rl-row{display:grid;grid-template-columns:minmax(90px,30%) 1fr;gap:8px}
+.rl-add{margin-bottom:8px}
+@media (max-width:600px){.rl-row{grid-template-columns:1fr}}
+.sheet-part{border:1px solid var(--line);border-radius:14px;padding:10px 14px;margin:0 0 14px}
+.sheet-part legend{font-family:'Unbounded',sans-serif;font-weight:800;font-size:.9rem;padding:0 6px}
+.sp-ok{color:#1F7A4D}
+.hint{display:block;font-weight:400;color:var(--muted);font-size:.82rem;margin:2px 0 4px}
+.sheet-view h3{font-family:'Unbounded',sans-serif;font-size:.9rem;margin:16px 0 6px;border-bottom:2px solid var(--line);padding-bottom:4px}
+.sheet-view dt{font-weight:700;margin-top:6px}
+.sheet-view dd{margin:2px 0 0 0}
+.sec-cta{background:var(--soft)!important;color:var(--ink)!important;font-size:.95rem!important}
+.books.rp{margin:4px 0 6px}
+@media print{.secnav,.hero{display:none!important}.sheet-view{border:0}}
 </style>
 </head>
 <body>
 <div id="root"><p style="padding:2rem;font-family:sans-serif">Chargement de l’Académie…</p></div>
-<script src="config.js?v=0.17.0"></script>
+<script src="config.js?v=0.18.0"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script src="app.js?v=0.17.0"></script>
+<script src="app.js?v=0.18.0"></script>
 </body>
 </html>

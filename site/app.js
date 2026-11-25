@@ -116,7 +116,7 @@ function loadAll(){
   return fetch("demo.json").then(function(r){return r.json();}).then(function(d){
    S.fam=d.settings.famille;S.plans=d.plans.sort(function(a,b){return a.week_start<b.week_start?-1:1;});
    try{S.done=JSON.parse(lsGet("planning-demo-done")||"{}");}catch(e){S.done={};}try{S.diff=JSON.parse(lsGet("planning-demo-diff")||"{}");}catch(e){S.diff={};}try{S.meth=JSON.parse(lsGet("planning-demo-meth")||"{}");}catch(e){S.meth={};}
-   S.sync=d.sync;S.ideas=d.ideas||[];S.stamps=d.stamps||[];S.sensei=d.sensei||[];S.books=d.books||[];S.cancels=d.cancellations||[];S.notes=d.teacher_notes||[];S.tips=d.tips||[];start();
+   S.sync=d.sync;S.ideas=d.ideas||[];S.stamps=d.stamps||[];S.sensei=d.sensei||[];S.books=d.books||[];S.cancels=d.cancellations||[];S.notes=d.teacher_notes||[];S.tips=d.tips||[];S.reading=d.reading||[];start();
   });
  }
  return Promise.all([
@@ -131,8 +131,10 @@ function loadAll(){
   sb.from("books").select("*").order("finished",{ascending:false}),
   sb.from("cancellations").select("*").gte("date",addDays(TODAY,-14)),
   sb.from("teacher_notes").select("*").order("date",{ascending:false}),
-  sb.from("tips").select("*").order("created_at",{ascending:false})
+  sb.from("tips").select("*").order("created_at",{ascending:false}),
+  sb.from("reading").select("*").order("created_at",{ascending:false})
  ]).then(function(r){
+  S.readingMissing=!!r[12].error;S.reading=r[12].error?[]:(r[12].data||[]);
   S.tipsMissing=!!r[11].error;S.tips=r[11].error?[]:(r[11].data||[]);
   S.notesMissing=!!r[10].error;S.notes=r[10].error?[]:(r[10].data||[]);
   S.cancelsMissing=!!r[9].error;S.cancels=r[9].error?[]:(r[9].data||[]);
@@ -169,11 +171,11 @@ function refreshChecks(){if(S.offline||!sb)return;selectChecks().then(function(r
 function softRender(){var a=document.activeElement;if(a&&root.contains(a)&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName)&&!a.classList.contains("chk"))return;render();}
 
 /* ------------------------------------------------------------ sauvegarde (0.17) */
-var BK_TABLES=["checks","extras","ideas","stamps","sensei_messages","books","cancellations","teacher_notes","tips"];
+var BK_TABLES=["checks","extras","ideas","stamps","sensei_messages","books","cancellations","teacher_notes","tips","reading"];
 function doBackup(){
  var fin=function(d){var blob=new Blob([JSON.stringify(d,null,1)],{type:"application/json"});var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="kizuna-sauvegarde-"+TODAY+".json";document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},1000);
   var n=0;Object.keys(d.tables).forEach(function(k){n+=d.tables[k].length;});flash("backup","Sauvegarde téléchargée : "+d.plans.length+" semaines et "+n+" lignes de données.");};
- if(DEMO||S.offline){var ck={};Object.keys(S.done).forEach(function(k){ck[k]=1;});fin({format:"kizuna-sauvegarde",version:1,at:new Date().toISOString(),settings:{famille:S.fam},plans:S.plans,checks:ck,tables:{extras:S.extras,ideas:S.ideas,stamps:S.stamps,books:S.books,teacher_notes:S.notes,tips:S.tips}});return;}
+ if(DEMO||S.offline){var ck={};Object.keys(S.done).forEach(function(k){ck[k]=1;});fin({format:"kizuna-sauvegarde",version:1,at:new Date().toISOString(),settings:{famille:S.fam},plans:S.plans,checks:ck,tables:{extras:S.extras,ideas:S.ideas,stamps:S.stamps,books:S.books,teacher_notes:S.notes,tips:S.tips,reading:S.reading||[]}});return;}
  flash("backup","Préparation de la sauvegarde…");
  Promise.all([sb.from("settings").select("*"),sb.from("plans").select("*")].concat(BK_TABLES.map(function(t){return sb.from(t).select("*");}))).then(function(r){
   if(r[0].error||r[1].error){flash("backup","Erreur : "+(r[0].error||r[1].error).message,true);return;}
@@ -186,9 +188,9 @@ function doBackup(){
 /* ------------------------------------------------------------ hors ligne (0.17) */
 var SNAP="kizuna-snap",QUEUE="kizuna-queue";
 function saveSnap(){if(DEMO||S.offline)return;try{var ck=Object.keys(S.done).map(function(id){var r={id:id};if(S.diff[id])r.difficulty=S.diff[id];if(S.meth[id]){r.method=S.meth[id].m.join(",");r.minutes=S.meth[id].min;}return r;});
- localStorage.setItem(SNAP,JSON.stringify({at:new Date().toISOString(),fam:S.fam,lock:S.lock,plans:S.plans,checks:ck,extras:S.extras,sync:S.sync,ideas:S.ideas,stamps:S.stamps,sensei:S.sensei,books:S.books,cancels:S.cancels,notes:S.notes,tips:S.tips}));}catch(e){}}
+ localStorage.setItem(SNAP,JSON.stringify({at:new Date().toISOString(),fam:S.fam,lock:S.lock,plans:S.plans,checks:ck,extras:S.extras,sync:S.sync,ideas:S.ideas,stamps:S.stamps,sensei:S.sensei,books:S.books,cancels:S.cancels,notes:S.notes,tips:S.tips,reading:S.reading}));}catch(e){}}
 function loadSnap(){var d=null;try{d=JSON.parse(localStorage.getItem(SNAP)||"null");}catch(e){}if(!d||!d.plans)return false;
- S.fam=d.fam;S.lock=d.lock||null;S.plans=d.plans;readChecks(d.checks);S.extras=d.extras||[];S.sync=d.sync||null;S.ideas=d.ideas||[];S.stamps=d.stamps||[];S.sensei=d.sensei||[];S.books=d.books||[];S.cancels=d.cancels||[];S.notes=d.notes||[];S.tips=d.tips||[];
+ S.fam=d.fam;S.lock=d.lock||null;S.plans=d.plans;readChecks(d.checks);S.extras=d.extras||[];S.sync=d.sync||null;S.ideas=d.ideas||[];S.stamps=d.stamps||[];S.sensei=d.sensei||[];S.books=d.books||[];S.cancels=d.cancels||[];S.notes=d.notes||[];S.tips=d.tips||[];S.reading=d.reading||[];
  queueGet().forEach(function(q){if(q.v)S.done[q.id]=1;else delete S.done[q.id];});
  S.offline=d.at;return true;}
 function goOffline(){if(!loadSnap())return false;start();return true;}
@@ -591,6 +593,87 @@ function renderTimetable(c,plan){
  if(!all.length)h+='<p class="tt-none">Pas encore d’emploi du temps pour cette semaine : il arrive avec la synchronisation.</p>';
  h+='</div></div><p class="det">École : emploi du temps d’EcoleDirecte (cours annulés barrés). Activités : réglages de la famille (Paramètres).</p></section></div>';
  return h;}
+/* ------------------------------------------------------------ carnet et fiche de lecture (0.18) */
+var NARR=[["je-perso","« Je » : le personnage principal raconte"],["je-temoin","« Je » : un témoin raconte"],["il","« Il / elle » : quelqu’un d’extérieur raconte"]];
+var GENRES=["Roman d’aventures","Roman policier","Roman historique","Science-fiction","Fantastique","Roman","Autobiographie","Contes","Nouvelles","Théâtre","Bande dessinée","Documentaire","Autre"];
+var RLISTS=[["persos","Personnages","Nom","Qui est-ce ? (âge, liens de famille, rôle)"],["lieux","Lieux","Lieu","Ce qui s’y passe"],["chapitres","Résumé des chapitres","Chapitre","Ce qui s’est passé (quelques lignes)"],["passages","Passages clés","Page","Ce qui se passe, pourquoi c’est important"]];
+var SHEET_PARTS=[
+ ["I. Carte d’identité du livre",[["id_titre","Titre","t"],["id_auteur","Auteur (nom, nationalité, siècle)","t"],["id_editeur","Éditeur et collection","t"],["id_date","Date de parution","t"],["id_genre","Genre","genre"]],["id_titre","id_genre"]],
+ ["II. Histoire et narration",[["narr","Qui raconte ?","narr"],["resume","Résumé ou quatrième de couverture","a","Pour une quatrième de couverture : donne envie sans écrire « c’est beau » ; une situation, une question, du suspense. Pour un résumé : dis aussi comment l’histoire finit."]],["narr","resume"]],
+ ["III. Le personnage principal",[["p_qui","Qui est-il ? (nom, âge, milieu, métier)","t"],["p_debut","Sa situation au début","a"],["p_but","Son but ou son problème","a"],["p_aide","Qui l’aide ?","t"],["p_contre","Qui s’oppose à lui ?","t"],["p_qual","Ses qualités et ses défauts","a"],["p_fin","À la fin : a-t-il réussi ? a-t-il changé ?","a"]],["p_qui","p_but"]],
+ ["IV. Lieux et époque",[["l_lieux","Pays et endroits de l’histoire","a"],["l_voyage","Le personnage voyage-t-il ? (départ, étapes, arrivée)","a"],["l_epoque","Époque et durée de l’histoire","t"]],["l_lieux","l_epoque"]],
+ ["V. Mon avis",[["a_aime","As-tu aimé ce livre ?","aime"],["a_r1","Raison 1","t"],["a_r2","Raison 2","t"],["a_r3","Raison 3","t"],["a_interet","Ce qui m’a le plus intéressé","t"],["a_conseil","Je le conseille à un ami ? Pourquoi ?","a"]],["a_r1","a_r2","a_r3"]]];
+function readingFor(cid){return (S.reading||[]).filter(function(r){return r.child===cid;});}
+function rNotes(r){var n=r.notes||{};RLISTS.forEach(function(l){if(!Array.isArray(n[l[0]]))n[l[0]]=[];});r.notes=n;return n;}
+function rCount(r){var n=rNotes(r);return RLISTS.reduce(function(a,l){return a+n[l[0]].length;},0)+(n.epoque?1:0)+(n.narrateur?1:0);}
+function sheetDone(r){var s=r.sheet||{};return SHEET_PARTS.filter(function(p){return p[2].every(function(k){return s[k]&&String(s[k]).trim();});}).length;}
+function saveReading(r,okMsg){r.updated_at=new Date().toISOString();
+ var done=function(x){var i=S.reading.map(function(y){return String(y.id);}).indexOf(String(x.id));if(i>=0)S.reading[i]=x;else S.reading.unshift(x);render();if(okMsg)flash("read",okMsg);};
+ if(DEMO){if(!r.id)r.id="demo-r"+Date.now();done(r);return Promise.resolve(r);}
+ if(S.offline){flash("read","Pas de réseau : réessaie quand le réseau sera revenu.",true);return Promise.resolve(null);}
+ var row={child:r.child,title:r.title,author:r.author||null,pages:r.pages||null,started:r.started||TODAY,notes:r.notes||{},sheet:r.sheet||{},status:r.status||"en_cours",book_id:r.book_id||null,updated_at:r.updated_at};if(r.id)row.id=r.id;
+ return sb.from("reading").upsert(row).select().then(function(res){if(res.error){flash("read",S.readingMissing?"Exécutez d’abord le bloc SQL « v0.18.0 » dans Supabase.":"Erreur : "+res.error.message,true);return null;}done(res.data[0]);return res.data[0];});}
+function readingCard(c,r){var n=rNotes(r);var open=S.readOpen===String(r.id);
+ var h='<section class="card read-card"><div class="rc-head">'+picto("Lecture",44)+'<div><span class="kicker acc">Livre en cours</span><h2>'+esc(r.title)+'</h2><small>'+(r.author?esc(r.author)+' · ':'')+'commencé le '+esc(fmtDate(r.started||TODAY,{day:"numeric",month:"long"}))+' · '+rCount(r)+' note'+(rCount(r)>1?"s":"")+' dans le carnet</small></div></div>';
+ if(!open)return h+'<div class="btnrow"><button class="btn" type="button" data-ropen="'+esc(r.id)+'">Ouvrir mon carnet</button><button class="btn sec" type="button" data-rfinish="'+esc(r.id)+'">J’ai fini ce livre</button></div></section>';
+ var tip=tipFor(c.id,"lec",new Date(TODAY+"T12:00:00").getDate());
+ if(tip)h+='<div class="tipbox ctx"><span class="tip-src">'+esc(tipSrcLabel(tip))+'</span><b>'+esc(tip.title)+'</b><span>'+esc(tip.body)+'</span></div>';
+ h+='<form class="f rmeta" data-rform="meta" data-rid="'+esc(r.id)+'"><div class="cols two"><label>Époque de l’histoire (date, siècle)<input name="epoque" type="text" value="'+esc(n.epoque||"")+'" placeholder="ex. hiver 1815"></label><label>Qui raconte ?<select name="narrateur"><option value="">Je ne sais pas encore</option>'+NARR.map(function(o){return '<option value="'+o[0]+'"'+(n.narrateur===o[0]?" selected":"")+'>'+o[1]+'</option>';}).join("")+'</select></label></div><button class="btn sec mini" type="submit">Enregistrer</button></form>';
+ RLISTS.forEach(function(l){var items=n[l[0]];var num=l[0]==="chapitres";
+  h+='<details class="rlist"'+((S.rlOpen||{})[r.id+l[0]]?" open":"")+' data-rl="'+esc(r.id+l[0])+'"><summary>'+l[1]+' <small>('+items.length+')</small></summary>';
+  if(items.length)h+='<ul class="rl-items">'+items.map(function(x,i){return '<li><span><b>'+esc(num?"Chapitre "+x.c:(l[0]==="passages"?(x.c?"p. "+x.c:"Passage"):x.c))+'</b> '+esc(x.t||"")+'</span><button class="linkbtn" type="button" data-rdel="'+esc(r.id)+'|'+l[0]+'|'+i+'" aria-label="Retirer">Retirer</button></li>';}).join("")+'</ul>';
+  h+='<form class="f rl-add" data-rform="'+l[0]+'" data-rid="'+esc(r.id)+'"><div class="rl-row"><label>'+l[2]+'<input name="c" type="'+(num||l[0]==="passages"?"number":"text")+'"'+(num?' value="'+(items.length?(+items[items.length-1].c||items.length)+1:1)+'" min="1"':l[0]==="passages"?' min="1" placeholder="42"':' required')+'></label><label>'+l[3]+'<input name="t" type="text" required></label></div><button class="btn sec mini" type="submit">Ajouter</button></form></details>';});
+ h+='<div class="btnrow"><button class="btn" type="button" data-rfinish="'+esc(r.id)+'">J’ai fini ce livre</button><button class="btn sec" type="button" data-ropen="">Refermer le carnet</button><button class="linkbtn" type="button" data-rdrop="'+esc(r.id)+'">Abandonner ce livre</button></div>'+msgHtml("read")+'</section>';
+ return h;}
+function sheetPrefill(r){var s=r.sheet||{};if(Object.keys(s).length)return s;var n=rNotes(r);
+ s={id_titre:r.title,id_auteur:r.author||"",narr:n.narrateur||"",l_epoque:n.epoque||"",l_lieux:n.lieux.map(function(x){return x.c+(x.t?" ("+x.t+")":"");}).join(" ; "),
+  resume:n.chapitres.map(function(x){return "Chapitre "+x.c+" : "+x.t;}).join("\n"),p_qui:n.persos.length?n.persos[0].c+(n.persos[0].t?", "+n.persos[0].t:""):""};
+ return s;}
+function sheetField(f,s){var v=s[f[0]]||"";var id="sh-"+f[0];
+ if(f[2]==="genre")return '<label for="'+id+'">'+f[1]+'<select id="'+id+'" name="'+f[0]+'"><option value="">Choisir…</option>'+GENRES.map(function(g){return '<option'+(v===g?" selected":"")+'>'+esc(g)+'</option>';}).join("")+'</select></label>';
+ if(f[2]==="narr")return '<label for="'+id+'">'+f[1]+'<select id="'+id+'" name="'+f[0]+'"><option value="">Choisir…</option>'+NARR.map(function(o){return '<option value="'+o[0]+'"'+(v===o[0]?" selected":"")+'>'+o[1]+'</option>';}).join("")+'</select></label>';
+ if(f[2]==="aime")return '<label for="'+id+'">'+f[1]+'<select id="'+id+'" name="'+f[0]+'"><option value="">Choisir…</option>'+["Oui, beaucoup","Plutôt oui","Moyennement","Pas vraiment"].map(function(o){return '<option'+(v===o?" selected":"")+'>'+o+'</option>';}).join("")+'</select></label>';
+ if(f[2]==="a")return '<label for="'+id+'">'+f[1]+(f[3]?'<small class="hint">'+esc(f[3])+'</small>':'')+'<textarea id="'+id+'" name="'+f[0]+'" rows="'+(f[0]==="resume"?6:3)+'">'+esc(v)+'</textarea></label>';
+ return '<label for="'+id+'">'+f[1]+'<input id="'+id+'" name="'+f[0]+'" type="text" value="'+esc(v)+'"></label>';}
+function nLabel(list,v){var x=list.filter(function(o){return o[0]===v;})[0];return x?x[1]:v;}
+function renderSheet(c,r){var s=sheetPrefill(r);var view=S.sheetMode==="view";
+ var h='<div class="narrow">'+banner(c,esc(r.title),"Ma fiche de lecture","",'<div class="hero-num"><b>'+sheetDone(r)+'/5</b><small>parties</small></div>');
+ h+='<div class="bilan-bar noprint"><button class="btn sec mini" type="button" data-sheetclose="1">← Ma bibliothèque</button><span class="btnrow"><button class="btn sec mini" type="button" data-sheetmode="'+(view?"edit":"view")+'">'+(view?"Modifier":"Voir la fiche")+'</button><button class="btn sec mini" type="button" data-act="print-sheet">Imprimer</button></span></div>';
+ if(view){h+='<section class="card sheet-view"><h2>'+esc(s.id_titre||r.title)+'</h2>';
+  SHEET_PARTS.forEach(function(p){h+='<h3>'+p[0]+'</h3><dl>'+p[1].map(function(f){var v=s[f[0]];if(!v)return "";if(f[2]==="narr")v=nLabel(NARR,v);return '<dt>'+esc(f[1])+'</dt><dd>'+esc(v).replace(/\n/g,"<br>")+'</dd>';}).join("")+'</dl>';});
+  return h+'</section></div>';}
+ h+='<form class="card f sheetf" id="sheetf" data-rid="'+esc(r.id)+'"><p class="det">Ton carnet a déjà rempli une partie de la fiche. Complète-la avec tes mots ; tu peux enregistrer et revenir plus tard.</p>';
+ SHEET_PARTS.forEach(function(p){var ok=p[2].every(function(k){return s[k]&&String(s[k]).trim();});h+='<fieldset class="sheet-part"><legend>'+p[0]+(ok?' <span class="sp-ok">✓</span>':'')+'</legend>'+p[1].map(function(f){return sheetField(f,s);}).join("")+'</fieldset>';});
+ h+='<div class="btnrow"><button class="btn" type="submit">Enregistrer ma fiche</button></div>'+msgHtml("read")+'</form></div>';
+ return h;}
+function readingParents(c){var rs=readingFor(c.id);if(!rs.length)return "";
+ return '<ul class="books rp">'+rs.map(function(r){return '<li><span><b>'+esc(r.title)+'</b><small>'+(r.status==="fini"?"fini · fiche "+sheetDone(r)+"/5 parties":"en cours · "+rCount(r)+" note"+(rCount(r)>1?"s":"")+" dans le carnet")+'</small></span></li>';}).join("")+'</ul>';}
+function bindReading(){
+ document.querySelectorAll("form[data-rform]").forEach(function(f){f.addEventListener("submit",function(e){e.preventDefault();
+  var r=(S.reading||[]).filter(function(x){return String(x.id)===f.getAttribute("data-rid");})[0];if(!r)return;var n=rNotes(r);var k=f.getAttribute("data-rform");
+  if(k==="meta"){n.epoque=f.elements.epoque.value.trim();n.narrateur=f.elements.narrateur.value;saveReading(r,"Carnet enregistré.");return;}
+  var cv=f.elements.c.value.trim(),tv=f.elements.t.value.trim();if(!tv&&!cv)return;n[k].push({c:cv,t:tv});S.rlOpen=S.rlOpen||{};S.rlOpen[r.id+k]=true;saveReading(r,"Ajouté au carnet.");});});
+ var sf=document.getElementById("sheetf");if(sf)sf.addEventListener("submit",function(e){e.preventDefault();
+  var r=(S.reading||[]).filter(function(x){return String(x.id)===sf.getAttribute("data-rid");})[0];if(!r)return;var s={};
+  [].slice.call(sf.elements).forEach(function(el){if(el.name)s[el.name]=el.value.trim();});r.sheet=s;saveReading(r,"Fiche enregistrée ("+sheetDone(r)+"/5 parties complètes).");});
+ var rs=document.getElementById("rstartf");if(rs)rs.addEventListener("submit",function(e){e.preventDefault();var pg=parseInt(val("rs-pages"),10);
+  saveReading({child:rs.getAttribute("data-child"),title:val("rs-title"),author:val("rs-author")||null,pages:pg>0?pg:null,started:TODAY,notes:{},sheet:{},status:"en_cours"},"Bonne lecture !").then(function(x){if(x){S.rstartOpen=false;S.readOpen=String(x.id);render();}});});}
+function readingClick(t){
+ if(t.hasAttribute("data-ropen")){S.readOpen=t.getAttribute("data-ropen")||null;render();return true;}
+ if(t.hasAttribute("data-rstart")){S.rstartOpen=t.getAttribute("data-rstart")==="1";render();var i=document.getElementById("rs-title");if(i)i.focus();return true;}
+ if(t.hasAttribute("data-rdel")){var p=t.getAttribute("data-rdel").split("|");var r=(S.reading||[]).filter(function(x){return String(x.id)===p[0];})[0];if(r){rNotes(r)[p[1]].splice(+p[2],1);saveReading(r);}return true;}
+ if(t.hasAttribute("data-rdrop")){if(!t.dataset.ok){t.dataset.ok="1";t.textContent="Confirmer : abandonner";return true;}var id=t.getAttribute("data-rdrop");
+  var aft=function(){S.reading=S.reading.filter(function(x){return String(x.id)!==id;});S.readOpen=null;render();};
+  if(DEMO)aft();else sb.from("reading").delete().eq("id",id).then(function(r){if(!r.error)aft();});return true;}
+ if(t.hasAttribute("data-rfinish")){var r2=(S.reading||[]).filter(function(x){return String(x.id)===t.getAttribute("data-rfinish");})[0];if(!r2)return true;
+  var brow={child:r2.child,title:r2.title,author:r2.author||null,pages:r2.pages||null,finished:TODAY};
+  var then=function(b){S.books.push(b);r2.status="fini";r2.book_id=b.id;r2.sheet=sheetPrefill(r2);saveReading(r2).then(function(){S.sheetFor=String(r2.id);S.sheetMode="edit";S.readOpen=null;flash("global","Bravo ! « "+r2.title+" » est dans ta bibliothèque. Place à ta fiche de lecture.");window.scrollTo(0,0);});};
+  if(DEMO){brow.id="demo-"+Date.now();then(brow);}else sb.from("books").insert(brow).select().then(function(res){if(res.error)flash("read","Erreur : "+res.error.message,true);else then(res.data[0]);});return true;}
+ if(t.hasAttribute("data-sheet")){S.sheetFor=t.getAttribute("data-sheet");S.sheetMode=t.getAttribute("data-sheetm")||"view";render();window.scrollTo(0,0);return true;}
+ if(t.hasAttribute("data-sheetclose")){S.sheetFor=null;render();return true;}
+ if(t.hasAttribute("data-sheetmode")){S.sheetMode=t.getAttribute("data-sheetmode");render();return true;}
+ if(t.getAttribute("data-act")==="print-sheet"){var m=S.sheetMode;S.sheetMode="view";render();setTimeout(function(){window.print();S.sheetMode=m;render();},50);return true;}
+ return false;}
 function weekNum(){var d=new Date(TODAY+"T12:00:00");var j=new Date(d.getFullYear(),0,1);return Math.floor((d-j)/604800000);}
 function tipForm(){
  var t=S.editTip?S.tips.filter(function(x){return String(x.id)===String(S.editTip);})[0]||{}:(S.tipDraft||{});
@@ -744,10 +827,13 @@ function renderWeek(c,plan){
  return h+'</div>';
 }
 function renderLibrary(c){
+ if(S.sheetFor){var sr=readingFor(c.id).filter(function(x){return String(x.id)===S.sheetFor;})[0];if(sr)return renderSheet(c,sr);S.sheetFor=null;}
  var bk=booksFor(c.id);
  var h='<div class="narrow">'+banner(c,"Bibliothèque de l’Académie","Ma bibliothèque","",'<div class="hero-num"><b>'+bk.length+'</b><small>livre'+(bk.length>1?"s":"")+'</small></div><div class="hero-num"><b>'+fmtN(pagesOf(bk))+'</b><small>pages</small></div>');
- h+='<section class="card side-card">'+(S.bookOpen?bookForm(c.id):'<button class="cta" type="button" data-act="book-open">J’ai fini un livre</button>')+'</section>';
- h+='<section class="card side-card">'+(bk.length?'<ul class="books">'+bk.map(function(b){return '<li>'+picto("Lecture",40)+'<span><b>'+esc(b.title)+'</b>'+(b.author?' · '+esc(b.author):'')+'<small>'+(b.pages?fmtN(+b.pages)+' pages · ':'')+(b.finished?esc(fmtDate(b.finished,{day:"numeric",month:"short",year:"numeric"})):'')+'</small></span><button class="linkbtn" data-delbook="'+esc(b.id)+'" aria-label="Retirer '+esc(b.title)+'">Retirer</button></li>';}).join("")+'</ul>':'<p class="none">Note ici chaque livre terminé, même pour le plaisir.</p>')+'</section>';
+ readingFor(c.id).filter(function(r){return r.status!=="fini";}).forEach(function(r){h+=readingCard(c,r);});
+ h+='<section class="card side-card">'+(S.rstartOpen?'<form class="f" id="rstartf" data-child="'+esc(c.id)+'"><h2>Je commence un livre</h2><p class="det">Ton carnet de lecture t’aidera à retenir l’histoire et à faire ta fiche.</p><label for="rs-title">Titre<input id="rs-title" type="text" required></label><div class="cols two"><label for="rs-author">Auteur (facultatif)<input id="rs-author" type="text"></label><label for="rs-pages">Pages (facultatif)<input id="rs-pages" type="number" min="1" max="5000" inputmode="numeric"></label></div><div class="btnrow"><button class="btn" type="submit">Ouvrir mon carnet</button><button class="btn sec" type="button" data-rstart="0">Annuler</button></div>'+msgHtml("read")+(S.readingMissing&&!DEMO?'<p class="msg err">Exécutez d’abord le bloc SQL « v0.18.0 » dans Supabase.</p>':'')+'</form>':'<button class="cta" type="button" data-rstart="1">Je commence un livre</button>')+'</section>';
+ h+='<section class="card side-card">'+(S.bookOpen?bookForm(c.id):'<button class="cta sec-cta" type="button" data-act="book-open">J’ai fini un livre (sans carnet)</button>')+'</section>';
+ h+='<section class="card side-card">'+(bk.length?'<ul class="books">'+bk.map(function(b){return '<li>'+picto("Lecture",40)+'<span><b>'+esc(b.title)+'</b>'+(b.author?' · '+esc(b.author):'')+'<small>'+(b.pages?fmtN(+b.pages)+' pages · ':'')+(b.finished?esc(fmtDate(b.finished,{day:"numeric",month:"short",year:"numeric"})):'')+'</small>'+(function(){var rr=readingFor(c.id).filter(function(x){return String(x.book_id)===String(b.id);})[0];return rr?'<button class="btn sec mini" type="button" data-sheet="'+esc(rr.id)+'" data-sheetm="'+(sheetDone(rr)===5?"view":"edit")+'">Ma fiche de lecture · '+sheetDone(rr)+'/5</button>':'';})()+'</span><button class="linkbtn" data-delbook=""'+esc(b.id)+'" aria-label="Retirer '+esc(b.title)+'">Retirer</button></li>';}).join("")+'</ul>':'<p class="none">Note ici chaque livre terminé, même pour le plaisir.</p>')+'</section>';
  return h+'</div>';
 }
 function renderStamps(c,plan){
@@ -823,8 +909,9 @@ function renderParents(noFam){
  }
  if(!noFam){
   h+='<section class="card"><div class="ftitle">'+picto("Lecture",44)+'<h2>Bibliothèque des enfants</h2></div>'+children().map(function(c){var bk=booksFor(c.id);var sum='<b>'+esc(c.name)+'</b><small>'+bk.length+' livre'+(bk.length>1?"s":"")+' · '+fmtN(pagesOf(bk))+' pages</small>';
-   if(!bk.length)return '<div class="xl"><span>'+sum+'</span></div>';
-   return '<details class="libkid"><summary><span>'+sum+'</span><span class="lk-more">Voir les livres</span></summary><ul class="books">'+bk.map(function(b){return '<li><span><b>'+esc(b.title)+'</b>'+(b.author?' · '+esc(b.author):'')+'<small>'+(b.pages?fmtN(+b.pages)+' pages · ':'')+(b.finished?'fini le '+esc(fmtDate(b.finished,{day:"numeric",month:"long"})):'')+'</small></span></li>';}).join("")+'</ul><a class="linkbtn" href="#'+esc(c.id)+'/livres">Ouvrir la bibliothèque de '+esc(c.name)+'</a></details>';}).join("")+'</section>';
+   var rp=readingParents(c);
+   if(!bk.length&&!rp)return '<div class="xl"><span>'+sum+'</span></div>';
+   return '<details class="libkid"><summary><span>'+sum+(readingFor(c.id).filter(function(r){return r.status!=="fini";}).length?'<small>· lecture en cours</small>':'')+'</span><span class="lk-more">Voir les livres</span></summary>'+rp+'<ul class="books">'+bk.map(function(b){return '<li><span><b>'+esc(b.title)+'</b>'+(b.author?' · '+esc(b.author):'')+'<small>'+(b.pages?fmtN(+b.pages)+' pages · ':'')+(b.finished?'fini le '+esc(fmtDate(b.finished,{day:"numeric",month:"long"})):'')+'</small></span></li>';}).join("")+'</ul><a class="linkbtn" href="#'+esc(c.id)+'/livres">Ouvrir la bibliothèque de '+esc(c.name)+'</a></details>';}).join("")+'</section>';
   // liste des ajouts
   var up=S.extras.filter(function(e){return e.due>=TODAY;});
   h+='<section class="card"><h2>Missions ajoutées à la main</h2>'+(up.length?'<p>Date affichée : jour de <b>rendu</b>.</p><button class="btn sec wrapbtn" type="button" id="shift-extras">Dates « à faire » ? Tout décaler d’un jour</button>'+msgHtml("shift"):'')+(up.length?'<div class="scrollbox" tabindex="0" role="region" aria-label="Liste des missions ajoutées ('+up.length+')">'+up.map(function(e){var c=child(e.child);return '<div class="xl"><span><span class="xl-h"><b>'+esc(c?c.name:"Tous")+'</b> · à rendre le '+esc(fmtDate(e.due))+'</span><small>'+esc((e.subject?e.subject+" : ":"")+e.text)+'</small></span><button class="btn sec mini" data-del="'+esc(e.id)+'">Supprimer</button></div>';}).join("")+'</div>'+(up.length>5?'<p class="det">'+up.length+' missions : faites défiler la liste.</p>':''):'<p class="none">Aucune pour le moment.</p>')+'</section>';
@@ -964,6 +1051,7 @@ function parseBulk(text,defChild,defSubj){
 
 /* ------------------------------------------------------------ actions */
 function bindForms(){
+ bindReading();
  var f;
  if((f=document.getElementById("addhw")))f.addEventListener("submit",function(e){
   e.preventDefault();
@@ -1108,7 +1196,8 @@ function val(id){return (document.getElementById(id).value||"").trim();}
 function pickWeek(idx){var p=S.plans[idx];if(!p)return;var has=p.data.days.some(function(d){return d.date===TODAY;});setDay(has?TODAY:(p.data.days[1]||p.data.days[0]).date);}
 
 root.addEventListener("click",function(e){
- var t=e.target.closest("[data-tipf],[data-edittip],[data-deltip],[data-note2tip],[data-mopen],[data-mtog],[data-mmin],[data-msave],[data-mskip],[data-ideaok],[data-ideano],[data-editnote],[data-delnote],[data-rate],[data-rateopen],[data-focus],[data-fclose],[data-fdone],[data-fundo],[data-fnext],[data-cancel],[data-uncancel],[data-delbook],[data-view],[data-day],[data-id],[data-go],[data-week],[data-del],[data-act],[data-delidea]");if(!t)return;
+ var t=e.target.closest("[data-ropen],[data-rstart],[data-rdel],[data-rdrop],[data-rfinish],[data-sheet],[data-sheetclose],[data-sheetmode],[data-tipf],[data-edittip],[data-deltip],[data-note2tip],[data-mopen],[data-mtog],[data-mmin],[data-msave],[data-mskip],[data-ideaok],[data-ideano],[data-editnote],[data-delnote],[data-rate],[data-rateopen],[data-focus],[data-fclose],[data-fdone],[data-fundo],[data-fnext],[data-cancel],[data-uncancel],[data-delbook],[data-view],[data-day],[data-id],[data-go],[data-week],[data-del],[data-act],[data-delidea]");if(!t)return;
+ if(t&&readingClick(t))return;
  if(t.hasAttribute("data-delidea")){var di=t.getAttribute("data-delidea");var aft=function(){S.ideas=S.ideas.filter(function(x){return String(x.id)!==di;});render();};
   if(DEMO)aft();else sb.from("ideas").delete().eq("id",di).then(function(r){if(!r.error)aft();});return;}
  if(t.matches("input.chk")){setDone(t.getAttribute("data-id"),t.checked);return;}
@@ -1183,7 +1272,7 @@ root.addEventListener("click",function(e){
  if(t.hasAttribute("data-day")){if(t.hasAttribute("data-sec")){var cv=curView();S.day=t.getAttribute("data-day");try{sessionStorage.setItem("planning-day",S.day);}catch(e2){}location.hash=cv;return;}setDay(t.getAttribute("data-day"));return;}
  if(t.hasAttribute("data-id")){var i=t.getAttribute("data-id");setDone(i,!S.done[i]);}
 });
-root.addEventListener("toggle",function(e){if(e.target.hasAttribute&&e.target.hasAttribute("data-fold")){S.open=S.open||{};S.open[e.target.getAttribute("data-fold")]=e.target.open;}if(e.target.classList&&e.target.classList.contains("pmenu"))S.pmenu=e.target.open;if(e.target.classList&&e.target.classList.contains("edt"))S.edtOpen=e.target.open;},true);
+root.addEventListener("toggle",function(e){if(e.target.hasAttribute&&e.target.hasAttribute("data-rl")){S.rlOpen=S.rlOpen||{};S.rlOpen[e.target.getAttribute("data-rl")]=e.target.open;}if(e.target.hasAttribute&&e.target.hasAttribute("data-fold")){S.open=S.open||{};S.open[e.target.getAttribute("data-fold")]=e.target.open;}if(e.target.classList&&e.target.classList.contains("pmenu"))S.pmenu=e.target.open;if(e.target.classList&&e.target.classList.contains("edt"))S.edtOpen=e.target.open;},true);
  try{S.standalone=window.matchMedia("(display-mode: standalone)").matches||navigator.standalone===true;}catch(e){}
 window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();S.installEvt=e;if(curView()==="parametres")softRender();});
 window.addEventListener("appinstalled",function(){S.installEvt=null;S.standalone=true;flash("global","L’Académie est installée : retrouvez l’icône 絆 sur l’écran d’accueil.");});
@@ -1191,7 +1280,7 @@ root.addEventListener("keydown",function(e){
  if(e.key==="Tab"&&S.focus){var dlg=document.querySelector(".focus");if(dlg){var fs=[].slice.call(dlg.querySelectorAll('button,a[href],input,select,textarea,[tabindex]:not([tabindex="-1"])')).filter(function(x){return !x.disabled&&x.offsetParent!==null;});
   if(fs.length){var f0=fs[0],fl=fs[fs.length-1];if(!dlg.contains(document.activeElement)){e.preventDefault();f0.focus();return;}if(e.shiftKey&&document.activeElement===f0){e.preventDefault();fl.focus();return;}if(!e.shiftKey&&document.activeElement===fl){e.preventDefault();f0.focus();return;}}}}
  if(e.key==="Escape"&&S.focus){var fk=S.focus;S.focus=null;render();var back=document.querySelector('[data-focus="'+(fk||"").replace(/"/g,'\\"')+'"]');if(back)back.focus();return;}if(e.key==="Escape"&&S.bookOpen&&e.target.closest&&e.target.closest("#bookf")){S.bookOpen=false;render();var ob=document.querySelector('[data-act="book-open"]');if(ob)ob.focus();}});
-window.addEventListener("hashchange",function(){S.pmenu=false;S.ideaOpen=false;var hv=(location.hash||"").replace("#","").split("/")[0];if(hv&&hv!=="parametres"&&hv!=="conseils")lsSet("kizuna-view",hv);S.bookOpen=false;S.focus=null;render();window.scrollTo(0,0);});
+window.addEventListener("hashchange",function(){S.pmenu=false;S.sheetFor=null;S.rstartOpen=false;S.ideaOpen=false;var hv=(location.hash||"").replace("#","").split("/")[0];if(hv&&hv!=="parametres"&&hv!=="conseils")lsSet("kizuna-view",hv);S.bookOpen=false;S.focus=null;render();window.scrollTo(0,0);});
 
 /* ------------------------------------------------------------ démarrage */
 if(DEMO){loadAll();}
