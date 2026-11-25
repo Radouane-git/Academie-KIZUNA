@@ -141,7 +141,7 @@ function loadAll(){
   var err=r.slice(0,5).filter(function(x){return x.error;})[0];
   if(err){renderError("Lecture impossible : "+err.error.message);return;}
   var set={};r[0].data.forEach(function(x){set[x.key]=x.value;});
-  S.fam=set.famille||null;S.plans=r[1].data||[];
+  S.fam=set.famille||null;S.lock=set.parent_lock||null;S.plans=r[1].data||[];
   readChecks(r[2].data);
   S.extras=r[3].data||[];S.sync=r[4].data[0]||null;
   start();
@@ -290,6 +290,32 @@ function syncLine(){
  return '<span class="status '+cls+'"><i></i>'+esc(txt)+(DEMO?' · <b>démo</b>':'')+(!DEMO?' · <button class="linkbtn" data-act="logout">Se déconnecter</button>':'')+'</span>';
 }
 function curSection(){var h=(location.hash||"").replace("#","").split("/");return ["semaine","livres","tampons"].indexOf(h[1])>=0?h[1]:"jour";}
+var LOCK_SVG='<svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 10V7a5 5 0 0 1 10 0v3h1a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1h1zm2 0h6V7a3 3 0 0 0-6 0v3z"/></svg>';
+function ssGet(k){try{return sessionStorage.getItem(k);}catch(e){return null;}}
+function ssSet(k,v){try{if(v==null)sessionStorage.removeItem(k);else sessionStorage.setItem(k,v);}catch(e){}}
+function lsDel(k){try{localStorage.removeItem(k);}catch(e){}}
+function hex(b){return [].map.call(new Uint8Array(b),function(x){return ("0"+x.toString(16)).slice(-2);}).join("");}
+function sha(t){if(!(window.crypto&&crypto.subtle))return Promise.reject(new Error("Ce navigateur ne permet pas d’utiliser le code parent."));return crypto.subtle.digest("SHA-256",new TextEncoder().encode(t)).then(hex);}
+function newSalt(){var a=new Uint8Array(12);crypto.getRandomValues(a);return hex(a.buffer);}
+function lockOn(){return !!(S.lock&&S.lock.h);}
+function unlocked(){if(!lockOn())return true;return ssGet("kizuna-unlock")===S.lock.h||lsGet("kizuna-unlock")===S.lock.h;}
+function relock(){ssSet("kizuna-unlock",null);lsDel("kizuna-unlock");}
+function codeInput(id,lab,ac){return '<label for="'+id+'">'+lab+'<input id="'+id+'" class="codein" type="password" inputmode="numeric" autocomplete="'+ac+'" pattern="[0-9]{4,8}" minlength="4" maxlength="8" required title="4 à 8 chiffres"></label>';}
+function renderLock(v){var wait=S.lockUntil&&Date.now()<S.lockUntil;
+ var h='<div class="lockwrap"><section class="card lockcard"><span class="lk-ico">'+LOCK_SVG+'</span><h1>Espace parents</h1><p>'+(v==="parametres"?"Les Paramètres sont protégés":"La Vue parents est protégée")+' par le code parent.</p>';
+ h+='<form class="f" id="unlockf">'+codeInput("u-code","Code parent","off")+'<label class="chkline"><input type="checkbox" id="u-keep"> Rester déverrouillé sur cet appareil (seulement le téléphone ou l’ordinateur des parents)</label><button class="btn" type="submit"'+(wait?" disabled":"")+'>Ouvrir</button>'+(wait?'<p class="msg err">Trop d’essais. Réessayez dans 30 secondes.</p>':msgHtml("unlock"))+'</form>';
+ h+='<details class="lockhelp"><summary>Code oublié ?</summary><p>Dans Supabase, ouvrez <b>SQL Editor</b> et lancez&nbsp;: <code>delete from settings where key = \'parent_lock\';</code> Le code est alors retiré&nbsp;: créez-en un nouveau dans Paramètres.</p></details>';
+ h+='<p><a class="linkbtn" href="#accueil">Retour à l’accueil</a></p></section></div>';
+ return h;}
+function lockForm(){var on=lockOn();
+ var h='<form class="card f" id="lockf"><div class="ftitle"><span class="lk-ico sm" aria-hidden="true">'+LOCK_SVG+'</span><h2>Code parent</h2></div><p>'+(on?'Un code protège la Vue parents et les Paramètres. Vous pouvez le changer ou le retirer.':'Protégez la Vue parents et les Paramètres par un code de 4 à 8 chiffres. Les enfants gardent l’accès à leur page et aux Conseils.')+'</p>';
+ h+='<div class="cols two">'+codeInput("l-code",on?"Nouveau code":"Code","new-password")+codeInput("l-code2","Confirmer le code","new-password")+'</div>';
+ h+='<div class="btnrow"><button class="btn" type="submit">'+(on?"Changer le code":"Activer le code")+'</button>'+(on?'<button class="btn sec" type="button" data-act="lock-off">Retirer le code</button>':'')+'</div>'+msgHtml("lock");
+ h+='<p class="det">C’est une porte, pas un coffre-fort : le code évite que l’espace parents soit ouvert par erreur ou par curiosité. Ne reprenez pas le code de votre carte bancaire ou de votre téléphone.</p></form>';
+ return h;}
+function saveLock(v,done){if(DEMO){S.lock=v;done();return;}
+ var q=v?sb.from("settings").upsert({key:"parent_lock",value:v,updated_at:new Date().toISOString()}):sb.from("settings").delete().eq("key","parent_lock");
+ q.then(function(r){if(r.error)flash("lock","Erreur : "+r.error.message,true);else{S.lock=v;done();}});}
 var GEAR='<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7zm8.2 4.7-.1-1.2 2-1.6-2-3.4-2.4.9a8 8 0 0 0-2-1.2L15.3 4h-4l-.4 2.7a8 8 0 0 0-2 1.2l-2.4-.9-2 3.4 2 1.6a8 8 0 0 0 0 2.4l-2 1.6 2 3.4 2.4-.9a8 8 0 0 0 2 1.2l.4 2.7h4l.4-2.7a8 8 0 0 0 2-1.2l2.4.9 2-3.4-2-1.6z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>';
 var SECTIONS=[["jour","Aujourd’hui","Devoir"],["semaine","Ma semaine","Sac"],["livres","Bibliothèque","Lecture"],["tampons","Tampons","Loisir"]];
 var FLAME='<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c1 4 5 5.5 5 11a5 5 0 0 1-10 0c0-3 2-4.5 2-7 2 1.2 3 2.6 3 4 1-2 .5-5 0-8z" fill="#FF6B4A"/></svg>';
@@ -467,6 +493,7 @@ function render(){
   else if(!plan)h+='<div class="card"><p>Aucun planning pour cette période.</p></div>';
   else if(sec==="semaine")h+=renderWeek(c,plan);
   else h+=renderChild(c,plan);}
+ else if((v==="parents"||v==="parametres")&&!unlocked())h+=renderLock(v);
  else if(v==="parents")h+=renderParents(false);
  else if(v==="parametres")h+=renderSettings(false);
  else if(v==="accueil")h+=renderHome();
@@ -475,6 +502,7 @@ function render(){
  if(c&&S.focus)h+=renderFocus(c);
  h+='</div>';
  root.innerHTML=h;foldForms();bindForms();
+ var uc=document.getElementById("u-code");if(uc&&!uc.disabled)uc.focus();
  if(c&&S.focus){var fb=document.querySelector(".focus [data-fdone]")||document.querySelector(".focus [data-fclose]");if(fb)fb.focus();}
 }
 function hero(c,plan){
@@ -632,6 +660,7 @@ function renderParents(noFam){
   var tot={n:0,t:0};children().forEach(function(c){var w=weekProg(c.id,plan);tot.n+=w.n;tot.t+=w.t;});
   var evc=0;children().forEach(function(c){evc+=evalsFor(c.id).filter(function(e){return e[0]>=TODAY&&dDiff(e[0],TODAY)<=7;}).length;});
   h+='<section class="hero" style="background-color:'+tp.bg+';color:'+tp.txt+'"><div class="hero-id"><div><span class="over">Bureau du sensei</span><h1>'+esc(plan?plan.data.title.replace(/^Du /,"Semaine du "):"Semaine")+'</h1></div></div><div class="hero-stats parents"><div><b>'+pct(tot)+' %</b><small>de la semaine</small></div><div><b style="color:'+tp.acc+'">'+evc+'</b><small>évaluations à 7 jours</small></div><div><b>'+S.stamps.length+'</b><small>tampons</small></div></div></section>';
+  h+=lockOn()?'<div class="lockhint"><button class="btn sec mini lockbtn" type="button" data-act="lock-now">Verrouiller l’espace parents</button></div>':'<div class="card lockhint"><span>Protégez cet espace des enfants avec un code parent.</span><a class="btn sec mini" href="#parametres">Créer le code</a></div>';
   h+='<div class="kidcards">'+children().map(function(c){var t=theme(c),mp=mprog(c.id,TODAY),w=weekProg(c.id,plan),ev=evalsFor(c.id).filter(function(e){return e[0]>=TODAY;})[0];
    return '<button class="kidcard" data-go="'+esc(c.id)+'" data-day="'+TODAY+'" style="--child:'+t.bg+'">'+ring(mp.t?mp.n/mp.t:0,58,7,mp.t?mp.n+"/"+mp.t:"–")+'<span class="kc-txt"><b>'+esc(c.name)+'</b><small>Aujourd’hui : '+(mp.t?(mp.t-mp.n?(mp.t-mp.n)+" mission"+(mp.t-mp.n>1?"s":"")+" à faire":"tout est fait"):"rien de prévu")+' · semaine '+pct(w)+' %</small>'+(ev?'<small class="evtxt">'+esc(fmtDate(ev[0]))+' : '+esc(ev[1])+'</small>':'')+(hardOf(c.id,plan).length?'<small class="hardtxt">'+hardOf(c.id,plan).length+' mission'+(hardOf(c.id,plan).length>1?"s":"")+' notée'+(hardOf(c.id,plan).length>1?"s":"")+' difficile'+(hardOf(c.id,plan).length>1?"s":"")+' cette semaine</small>':'')+'</span><span class="chev" aria-hidden="true">›</span></button>';}).join("")+'</div>';
   h+=weeksNav();
@@ -727,6 +756,7 @@ function renderParents(noFam){
 function renderSettings(noFam){
  var h='<div class="narrow"><section class="hero" style="background-color:#3A4250;color:#fff"><div class="hero-id"><div><span class="over">Réservé aux parents</span><h1>Paramètres</h1></div></div></section><div class="cols">';
  if(!noFam){
+  h+=lockForm();
   h+='<form class="card f" id="themesf"><h2>Couleurs de héros</h2><p>Chaque profil choisit sa couleur.</p>';
   children().forEach(function(c){h+='<label for="th-'+esc(c.id)+'">'+esc(c.name)+'<select id="th-'+esc(c.id)+'" data-theme-for="'+esc(c.id)+'">'+Object.keys(THEMES).map(function(n){return '<option'+(n===themeName(c)?" selected":"")+'>'+n+'</option>';}).join("")+'</select></label>';});
   h+='<label for="th-parents">Parents<select id="th-parents" data-theme-for="__parents">'+Object.keys(THEMES).map(function(n){return '<option'+(n===themeName(null)?" selected":"")+'>'+n+'</option>';}).join("")+'</select></label>';
@@ -910,6 +940,22 @@ function bindForms(){
   if(DEMO){row.id="demo-"+Date.now();row.created_at=new Date().toISOString();ok(row);return;}
   sb.from("sensei_messages").insert(row).select().then(function(r){if(r.error)flash("sensei","Erreur : "+r.error.message,true);else ok(r.data[0]);});
  });
+ if((f=document.getElementById("unlockf")))f.addEventListener("submit",function(e){
+  e.preventDefault();var c=val("u-code");var keep=document.getElementById("u-keep").checked;
+  sha(S.lock.s+":"+c).then(function(hh){
+   if(hh===S.lock.h){S.lockFails=0;ssSet("kizuna-unlock",hh);if(keep)lsSet("kizuna-unlock",hh);render();window.scrollTo(0,0);}
+   else{S.lockFails=(S.lockFails||0)+1;if(S.lockFails>=5){S.lockFails=0;S.lockUntil=Date.now()+30000;setTimeout(render,30500);render();}else flash("unlock","Code incorrect.",true);}
+  }).catch(function(er){flash("unlock",er.message,true);});
+ });
+ if((f=document.getElementById("lockf")))f.addEventListener("submit",function(e){
+  e.preventDefault();var c=val("l-code"),c2=val("l-code2");
+  if(!/^[0-9]{4,8}$/.test(c)){flash("lock","Le code doit faire 4 à 8 chiffres.",true);return;}
+  if(c!==c2){flash("lock","Les deux codes ne sont pas identiques.",true);return;}
+  var was=lockOn(),keep=lockOn()&&lsGet("kizuna-unlock")===S.lock.h;var salt=newSalt();
+  sha(salt+":"+c).then(function(hh){var v={h:hh,s:salt,at:TODAY};
+   saveLock(v,function(){ssSet("kizuna-unlock",hh);if(keep)lsSet("kizuna-unlock",hh);flash("lock",was?"Code changé. Les autres appareils le demanderont à la prochaine ouverture.":"Code activé. Notez-le : il sera demandé pour ouvrir la Vue parents et les Paramètres.");});
+  }).catch(function(er){flash("lock",er.message,true);});
+ });
  if((f=document.getElementById("themesf")))f.addEventListener("submit",function(e){
   e.preventDefault();
   var v=JSON.parse(JSON.stringify(S.fam));
@@ -977,6 +1023,8 @@ root.addEventListener("click",function(e){
   sb.from("cancellations").insert(row).select().then(function(r){if(r.error)flash("global","Erreur : "+r.error.message,true);else okc(r.data[0]);});return;}
  if(t.hasAttribute("data-uncancel")){var uid=t.getAttribute("data-uncancel");var aftu=function(){S.cancels=S.cancels.filter(function(x){return String(x.id)!==uid;});render();};
   if(DEMO)aftu();else sb.from("cancellations").delete().eq("id",uid).then(function(r){if(!r.error)aftu();});return;}
+ if(t.getAttribute("data-act")==="lock-now"){relock();location.hash="#accueil";return;}
+ if(t.getAttribute("data-act")==="lock-off"){if(!t.dataset.ok){t.dataset.ok="1";t.textContent="Confirmer : retirer le code";return;}saveLock(null,function(){relock();flash("lock","Code retiré : la Vue parents est de nouveau ouverte à tous.");});return;}
  if(t.getAttribute("data-act")==="install"){var ev=S.installEvt;if(ev){ev.prompt();ev.userChoice.then(function(){S.installEvt=null;render();});}return;}
  if(t.getAttribute("data-act")==="kidea-open"){S.ideaOpen=true;render();var kt=document.getElementById("ki-title");if(kt)kt.focus();return;}
  if(t.getAttribute("data-act")==="kidea-close"){S.ideaOpen=false;render();return;}

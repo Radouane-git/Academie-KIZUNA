@@ -5,9 +5,9 @@ Numérotation : `MAJEUR.MINEUR.CORRECTIF` (ex. 0.2.1).
 - **mineur** (0.**2**.0) : une nouveauté (un réglage, un écran, une règle de planning) ;
 - **majeur** (**1**.0.0) : la version jugée stable après plusieurs semaines d'usage réel.
 
-## [0.14.0] – préversion (non publiée)
+## [0.14.0] – 2026-11-25
 
-Visible uniquement sur `/preview/`.
+Validée par les parents et publiée sur le site principal.
 - **Code parent** : la Vue parents et les Paramètres peuvent être protégés par un code de 4 à 8 chiffres.
   Les enfants gardent l'accès à leur page, à l'accueil et aux Conseils.
 - Créer, changer ou retirer le code : Paramètres → « Code parent ». Rappel dans la Vue parents tant qu'aucun code

@@ -613,12 +613,28 @@ a{color:var(--child)}
 .ptips-all{margin-top:12px}
 .ptips-all summary{cursor:pointer;font-weight:700;color:#B83E25;min-height:44px;display:flex;align-items:center}
 .ptips-all .tips-grid{margin-top:8px}
+/* ===== 0.14.0 : code parent ===== */
+.lockwrap{max-width:440px;margin:24px auto}
+.lockcard{text-align:center}
+.lk-ico{display:inline-flex;width:64px;height:64px;border-radius:50%;background:#3A4250;color:#fff;align-items:center;justify-content:center;margin-bottom:6px}
+.lockcard h1{font-family:'Unbounded',sans-serif;font-size:1.3rem;margin:6px 0}
+.lockcard form{text-align:left}
+.codein{font-size:1.6rem;letter-spacing:.5em;text-align:center;font-family:'Atkinson Hyperlegible',sans-serif}
+.lockcard .chkline{display:flex;gap:10px;align-items:flex-start;font-weight:400;min-height:44px}
+.lockcard .chkline input{width:22px;height:22px;margin-top:2px;flex:none}
+.lockcard .btn{width:100%}
+.lockhelp{margin-top:12px;text-align:left}
+.lockhelp summary{cursor:pointer;color:#B83E25;font-weight:700;min-height:44px;display:flex;align-items:center}
+.lockbtn{margin-left:auto}
+.lockhint{display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:space-between;margin:12px 0}
+div.lockhint:not(.card){justify-content:flex-end}
+.lk-ico.sm{width:44px;height:44px;margin:0}
 </style>
 </head>
 <body>
 <div id="root"><p style="padding:2rem;font-family:sans-serif">Chargement de l’Académie…</p></div>
-<script src="config.js?v=0.13.0"></script>
+<script src="config.js?v=0.14.0"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script src="app.js?v=0.13.0"></script>
+<script src="app.js?v=0.14.0"></script>
 </body>
 </html>
