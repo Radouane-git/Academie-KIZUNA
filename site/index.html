@@ -689,12 +689,23 @@ div.lockhint:not(.card){justify-content:flex-end}
 .narrow.wide-tt{max-width:none}
 .tt-none{grid-column:2/-1;padding:16px;color:var(--muted)}
 @media (max-width:720px){.sec .sl{display:none}.sec .ss{display:inline}}
+/* ===== 0.17.0 : hors ligne, sauvegarde, légende des jours ===== */
+.dchip i{box-sizing:border-box;border:2px solid var(--muted);background:transparent}
+.dchip i.part{border-color:var(--child);background:linear-gradient(90deg,var(--child) 50%,transparent 50%)}
+.dchip i.full{border-color:var(--child);background:var(--child)}
+.dlegend{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 14px;margin:-8px 0 12px;font-size:.75rem;color:var(--muted)}
+.dlegend span{display:inline-flex;align-items:center;gap:5px}
+.dlegend i{width:9px;height:9px;border-radius:50%;box-sizing:border-box;border:2px solid var(--muted);display:inline-block}
+.dlegend i.part{border-color:var(--child);background:linear-gradient(90deg,var(--child) 50%,transparent 50%)}
+.dlegend i.full{border-color:var(--child);background:var(--child)}
+.offbar{background:#FFF4D6;border:1px solid #F2D48A;border-radius:14px;padding:10px 14px;margin:10px 0;font-size:.9rem}
+.offbar b{font-weight:700}
 </style>
 </head>
 <body>
 <div id="root"><p style="padding:2rem;font-family:sans-serif">Chargement de l’Académie…</p></div>
-<script src="config.js?v=0.16.0"></script>
+<script src="config.js?v=0.17.0"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script src="app.js?v=0.16.0"></script>
+<script src="app.js?v=0.17.0"></script>
 </body>
 </html>

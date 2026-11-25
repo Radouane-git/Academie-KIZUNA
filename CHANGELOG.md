@@ -5,9 +5,9 @@ Numérotation : `MAJEUR.MINEUR.CORRECTIF` (ex. 0.2.1).
 - **mineur** (0.**2**.0) : une nouveauté (un réglage, un écran, une règle de planning) ;
 - **majeur** (**1**.0.0) : la version jugée stable après plusieurs semaines d'usage réel.
 
-## [0.17.0] – préversion (non publiée)
+## [0.17.0] – 2026-11-25
 
-Visible uniquement sur `/preview/`.
+Validée par les parents et publiée sur le site principal.
 - **Copie hors ligne** : l'appli s'ouvre sans réseau (métro, car, wifi coupé) avec les données de la dernière
   ouverture. Un bandeau indique l'heure de ces données. Les coches faites hors ligne sont gardées sur l'appareil
   et envoyées au retour du réseau ; les autres changements attendent le réseau.

@@ -74,7 +74,7 @@ Le planificateur ne voit que ce format commun : ajouter Pronote ne change ni le 
 
 ## Autres pistes notées le 23/11
 
-(Copie hors ligne, légende des pastilles des jours, focus clavier de la fenêtre mission et sauvegarde : en préversion 0.17.0.)
+(Copie hors ligne, légende des pastilles des jours, focus clavier de la fenêtre mission et sauvegarde : faits en v0.17.0.)
 
 - Vue parents dans le nouveau style (navigation inspirée de Brilliant).
 - Code parent pour ouvrir les Paramètres (fait en v0.14.0 : Vue parents et Paramètres).
