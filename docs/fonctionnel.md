@@ -92,6 +92,10 @@ Carte d'élève complète, **Mes objectifs** (bouton « Cette semaine, je l'ai t
 - Un conseil adapté s'affiche dans l'écran « mission en cours » ; « Conseil de la semaine » sur l'accueil.
 - Les parents ajoutent, modifient, suppriment les conseils (Vue parents) ; un retour de professeur peut devenir un conseil.
 - Règle : écrire les conseils avec ses mots, ne jamais recopier de passages de livres.
+- **Conseils pour les parents** (0.13) : rubrique de la Vue parents, jamais affichée aux enfants (ni onglet Conseils,
+  ni missions, ni accueil). Conseils par défaut dans le code (`PARENT_TIPS`) + conseils de la famille saisis avec
+  « Pour : Les parents » (`tips.child = 'parents'`, `tips.moments` = endroits : general, diff, meth, notes).
+  Un conseil s'affiche aussi sous « Points difficiles », « Méthodes de travail » et « Retours des professeurs ».
 
 ## 5. Règles du planning
 
