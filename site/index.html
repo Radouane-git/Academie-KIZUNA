@@ -724,12 +724,41 @@ div.lockhint:not(.card){justify-content:flex-end}
 .sec-cta{background:var(--soft)!important;color:var(--ink)!important;font-size:.95rem!important}
 .books.rp{margin:4px 0 6px}
 @media print{.secnav,.hero{display:none!important}.sheet-view{border:0}}
+/* ===== 0.19.0 : présentation, première passe ===== */
+.ovcard,.hardcard,.methcard{margin-top:16px}
+.acts{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:8px;align-items:flex-start}
+.acts>.fold{flex:0 0 auto;border-radius:999px}
+.acts>.fold>summary{min-height:44px;padding:6px 14px 6px 6px;font-size:.9rem;border-radius:999px;gap:8px}
+.acts .fplus{font-size:1.1rem;color:var(--muted);margin-left:2px}
+.acts>.fold[open] .fplus{transform:rotate(45deg)}
+.acts .pic{flex:none}
+.acts>.fold[open]{order:10;flex:1 1 100%;border-radius:22px}
+.acts>.fold[open]>summary{border-radius:22px 22px 0 0}
+.cols>.setlink{grid-column:1/-1}
+.tips-scroll{max-height:380px}
+.card>.ftitle h2,.ftitle h2{margin:0}
+.card>.ftitle{margin-bottom:8px}
+h2 small.cnt{display:inline;font-weight:400;color:var(--muted);font-size:.85rem;margin-left:4px}
+.bilan-cta a.btn{text-decoration:none;color:#fff}
+.kidbar .profiles{display:none}
+.kidbar .pmenu{display:block}
+@media (min-width:901px){
+ .kidbar .secpic{display:inline-flex}
+ .kidbar .sec{display:inline-flex;align-items:center;gap:6px}
+ .kidbar .sec .pic{width:26px!important;height:26px!important}
+ .kidbar .sec .pic svg{width:18px;height:18px}
+}
+@media (min-width:901px) and (max-width:1120px){
+ .kidbar .sec .sl{display:none}
+ .kidbar .sec[aria-current="page"] .sl{display:inline}
+ .kidbar .sec{padding-left:8px;padding-right:8px}
+}
 </style>
 </head>
 <body>
 <div id="root"><p style="padding:2rem;font-family:sans-serif">Chargement de l’Académie…</p></div>
-<script src="config.js?v=0.18.0"></script>
+<script src="config.js?v=0.19.0"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script src="app.js?v=0.18.0"></script>
+<script src="app.js?v=0.19.0"></script>
 </body>
 </html>

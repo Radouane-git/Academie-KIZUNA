@@ -5,9 +5,9 @@ Numérotation : `MAJEUR.MINEUR.CORRECTIF` (ex. 0.2.1).
 - **mineur** (0.**2**.0) : une nouveauté (un réglage, un écran, une règle de planning) ;
 - **majeur** (**1**.0.0) : la version jugée stable après plusieurs semaines d'usage réel.
 
-## [0.19.0] – préversion (non publiée)
+## [0.19.0] – 2026-11-25
 
-Visible uniquement sur `/preview/`.
+Validée par les parents et publiée sur le site principal.
 - **Bandeau des pages enfants** : les avatars, Parents, Conseils et la roue dentée laissent place à un seul bouton de
   profil (« L Léo ▾ ») qui ouvre le menu (autres enfants, Vue parents, Conseils, Paramètres). Les sections gardent
   leur pictogramme et leur nom ; sur un écran moyen (petit portable, tablette), seule la section ouverte garde son

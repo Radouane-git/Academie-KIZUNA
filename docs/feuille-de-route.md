@@ -197,7 +197,7 @@ et le sport, dans une section des pages enfants comme Bibliothèque ou Tampons.
 
 ## Demandes du 25/11 au soir (ordre convenu)
 
-1. **0.19.0 – Présentation, première passe** : Vue parents (espaces entre les cartes, « Conseils pour les parents »
+1. **0.19.0 – Présentation, première passe** (faite le 25/11) : Vue parents (espaces entre les cartes, « Conseils pour les parents »
    avant « Conseils de la famille », conseils de la famille limités à 3 ou 4 avec ascenseur, boutons « Actions »
    plus petits, « Mot du sensei » et « Ajouter une mission » rangés dans « Autres actions ») et bandeau du haut des
    pages enfants (place manquante).
