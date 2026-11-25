@@ -173,3 +173,15 @@ Les livres de méthode contiennent aussi des conseils qui s'adressent aux adulte
   un conseil sur le dosage de la difficulté).
 - Base : valeur `parents` dans la colonne `child` de la table `tips` (ou nouveau moment « parents »),
   exclue des écrans enfants.
+
+## Idée notée le 25/11 : revoir la présentation finale
+
+Les écrans se chargent (Conseils, Retours des professeurs, Vue parents…) et il faut beaucoup défiler.
+À faire après les prochaines fonctions, avant la 1.0.
+
+- Faire l'inventaire de chaque écran : ce qui sert tous les jours, ce qui sert de temps en temps, ce qui sert rarement.
+- Pistes : onglets ou sous-pages dans la Vue parents (Semaine · Enfants · Conseils et retours · Actions) ;
+  listes repliées avec les 3 éléments les plus récents et « Voir tout » ; filtres et recherche dans les conseils ;
+  un seul conseil visible à la fois avec « suivant » ; retours des professeurs groupés par enfant puis par matière.
+- Vérifier sur téléphone : une action principale par écran, le moins de défilement possible.
+- Faire tester par les enfants et les parents, puis valider en préversion.
