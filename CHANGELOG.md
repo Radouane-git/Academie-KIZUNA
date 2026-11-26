@@ -8,18 +8,19 @@ Numérotation : `MAJEUR.MINEUR.CORRECTIF` (ex. 0.2.1).
 ## [0.22.0] – préversion (non publiée)
 
 Refonte de l'interface, direction A « L'Académie, plus assumée » choisie le 26/11. Premières maquettes en préversion
-(`/preview/`) : Aujourd'hui et Mon dossier. Le site principal ne change pas.
+(`/preview/`) : Aujourd'hui et Mon parcours. Le site principal ne change pas.
 - **Grades** au lieu du niveau chiffré, des badges et de la flamme : Recrue, Apprenti (3 semaines tenues), Aspirant (7),
   Confirmé (12), Élite (18), Maître (25). Une semaine est tenue avec au moins 80 % des missions faites ; on ne perd
-  jamais un grade. Insigne à chevrons (étoile pour Maître) sur l'accueil, la carte d'élève et le dossier.
+  jamais un grade. Insigne à chevrons (étoile pour Maître) sur l'accueil, la carte d'élève et le parcours.
 - **Coup de pouce du mentor** : semaines accordées par un parent (`grade_bonus` dans les réglages de la famille, pas
   de bloc SQL). Le bouton côté parents viendra avec la maquette de la Vue parents.
 - **Aujourd'hui** : grade et promotion sur la carte d'élève, « Ma semaine : x % (80 % pour la tenir) », message du
-  mentor ciblé (« Pour toi » ou « Pour toute la promotion », affiché 4 jours puis rangé dans le dossier), « Épreuve »
+  mentor ciblé (« Pour toi » ou « Pour toute la promotion », affiché 4 jours puis rangé dans le parcours), « Épreuve »
   à la place d'« Évaluation », conseil du jour (rappel de rythme pendant les vacances), « Journée bouclée ».
-- **Mon dossier** (remplace Tampons, ancienne adresse redirigée) : carte d'élève, parcours de l'année, objectifs,
+- **Mon parcours** (remplace Tampons, anciennes adresses redirigées) : carte d'élève (kanji 道, le chemin, en
+  décoration), parcours de l'année, objectifs,
   ce que pensent mes professeurs, messages du mentor, sceaux (kanji 努, l'effort), promotions, règles.
-- Pictogramme « Dossier » ; visites guidées mises à jour ; légende des jours replacée sous la bande des jours sur
+- Pictogramme « Parcours » (chemin et drapeau) ; Paramètres toujours en dernier dans le menu des profils ; visites guidées mises à jour ; légende des jours replacée sous la bande des jours sur
   téléphone.
 - Pas de nouveau bloc SQL.
 
