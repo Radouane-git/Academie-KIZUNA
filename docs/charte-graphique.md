@@ -8,8 +8,13 @@ Planches de référence (maquettes validées) : canevas « Identité visuelle du
 - **Accroche** : « Devoirs, missions et organisation ».
 - **Affichage** : « ACADÉMIE KIZUNA » sur ordinateur (deux lignes : ACADÉMIE en petit, KIZUNA en grand) ;
   « KIZUNA » seul sur téléphone.
-- **Vocabulaire** : un devoir est une **mission** ; le parent est le **sensei** ; la récompense est un **tampon** ;
-  la fiche de l'enfant est sa **carte d'élève**.
+- **Vocabulaire** (0.22, direction « L'Académie, plus assumée ») : l'enfant est un **élève** ; un devoir est une
+  **mission** ; une évaluation est une **épreuve** ; le parent est le **mentor** (entraîneur en retrait, peu de mots
+  mais qui comptent) ; la progression se fait par **grades** (Recrue, Apprenti, Aspirant, Confirmé, Élite, Maître) ;
+  l'année scolaire est une **promotion** ; la récompense rare est un **sceau** ; la fiche de l'enfant est sa
+  **carte d'élève**, dans **Mon parcours**.
+- **Mots à éviter** (trop liés à des œuvres connues) : ninja, village, bandeau frontal, chakra, jutsu, missions classées
+  de D à S, « alter », devises célèbres.
 - **Ton** : tutoiement pour les enfants, vouvoiement neutre dans les écrans parents ; phrases courtes ; encourager,
   ne jamais culpabiliser (une série qui s'arrête ne retire rien).
 - Inspiration : l'univers manga (académies de héros), **sans** reprendre de nom, personnage ou visuel protégé.
@@ -22,10 +27,12 @@ Planches de référence (maquettes validées) : canevas « Identité visuelle du
 - Icône d'appli : même dessin, fond Lagon plein (version « maskable », logo à 72 % du carré).
 - Ne pas : changer la police du kanji, le déformer, l'utiliser sur un fond qui le fait disparaître.
 
-## 3. Tampon de l'Académie
+## 3. Sceaux de l'Académie (ancien tampon)
 
 - Carré arrondi rouge `#C62E3A`, double filet intérieur (rouge puis blanc), légèrement tourné (−8°),
-  kanji 絆 blanc en **Dela Gothic One** (toujours gras).
+  kanji blanc en **Dela Gothic One** : **努** (l'effort) pour le sceau individuel ; **絆** (le lien) réservé au logo et au
+  défi d'équipe réussi ; **継** (la persévérance) possible plus tard. Sens vérifiés par le père le 26/11.
+- **道** (le chemin) : en filigrane sur la carte de Mon parcours (blanc à 14 %), jamais seul comme libellé.
 - Sur les cartes colorées : **contour blanc de 3 px et petite ombre** pour rester visible sur toutes les couleurs.
 
 ## 4. Typographie
@@ -73,9 +80,10 @@ Règle pour une nouvelle couleur : contraste d'au moins **4,5:1** entre le texte
 ## 6. Éléments
 
 - **Carte d'élève / carte de profil** : fond couleur de héros + lignes de vitesse
-  (`repeating-conic-gradient`, rayons blancs à 12 %), coins arrondis 24–28 px ; bouclier du niveau
-  (couleur d'accent, chiffre bleu nuit foncé `#082A31`, ou jaune clair `#FFE58A` si l'accent est sombre), nom en
-  Unbounded 900. Pastilles de la carte : fond assombri (noir à 20 %), jamais éclairci, pour garder 4,5:1 sur toutes
+  (`repeating-conic-gradient`, rayons blancs à 12 %), coins arrondis 24–28 px ; **insigne de grade** (bouclier couleur
+  d'accent, de 1 à 5 chevrons pour Recrue à Élite, étoile pour Maître, dessinés en bleu nuit foncé `#082A31`, ou jaune
+  clair `#FFE58A` si l'accent est sombre ; grades non atteints sur fond gris `#E4ECEB`), nom en Unbounded 900, grade
+  dans une pastille. Pastilles de la carte : fond assombri (noir à 20 %), jamais éclairci, pour garder 4,5:1 sur toutes
   les couleurs de héros.
 - **Cartes** : blanc, coins 22–24 px, ombre douce ; carte d'action principale avec ombre « marche » (6 px, couleur des lignes).
 - **Bouton d'action** : couleur de héros, texte blanc, coins 14 px, ombre « marche » de 5 px qui s'enfonce au clic.
@@ -83,7 +91,8 @@ Règle pour une nouvelle couleur : contraste d'au moins **4,5:1** entre le texte
   de la couleur d'accent ; étape faite remplie de la couleur de héros avec une coche.
 - **Pictogrammes « autocollants »** (série 2) : dessin coloré dans un carré blanc arrondi, contour bleu nuit
   et ombre décalée de 2 px. Jeu : Devoir, Réviser, Lecture, Apprendre, Relire, Sac, Corvée, Rangement, Sport,
-  Loisir, Repas, Coucher. Tous à la même taille dans une liste.
+  Loisir, Repas, Coucher, Parcours (chemin et drapeau, 0.22). Tous à la même taille dans une liste.
+- **Journée bouclée** : bandeau corail à lignes de vitesse, titre blanc ombré, sous-titre `#082A31` (5,4:1).
 
 ## 7. Accessibilité
 
@@ -96,6 +105,8 @@ Règle pour une nouvelle couleur : contraste d'au moins **4,5:1** entre le texte
 ## Bandeau du haut (0.19)
 
 - Pages enfants : logo, sections (pictogramme + nom), bouton de profil unique (menu), série de jours.
+- Sections depuis la 0.22 : Aujourd'hui, Ma semaine, Emploi du temps, Bibliothèque, Mon parcours ; plus de flamme.
+  Menu des profils : enfants, Vue parents, Conseils, puis **Paramètres toujours en dernier**.
 - Écran moyen (901 à 1120 px) : pictogrammes seuls sauf la section ouverte ; nom en bulle (`title`) et pour les
   lecteurs d'écran. Téléphone : barre du bas (Aujourd'hui, Semaine, Horaires, Livres, Tampons).
 - Ne pas revenir aux pictogrammes seuls partout : le survol n'existe pas sur téléphone et le nom aide les enfants.

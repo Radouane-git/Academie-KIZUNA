@@ -766,6 +766,47 @@ h2 small.cnt{display:inline;font-weight:400;color:var(--muted);font-size:.85rem;
 .tour-btns span{display:flex;gap:8px}
 @media (prefers-reduced-motion:reduce){.tour-hole,.tour-pop{transition:none}}
 @media print{#tour,.tourbtn{display:none!important}}
+/* ===== 0.22.0 : grades, mentor, parcours ===== */
+.preview-flag{position:fixed;left:12px;bottom:12px;z-index:4;background:var(--ink);color:#fff;border-radius:999px;padding:5px 11px;font-size:.72rem;font-weight:700}
+@media (max-width:900px){.preview-flag{bottom:86px;left:8px}}
+.shield.ins svg{width:64%;height:64%;margin-top:-6%}
+.shield.ins.sm{width:40px;height:46px}
+.home-card .shield.ins{width:56px;height:64px}
+.badges .gname{font-family:var(--display);font-weight:800;letter-spacing:.02em}
+.hero-week{display:flex;flex-direction:column;line-height:1.15}
+.hero-week b{font-family:var(--display);font-weight:900;font-size:1.5rem}
+.hero-week small{opacity:.88}
+.boom small{display:block;color:#082A31;font-weight:700;margin-top:4px}
+.mentor{border-left:6px solid var(--child)}
+.mt-kick{display:block;font-size:.75rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#B83E25}
+.mentor h2,.tipday h2{margin:4px 0 6px}
+.mentor small,.tipday small,.m-mentor small,.m-tip small{color:var(--muted)}
+.tipday p,.m-tip p{margin:0 0 4px}
+.m-mentor,.m-tip{background:#fff;border:2px solid var(--line);border-radius:16px;padding:12px 16px}
+.m-mentor{border-left:6px solid var(--child)}
+.m-mentor h2,.m-tip h2{font-size:1rem;margin:2px 0 4px}
+.m-mentor .sensei-msg{font-size:1rem}
+.ladder{list-style:none;margin:6px 0 10px;padding:0;display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+.lg{display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;padding:10px 4px;border-radius:16px;border:2px solid var(--line)}
+.lg.now{border-color:var(--child);box-shadow:0 0 0 2px var(--child) inset}
+.lg.next{opacity:.8}
+.lg-t b{display:block;font-family:var(--display);font-weight:800;font-size:.82rem}
+.lg-t small{color:var(--muted);font-size:.74rem}
+.lg em{font-style:normal;font-size:.72rem;font-weight:700;border-radius:999px;padding:2px 8px}
+.lg-now{background:var(--ink);color:#fff}
+.lg-ok{background:#E5F4E4;color:#1E5E2F}
+@media (max-width:700px){.ladder{grid-template-columns:repeat(3,1fr)}}
+.mlist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.mlist li{border-left:4px solid var(--child);padding:2px 0 2px 12px}
+.mlist p{margin:2px 0 0}
+.promo{display:flex;align-items:center;gap:12px}
+.promo b{display:block}
+.promo small{color:var(--muted)}
+.dossier-hero .wk-now{min-width:180px}
+.dossier-hero{position:relative;overflow:hidden}.dossier-hero>*{position:relative}.dossier-hero>.michi{position:absolute;right:18px;top:6px;font-family:var(--kanji);font-size:6.5rem;line-height:1;opacity:.14;pointer-events:none}
+@media (max-width:600px){.dossier-hero>.michi{font-size:4.5rem;right:12px}}
+@media (max-width:900px){.main-col>.dlegend{order:3}.kid-hero .badges{display:flex;margin-top:6px}.kid-hero .badges span:not(.gname){display:none}}
+
 /* ===== 0.21.0 : présentation allégée ===== */
 .ptabs{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;background:#fff;border:2px solid var(--line);border-radius:18px;padding:4px;margin:4px 0 14px}
 .ptab{position:relative;display:flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:6px 8px;border-radius:14px;text-decoration:none;color:var(--muted);font-weight:700;font-size:.92rem;line-height:1.15;text-align:center}
@@ -833,8 +874,8 @@ details.ptip>span{display:block;margin-top:6px}
 </head>
 <body>
 <div id="root"><p style="padding:2rem;font-family:sans-serif">Chargement de l’Académie…</p></div>
-<script src="config.js?v=0.21.2"></script>
+<script src="config.js?v=0.22.0"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script src="app.js?v=0.21.2"></script>
+<script src="app.js?v=0.22.0"></script>
 </body>
 </html>

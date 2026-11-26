@@ -1,8 +1,8 @@
 import asyncio, json
 from playwright.async_api import async_playwright
 KIDS=["leo","ines","sarah"]
-ROUTES=["accueil"]+[f"{k}{s}" for k in KIDS for s in ["","/semaine","/edt","/livres","/tampons"]]+["parents","parents/enfants","parents/retours","parents/actions","parents/bilan","conseils","parametres"]
-KEYS=["accueil","jour","semaine","edt","livres","tampons","parents","parents-enfants","parents-retours","parents-actions","bilan","conseils","parametres"]
+ROUTES=["accueil"]+[f"{k}{s}" for k in KIDS for s in ["","/semaine","/edt","/livres","/parcours"]]+["parents","parents/enfants","parents/retours","parents/actions","parents/bilan","conseils","parametres"]
+KEYS=["accueil","jour","semaine","edt","livres","parcours","parents","parents-enfants","parents-retours","parents-actions","bilan","conseils","parametres"]
 JS="""()=>{const W=innerWidth,out={};
 out.overflow=document.documentElement.scrollWidth>W+1?document.documentElement.scrollWidth:0;
 const tb=document.querySelector('.topbar');out.topbar=tb?Math.round(tb.getBoundingClientRect().height):0;

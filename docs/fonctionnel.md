@@ -16,13 +16,14 @@ de l'ENT, et qu'il coche lui-même. Les parents suivent l'avancement, ajoutent c
 
 | Profil | Accès | Rôle |
 |---|---|---|
-| Enfant | carte sur l'accueil, pastille ou menu avatar | voit et coche sa journée, sa semaine, ses livres, ses tampons |
+| Enfant | carte sur l'accueil, pastille ou menu avatar | voit et coche sa journée, sa semaine, ses livres, son parcours (grade, sceaux) |
 | Parents | « Vue parents » | suit les enfants, donne des tampons, écrit le mot du sensei, ajoute des missions, propose des idées |
 | Paramètres | roue dentée | rubriques repliées : code parent, couleurs de héros, sauvegarde, installation sur téléphone, import d'historique, réglages avancés (JSON) |
 
 - Un seul **mot de passe familial** ouvre l'appli (demandé une fois par appareil).
-- L'appli s'ouvre sur l'**accueil** « Qui ouvre l'Académie ? » : une carte par enfant (couleur, niveau, missions du jour).
-- Adresses : `#accueil`, `#<enfant>`, `#<enfant>/semaine`, `#<enfant>/livres`, `#<enfant>/tampons`, `#parents`,
+- L'appli s'ouvre sur l'**accueil** « Qui ouvre l'Académie ? » : une carte par enfant (couleur, insigne et grade, missions du jour).
+- Adresses : `#accueil`, `#<enfant>`, `#<enfant>/semaine`, `#<enfant>/livres`, `#<enfant>/parcours` (anciennes adresses
+  `/tampons` et `/dossier` redirigées), `#parents`,
   `#parametres`, `#conseils`.
 - Ordinateur : sections en haut, profils en pastilles à droite. Téléphone : sections en barre du bas,
   profils derrière l'avatar en haut à droite.
@@ -31,8 +32,9 @@ de l'ENT, et qu'il coche lui-même. Les parents suivent l'avancement, ajoutent c
 ## 3. Écrans de l'enfant
 
 ### 3.1 Aujourd'hui
-- **Carte d'élève** aux couleurs de l'enfant (lignes de vitesse) : niveau, salutation, missions faites et restantes,
-  badges, anneau des missions du jour, nombre de tampons. Compacte sur téléphone.
+- **Carte d'élève** aux couleurs de l'enfant (lignes de vitesse) : insigne et grade, promotion (classe), salutation,
+  missions faites et restantes, semaines tenues manquantes pour le grade suivant, anneau des missions du jour,
+  « Ma semaine : x % (80 % pour la tenir) ». Compacte sur téléphone (insigne et grade seulement).
 - **Bande des 7 jours** pour changer de jour (pastille : vide, entamé, complet).
 - **Prochaine mission** : la première mission non faite, avec le bouton **Commencer**.
 - **Écran « mission en cours »** : consigne en grand, barre de progression, **C'est fait** (coche et passe à la suivante),
@@ -43,8 +45,11 @@ de l'ENT, et qu'il coche lui-même. Les parents suivent l'avancement, ajoutent c
 - **Relire les leçons** : une pastille par matière du jour et du lendemain ; message
   « Pas de leçon à relire pour demain » si le lendemain n'a pas cours. Compte pour **une** mission.
 - **Pas de place avant le coucher** : encadré des missions qui ne rentrent pas dans la journée (voir § 5.4).
-- Colonne (ou bloc sous la prochaine mission sur téléphone) : **mot du sensei**, **Pour demain** (ce qui est à rendre),
-  **prochaine évaluation**.
+- Colonne (ou bloc sous la prochaine mission sur téléphone) : **message du mentor** (« Pour toi » s'il vise l'enfant,
+  « Pour toute la promotion » s'il vise tous ; le plus récent des 4 derniers jours, le message personnel d'abord),
+  objectif, **Pour demain** (ce qui est à rendre), **prochaine épreuve** (évaluation), **conseil du jour**
+  (pendant une semaine sans cours : rappel pour garder le rythme).
+- **Journée bouclée** : bandeau quand toutes les missions du jour sont cochées.
 - **Difficulté ressentie** : en cochant un devoir, une leçon, une révision ou une lecture, l'enfant note de 1 (très facile)
   à 5 (très difficile), ou passe ; pastille colorée sur le rond, modifiable.
 - **Méthode de travail** : après une révision ou une leçon, l'enfant indique comment il a travaillé (méthodes, temps) ;
@@ -62,9 +67,12 @@ Navigation : semaine dernière, cette semaine, semaine prochaine, autres semaine
 Livres terminés (titre, auteur, pages, date), total de livres et de pages, bouton **J'ai fini un livre**
 (formulaire avec Annuler).
 
-### 3.4 Tampons
-Carte d'élève complète, **Mes objectifs** (bouton « Cette semaine, je l'ai tenu »), **Ce que pensent mes professeurs**
-(version pour l'enfant des retours partagés par les parents), liste des tampons reçus, rappel des règles de niveau.
+### 3.4 Mon parcours (0.22, remplace Tampons)
+Carte d'élève complète (insigne, grade, promotion et année scolaire, barre vers le grade suivant, semaine en cours,
+nombre de sceaux, kanji 道 en filigrane), **Mon parcours de l'année** (les 6 grades : atteint, ton grade, à venir),
+**Mes objectifs** (bouton « Cette semaine, je l'ai tenu »), **Ce que pensent mes professeurs** (version pour l'enfant
+des retours partagés par les parents), **Messages de mon mentor** (les 5 derniers), **Mes sceaux** (les tampons
+donnés par les parents, kanji 努), **Mes promotions**, **Comment monter en grade**.
 
 ## 4. Vue parents
 
@@ -203,13 +211,16 @@ les jours à venir sont recalculés à chaque synchronisation.
 
 ## 6. Progression et récompenses
 
-- **Niveau** = 1 + une tranche par 40 missions cochées.
-- **Badges** : « N jours de suite » (au moins 80 % de la journée faite), Lecteur (15 lectures ou 3 livres),
-  Stratège (10 révisions), Pilier de la maison (15 tâches ménagères), Tamponné (premier tampon),
-  « 1 000 pages lues » (puis 2 000…).
-- Une série qui s'arrête ne retire rien (choix volontaire : motiver sans culpabiliser).
-- **Tampon de l'Académie** : donné par un parent après une bonne note préparée avec les révisions.
-- **Mot du sensei** : message d'encouragement d'un parent, affiché dans la journée de l'enfant.
+- **Grades** (0.22) : Recrue, Apprenti (3 semaines tenues), Aspirant (7), Confirmé (12), Élite (18), Maître (25).
+  Une **semaine tenue** = semaine terminée avec au moins 80 % des missions faites (`TENUE`, table `GRADES` dans
+  `site/app.js`). Seules comptent les semaines depuis le 1er septembre. On ne perd jamais un grade.
+- **Coup de pouce** : un parent peut accorder des semaines (`grade_bonus` d'un enfant dans les réglages de la famille),
+  pour faire monter un enfant d'un grade de façon exceptionnelle. Le bouton dans la Vue parents est à venir.
+- **Promotion** : une par année scolaire (classe lue dans `meta`, ex. « 13 ans · 4e »). En septembre, on repart Recrue ;
+  l'insigne de l'année reste dans Mon parcours (remis au dernier bilan de juin ; enregistrement à venir).
+- Le niveau chiffré, les badges et la série de jours (flamme) ont été retirés en 0.22.
+- **Sceau de l'effort** (ancien tampon) : donné par un parent pour un vrai effort ; kanji 努.
+- **Message du mentor** (ancien mot du sensei) : message d'un parent à un enfant ou à tous.
 
 ## 7. Couleurs de héros
 

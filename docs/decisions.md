@@ -23,3 +23,8 @@ Une ligne par décision importante : ce qui a été choisi et pourquoi. Les plus
 | 23/11/2026 | **Page d'accueil des profils** à l'ouverture | appareils partagés ; chaque enfant choisit son profil |
 | 23/11/2026 | Dépôt renommé **Academie-KIZUNA** | adresse du site au nom de l'appli |
 | 23/11/2026 | Architecture **multi-sources** (EcoleDirecte, Pronote) prévue mais pas développée | besoin futur ; voir feuille de route |
+| 26/11/2026 | Refonte de l'interface, direction **« L'Académie, plus assumée »** | l'univers était dans l'emballage, pas dans le fonctionnement ; les enfants (13–15 ans, lecteurs de manga) veulent une école d'élite crédible, sans copie |
+| 26/11/2026 | **Grades par semaines tenues** (80 %) au lieu du niveau, des badges et de la flamme ; jamais de grade perdu | un seul système clair ; les enfants cochent après coup, la régularité compte plus que la vitesse |
+| 26/11/2026 | **Une promotion par année scolaire** ; coup de pouce possible du parent | renouveler la montée chaque année sans effacer le passé ; l'appli a démarré en novembre |
+| 26/11/2026 | Parent = **mentor en retrait**, message ciblé et rare | rôle choisi par le père ; garde aussi le lien pour un parent séparé ou loin |
+| 27/11/2026 | Rubrique **« Mon parcours »** (道 en décoration) ; sceaux 努 / 絆 / 継 | nom clair pour les enfants ; kanji vérifiés |

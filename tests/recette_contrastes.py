@@ -1,8 +1,8 @@
 import asyncio, json
 from playwright.async_api import async_playwright
 KIDS=["leo","ines","sarah"]
-ROUTES=["accueil"]+[f"{k}{s}" for k in KIDS for s in ["","/semaine","/edt","/livres","/tampons"]]+["parents","parents/enfants","parents/retours","parents/actions","parents/bilan","conseils","parametres"]
-KEYS=["accueil","jour","semaine","edt","livres","tampons","parents","parents-enfants","parents-retours","parents-actions","bilan","conseils","parametres"]
+ROUTES=["accueil"]+[f"{k}{s}" for k in KIDS for s in ["","/semaine","/edt","/livres","/parcours"]]+["parents","parents/enfants","parents/retours","parents/actions","parents/bilan","conseils","parametres"]
+KEYS=["accueil","jour","semaine","edt","livres","parcours","parents","parents-enfants","parents-retours","parents-actions","bilan","conseils","parametres"]
 JS="""()=>{function rgb(s){const m=s.match(/[\\d.]+/g);return m?m.map(Number):[0,0,0,0];}
 function lum(c){const a=c.slice(0,3).map(v=>{v/=255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4)});return .2126*a[0]+.7152*a[1]+.0722*a[2];}
 function bg(e){let comps=[];while(e){const s=getComputedStyle(e);const c=rgb(s.backgroundColor);if(c.length<4)c.push(1);if(c[3]>0){comps.push(c);if(c[3]>=1)break;}e=e.parentElement;}

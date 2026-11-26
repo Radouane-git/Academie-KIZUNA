@@ -1,6 +1,6 @@
 import asyncio, json, datetime
 from playwright.async_api import async_playwright
-KEYS=["accueil","jour","semaine","edt","livres","tampons","parents","parents-enfants","parents-retours","parents-actions","bilan","conseils","parametres"]
+KEYS=["accueil","jour","semaine","edt","livres","parcours","parents","parents-enfants","parents-retours","parents-actions","bilan","conseils","parametres"]
 R=[]
 def ok(name,cond,info=""): R.append(("OK " if cond else "ÉCHEC ")+name+(" — "+str(info) if info else ""))
 async def run():
@@ -82,7 +82,7 @@ async def run():
       await pg.locator(f"[data-fold={f}]>summary").click(); await pg.wait_for_timeout(300)
     await openf("stampf")
     await pg.select_option("#s-child","leo"); await pg.fill("#s-title","Test : tampon"); await pg.locator("#stampf button[type=submit]").click(); await pg.wait_for_timeout(600)
-    await go("leo/tampons")
+    await go("leo/parcours")
     ok("Tampon visible côté enfant", "Test : tampon" in await pg.inner_text("#root"))
     await go("parents/actions"); await openf("senseif")
     await pg.select_option("#m-child","leo"); await pg.fill("#m-text","Message de test du sensei"); await pg.locator("#senseif button[type=submit]").click(); await pg.wait_for_timeout(600)

@@ -1,6 +1,6 @@
 import asyncio, json
 from playwright.async_api import async_playwright
-KEYS=["accueil","jour","semaine","edt","livres","tampons","parents","parents-enfants","parents-retours","parents-actions","bilan","conseils","parametres"]
+KEYS=["accueil","jour","semaine","edt","livres","parcours","parents","parents-enfants","parents-retours","parents-actions","bilan","conseils","parametres"]
 async def run():
   async with async_playwright() as p:
     b=await p.chromium.launch(executable_path="/usr/bin/google-chrome",args=["--no-sandbox"])

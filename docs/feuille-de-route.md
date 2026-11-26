@@ -195,7 +195,7 @@ Les écrans se chargent (Conseils, Retours des professeurs, Vue parents…) et i
 ## Idée notée le 25/11 : emploi du temps de la semaine (fait en v0.16.0)
 
 Vue synthétique sur une semaine qui mélange l'emploi du temps EcoleDirecte, les cours d'anglais, les cours du soir
-et le sport, dans une section des pages enfants comme Bibliothèque ou Tampons.
+et le sport, dans une section des pages enfants comme Bibliothèque ou Mon parcours.
 
 ## Demandes du 25/11 au soir (ordre convenu)
 

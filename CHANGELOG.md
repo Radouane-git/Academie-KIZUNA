@@ -5,10 +5,10 @@ Numérotation : `MAJEUR.MINEUR.CORRECTIF` (ex. 0.2.1).
 - **mineur** (0.**2**.0) : une nouveauté (un réglage, un écran, une règle de planning) ;
 - **majeur** (**1**.0.0) : la version jugée stable après plusieurs semaines d'usage réel.
 
-## [0.22.0] – préversion (non publiée)
+## [0.22.0] – 2026-11-27
 
-Refonte de l'interface, direction A « L'Académie, plus assumée » choisie le 26/11. Premières maquettes en préversion
-(`/preview/`) : Aujourd'hui et Mon parcours. Le site principal ne change pas.
+Validée par les parents et publiée sur le site principal. Refonte de l'interface, direction A « L'Académie, plus
+assumée » choisie le 26/11 : premiers écrans, Aujourd'hui et Mon parcours.
 - **Grades** au lieu du niveau chiffré, des badges et de la flamme : Recrue, Apprenti (3 semaines tenues), Aspirant (7),
   Confirmé (12), Élite (18), Maître (25). Une semaine est tenue avec au moins 80 % des missions faites ; on ne perd
   jamais un grade. Insigne à chevrons (étoile pour Maître) sur l'accueil, la carte d'élève et le parcours.
@@ -18,10 +18,12 @@ Refonte de l'interface, direction A « L'Académie, plus assumée » choisie le 
   mentor ciblé (« Pour toi » ou « Pour toute la promotion », affiché 4 jours puis rangé dans le parcours), « Épreuve »
   à la place d'« Évaluation », conseil du jour (rappel de rythme pendant les vacances), « Journée bouclée ».
 - **Mon parcours** (remplace Tampons, anciennes adresses redirigées) : carte d'élève (kanji 道, le chemin, en
-  décoration), parcours de l'année, objectifs,
-  ce que pensent mes professeurs, messages du mentor, sceaux (kanji 努, l'effort), promotions, règles.
-- Pictogramme « Parcours » (chemin et drapeau) ; Paramètres toujours en dernier dans le menu des profils ; visites guidées mises à jour ; légende des jours replacée sous la bande des jours sur
-  téléphone.
+  décoration), parcours de l'année, objectifs, ce que pensent mes professeurs, messages du mentor, sceaux (kanji 努, l'effort), promotions, règles.
+- Pictogramme « Parcours » (chemin et drapeau) ; Paramètres toujours en dernier dans le menu des profils ;
+  visites guidées mises à jour ; légende des jours replacée sous la bande des jours sur téléphone.
+- Pas encore refaits : Semaine et Vue parents, qui gardent « évaluation », « tampon » et « mot du sensei » ; l'onglet
+  Équipe (défi d'équipe) et le bouton « coup de pouce » viendront ensuite.
+- Scripts `tests/` : section « parcours » au lieu de « tampons ».
 - Pas de nouveau bloc SQL.
 
 ## [0.21.2] – 2026-11-26
