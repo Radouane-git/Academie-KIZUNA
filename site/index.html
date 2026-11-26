@@ -76,7 +76,7 @@ a{color:var(--child)}
 .over{font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;opacity:.92;display:block;margin-bottom:6px}
 .hero h1{font-weight:900;font-size:clamp(1.7rem,4vw,2.5rem)}
 .badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
-.badges span{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:3px 11px;font-size:.8rem;font-weight:700}
+.badges span{background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:3px 11px;font-size:.8rem;font-weight:700}
 .hero-stats{display:flex;align-items:center;gap:26px;flex-wrap:wrap}
 .wk-prog{min-width:220px}
 .wk-prog>div:first-child{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
@@ -577,7 +577,7 @@ a{color:var(--child)}
 .rr:hover,.rr[aria-pressed="true"]{border-color:var(--dc)}
 .rr[aria-pressed="true"]{background:color-mix(in srgb,var(--dc) 12%,#fff)}
 .rr-skip{align-self:flex-start;padding:6px 2px;font-weight:700}
-.diff-link{font-size:.85rem;padding:6px 0;text-align:left;align-self:flex-start;min-height:32px}
+.diff-link{font-size:.85rem;padding:6px 0;text-align:left;align-self:flex-start;min-height:44px}
 .focus footer .raterow{margin:0 0 4px;text-align:left}
 .hardtxt{color:#D63A3A!important;font-weight:700}
 .hardcard .hard-kid{margin-top:8px}
@@ -822,12 +822,19 @@ details.ptip>span{display:block;margin-top:6px}
 .setfolds>.fold[open] .fplus{transform:rotate(45deg)}
 @media (max-width:600px){.topbar{gap:8px 10px;flex-wrap:nowrap}}
 .setfolds>.fold>form>.ftitle:first-child,.setfolds>.fold>.card>h2:first-child,.setfolds>.fold>form>h2:first-child{display:none}
+/* ===== 0.21.2 : recette avant 1.0 ===== */
+.st-l.link{position:relative}
+.st-l.link::after{content:"";position:absolute;left:0;right:0;top:50%;min-height:44px;height:100%;transform:translateY(-50%)}
+[data-delbook],[data-rdel],[data-rdrop]{min-height:44px;padding:0 8px}
+.chk{width:44px;height:44px}label .chk{width:36px;height:36px}
+@media (max-width:600px){.who{flex:1 1 auto;min-width:0;justify-content:flex-end}.pmenu{min-width:0}.pmenu summary{min-width:0}.pmenu summary .pm-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}}
+@media (max-width:380px){.topbar{padding-left:12px;padding-right:12px;margin-left:-12px;margin-right:-12px;gap:8px}.pmenu summary{padding:4px 10px 4px 12px;gap:5px}.pmenu summary .av{display:none}}
 </style>
 </head>
 <body>
 <div id="root"><p style="padding:2rem;font-family:sans-serif">Chargement de l’Académie…</p></div>
-<script src="config.js?v=0.21.1"></script>
+<script src="config.js?v=0.21.2"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script src="app.js?v=0.21.1"></script>
+<script src="app.js?v=0.21.2"></script>
 </body>
 </html>

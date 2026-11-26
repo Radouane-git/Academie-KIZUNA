@@ -74,7 +74,9 @@ Règle pour une nouvelle couleur : contraste d'au moins **4,5:1** entre le texte
 
 - **Carte d'élève / carte de profil** : fond couleur de héros + lignes de vitesse
   (`repeating-conic-gradient`, rayons blancs à 12 %), coins arrondis 24–28 px ; bouclier du niveau
-  (couleur d'accent, chiffre bleu nuit), nom en Unbounded 900.
+  (couleur d'accent, chiffre bleu nuit foncé `#082A31`, ou jaune clair `#FFE58A` si l'accent est sombre), nom en
+  Unbounded 900. Pastilles de la carte : fond assombri (noir à 20 %), jamais éclairci, pour garder 4,5:1 sur toutes
+  les couleurs de héros.
 - **Cartes** : blanc, coins 22–24 px, ombre douce ; carte d'action principale avec ombre « marche » (6 px, couleur des lignes).
 - **Bouton d'action** : couleur de héros, texte blanc, coins 14 px, ombre « marche » de 5 px qui s'enfonce au clic.
 - **Chemin du jour** : ronds de 56 px (48 px sur téléphone) reliés par un trait de 4 px ; étape en cours entourée

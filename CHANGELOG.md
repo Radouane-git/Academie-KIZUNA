@@ -5,6 +5,24 @@ Numérotation : `MAJEUR.MINEUR.CORRECTIF` (ex. 0.2.1).
 - **mineur** (0.**2**.0) : une nouveauté (un réglage, un écran, une règle de planning) ;
 - **majeur** (**1**.0.0) : la version jugée stable après plusieurs semaines d'usage réel.
 
+## [0.21.2] – 2026-11-26
+
+Recette complète avant la 1.0 (tous les écrans, 4 largeurs d'écran, contrastes, clavier, 20 parcours, planning simulé
+sur 4 semaines). Corrections publiées directement.
+- **Bibliothèque : « Retirer » un livre ne faisait rien** depuis la 0.18.0 (le bouton ne transmettait pas le livre à
+  retirer). Corrigé.
+- **Petit téléphone (360 px)** : dans Paramètres, le bandeau du haut dépassait de l'écran. Il tient maintenant sur
+  une ligne (bouton de profil plus compact en dessous de 380 px).
+- **Contrastes** : chiffre du bouclier un peu plus foncé sur les accents corail (Lagon, Graphite : 4,3 → 5,4:1) ;
+  pastille « Encore N missions » sur fond assombri au lieu d'éclairci (Sakura, Jade, Brasier, Émeraude passaient
+  sous 4,5:1, désormais 6,8:1 minimum).
+- **Zones à toucher d'au moins 44 px** : titres des missions du chemin du jour (zone agrandie sans changer
+  l'affichage), cases à cocher hors étiquette, « Retirer », « Abandonner ce livre », « Noter la difficulté ».
+- Scripts de recette automatique ajoutés dans `tests/` (mode démo).
+- Vérifié sans changement : aucune erreur JavaScript, aucun contour clavier manquant, aucun travail placé après
+  21h30, après le coucher ou après un sport du soir (28 simulations de synchro, 1 860 blocs de travail).
+- Pas de nouveau bloc SQL.
+
 ## [0.21.1] – 2026-11-26
 
 Correction de présentation, publiée directement.

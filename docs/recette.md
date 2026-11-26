@@ -16,7 +16,7 @@ sans toucher aux vraies coches. Compter 10 minutes.
 - [ ] La coche apparaît sur un **autre appareil** en moins d'une minute.
 - [ ] Les pastilles « Relire les leçons » se cochent une à une.
 - [ ] La bande des jours change de jour ; Ma semaine ouvre un jour au clic.
-- [ ] Bibliothèque : ajouter puis retirer un livre ; Annuler referme le formulaire.
+- [ ] Bibliothèque : ajouter puis retirer un livre (« Retirer » puis « Confirmer ») ; Annuler referme le formulaire.
 - [ ] Aucun horaire après 21h30, coucher au plus tard 22h00 ; rien après une activité sportive le soir.
 
 ## Parents
@@ -38,4 +38,8 @@ sans toucher aux vraies coches. Compter 10 minutes.
 ## Lisibilité
 - [ ] Polices : titres en Unbounded, texte en Atkinson Hyperlegible, 絆 en Dela Gothic One.
 - [ ] Bandeau du haut sur une seule ligne sur ordinateur, quel que soit le profil.
-- [ ] Rien de coupé ni de superposé sur un petit téléphone (largeur 360 px).
+- [ ] Rien de coupé ni de superposé sur un petit téléphone (largeur 360 px), bandeau compris, dans Paramètres aussi.
+
+## Recette automatique
+Avant une version importante : scripts de `tests/` (mise en page sur 4 largeurs, contrastes, clavier, 20 parcours
+en mode démo). Voir `tests/README.md`.
