@@ -5,6 +5,20 @@ Numérotation : `MAJEUR.MINEUR.CORRECTIF` (ex. 0.2.1).
 - **mineur** (0.**2**.0) : une nouveauté (un réglage, un écran, une règle de planning) ;
 - **majeur** (**1**.0.0) : la version jugée stable après plusieurs semaines d'usage réel.
 
+## [0.22.1] – 2026-11-27
+
+Correction côté parents, publiée directement.
+- **Modifier ou supprimer un sceau ou un message du mentor** : nouvelle rubrique « Sceaux et messages du mentor » dans
+  Vue parents → Enfants (3 plus récents, puis « Voir les autres »). « Modifier » ouvre le formulaire prérempli dans
+  l'onglet Actions ; « Supprimer » demande une confirmation.
+- Onglet Actions : « Sceau de l'effort » (au lieu de « Tampon ») et « Message du mentor » (au lieu de « Mot du sensei »),
+  formulaires renommés ; « tampon » devient « sceau » dans le bilan et dans l'écran mission.
+- **Texte perdu en cours de saisie** : un message de confirmation (« Tampon donné… ») qui disparaissait au bout de
+  6 secondes redessinait toute la page, et pouvait effacer un formulaire en train d'être rempli. Il disparaît
+  maintenant sans toucher au formulaire.
+- Scripts `tests/` : 4 parcours de plus (modifier et supprimer un sceau, un message).
+- Pas de nouveau bloc SQL.
+
 ## [0.22.0] – 2026-11-27
 
 Validée par les parents et publiée sur le site principal. Refonte de l'interface, direction A « L'Académie, plus

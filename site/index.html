@@ -803,6 +803,14 @@ h2 small.cnt{display:inline;font-weight:400;color:var(--muted);font-size:.85rem;
 .promo b{display:block}
 .promo small{color:var(--muted)}
 .dossier-hero .wk-now{min-width:180px}
+.seals-card .sub-h{font-family:var(--display);font-size:.95rem;margin:16px 0 6px}
+.seals-card .nk h4{margin:10px 0 4px;font-size:.95rem}
+.seals-card .xl{align-items:flex-start}
+.seals-card .xl>span:first-child{flex:1;display:flex;flex-direction:column;gap:2px}
+.seals-card .xl>span.nr-btns{display:flex;flex-direction:row;gap:6px;flex-wrap:wrap;flex:none}
+.seals-card .nk h4 small.cnt{display:inline;font-weight:400;color:var(--muted)}
+.seals-card .btn.danger{background:#B83E25;color:#fff;border-color:#B83E25}
+@media (max-width:600px){.seals-card .xl{flex-direction:column}}
 .dossier-hero{position:relative;overflow:hidden}.dossier-hero>*{position:relative}.dossier-hero>.michi{position:absolute;right:18px;top:6px;font-family:var(--kanji);font-size:6.5rem;line-height:1;opacity:.14;pointer-events:none}
 @media (max-width:600px){.dossier-hero>.michi{font-size:4.5rem;right:12px}}
 @media (max-width:900px){.main-col>.dlegend{order:3}.kid-hero .badges{display:flex;margin-top:6px}.kid-hero .badges span:not(.gname){display:none}}
@@ -874,8 +882,8 @@ details.ptip>span{display:block;margin-top:6px}
 </head>
 <body>
 <div id="root"><p style="padding:2rem;font-family:sans-serif">Chargement de l’Académie…</p></div>
-<script src="config.js?v=0.22.0"></script>
+<script src="config.js?v=0.22.1"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script src="app.js?v=0.22.0"></script>
+<script src="app.js?v=0.22.1"></script>
 </body>
 </html>

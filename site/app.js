@@ -43,7 +43,7 @@ var MOMENTS=[["general","Organisation"],["dev","Devoirs"],["rev","Révisions"],[
 var TIP_SRC=[["prof","Conseil d’un professeur"],["livre","D’après un livre"],["famille","Conseil de la famille"]];
 
 /* ------------------------------------------------------------ état */
-var S = {fam:null, plans:[], done:{}, extras:[], ideas:[], ideasMissing:false, stamps:[], sensei:[], stampsMissing:false, books:[], booksMissing:false, cancels:[], cancelsMissing:false, edtOpen:false, focus:null, ideaOpen:false, ideasPropMissing:false, installEvt:null, standalone:false, diff:{}, rate:null, diffMissing:false, meth:{}, methOpen:null, methMissing:false, notes:[], notesMissing:false, editNote:null, tips:[], tipsMissing:false, editTip:null, tipFilter:"tous", bookOpen:false, sync:null, mfa:null, view:null, day:null, msg:{}, bulk:{text:"",items:null}};
+var S = {fam:null, plans:[], done:{}, extras:[], ideas:[], ideasMissing:false, stamps:[], sensei:[], stampsMissing:false, books:[], booksMissing:false, cancels:[], cancelsMissing:false, edtOpen:false, focus:null, ideaOpen:false, ideasPropMissing:false, installEvt:null, standalone:false, diff:{}, rate:null, diffMissing:false, meth:{}, methOpen:null, methMissing:false, notes:[], notesMissing:false, editNote:null, editStamp:null, editSensei:null, tips:[], tipsMissing:false, editTip:null, tipFilter:"tous", bookOpen:false, sync:null, mfa:null, view:null, day:null, msg:{}, bulk:{text:"",items:null}};
 function lsGet(k){try{return localStorage.getItem(k);}catch(e){return null;}}
 function lsSet(k,v){try{localStorage.setItem(k,v);}catch(e){}}
 function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
@@ -110,7 +110,7 @@ function setDone(id,val){
  q.then(function(r){if(r.error){if(netErr(r.error.message)){queuePush(id,val);flash("global","Pas de réseau : la coche est gardée et partira au retour du réseau.");}else flash("global","Coche non enregistrée : "+r.error.message,true);}else saveSnap();});
 }
 function cheer(t){S.msg.global={t:t,e:false,cheer:true};clearTimeout(S.cheerT);S.cheerT=setTimeout(function(){if(S.msg.global&&S.msg.global.cheer){delete S.msg.global;softRender();}},3500);}
-function flash(k,text,err){S.msg[k]={t:text,e:!!err};render();setTimeout(function(){delete S.msg[k];render();},6000);}
+function flash(k,text,err){S.msg[k]={t:text,e:!!err};render();setTimeout(function(){delete S.msg[k];softRender();},6000);}
 
 function loadAll(){
  if(DEMO){
@@ -443,10 +443,10 @@ function weeksNav(){
  if(others.length)h+='<select class="wk" id="oldweek" aria-label="Autres semaines"><option value="">Autres semaines…</option>'+others.map(function(i){return '<option value="'+i+'"'+(i===sel?" selected":"")+'>Semaine du '+lbl(i)+'</option>';}).join("")+'</select>';
  return h+'</nav>';
 }
-var FOLDS=[["tipf","Conseil","tip","Conseil","Une astuce de professeur ou de livre"],["notef","Retour de professeur","note","Prof","Message reçu, version pour l’enfant"],["stampf","Tampon","stamp","Tampon","Récompenser une évaluation réussie"],["senseif","Mot du sensei","sensei","Parchemin","Un message en haut de sa journée"],["addhw","Mission","addhw","Devoir","Un devoir absent d’EcoleDirecte"],["bulk","Saisie rapide","bulk","Liste","Coller une liste de devoirs"],["idea","Idée de loisir","idea","Loisir","Sortie, lecture plaisir, défi"],["lockf","Code parent","lock",""],["themesf","Couleurs de héros","themes",""],["setinstall","Installer sur un téléphone","install",""],["setbackup","Sauvegarde","backup",""],["import","Restaurer ou importer","import",""],["settings","Réglages (avancé)","settings",""]];
+var FOLDS=[["tipf","Conseil","tip","Conseil","Une astuce de professeur ou de livre"],["notef","Retour de professeur","note","Prof","Message reçu, version pour l’enfant"],["stampf","Sceau de l’effort","stamp","Tampon","Récompenser un vrai effort, rarement"],["senseif","Message du mentor","sensei","Parchemin","Un mot direct à un enfant ou à tous"],["addhw","Mission","addhw","Devoir","Un devoir absent d’EcoleDirecte"],["bulk","Saisie rapide","bulk","Liste","Coller une liste de devoirs"],["idea","Idée de loisir","idea","Loisir","Sortie, lecture plaisir, défi"],["lockf","Code parent","lock",""],["themesf","Couleurs de héros","themes",""],["setinstall","Installer sur un téléphone","install",""],["setbackup","Sauvegarde","backup",""],["import","Restaurer ou importer","import",""],["settings","Réglages (avancé)","settings",""]];
 function foldForms(){FOLDS.forEach(function(f){var el=document.getElementById(f[0]);if(!el||el.parentNode.tagName==="DETAILS")return;
  var d=document.createElement("details");d.className="fold"+(f[0]==="bulk"||f[0]==="notef"||f[0]==="tipf"?" wide":"");d.setAttribute("data-fold",f[0]);
- if((S.open||{})[f[0]]||S.msg[f[2]]||(f[0]==="bulk"&&S.bulk.items)||(f[0]==="notef"&&S.editNote)||(f[0]==="tipf"&&(S.editTip||S.tipDraft)))d.open=true;
+ if((S.open||{})[f[0]]||S.msg[f[2]]||(f[0]==="bulk"&&S.bulk.items)||(f[0]==="notef"&&S.editNote)||(f[0]==="stampf"&&S.editStamp)||(f[0]==="senseif"&&S.editSensei)||(f[0]==="tipf"&&(S.editTip||S.tipDraft)))d.open=true;
  var sm=document.createElement("summary");sm.innerHTML=(f[3]?picto(f[3],28):"")+"<span>"+esc(f[1])+(f[4]?"<small class=\"fdesc\">"+esc(f[4])+"</small>":"")+"</span><b class=\"fplus\" aria-hidden=\"true\">+</b>";d.appendChild(sm);el.parentNode.insertBefore(d,el);d.appendChild(el);});}
 function renderHome(){
  var hr=new Date().getHours();
@@ -575,7 +575,7 @@ function bilanKid(c,plan){
  ev.sort(function(a,b){return a[0]<b[0]?-1:1;});
  return {all:all,cat:cat,miss:miss,hard:hardOf(c.id,plan).filter(function(m){return m.date<=lim;}),meth:methStats(c.id,plan),st:st,bk:bk,goals:goals,ev:ev,next:np?weekProg(c.id,np).t:null};}
 function bilanTalk(c,b,future,partial){var out=[],p=pct(b.all);if(future)return out;
- if(b.st.length)out.push("Féliciter "+c.name+" pour ses efforts : "+b.st.length+" tampon"+(b.st.length>1?"s":"")+" cette semaine.");
+ if(b.st.length)out.push("Féliciter "+c.name+" pour ses efforts : "+b.st.length+" sceau"+(b.st.length>1?"x":"")+" cette semaine.");
  else if(b.all.t&&p>=85)out.push("Féliciter "+c.name+" pour sa régularité ("+p+" % des missions faites).");
  if(!partial&&b.all.t&&p<70)out.push("Seulement "+p+" % des missions faites : qu’est-ce qui a coincé ? Trop de choses le même soir, fatigue, oubli ?");
  if(b.hard.length)out.push("Reprendre ensemble « "+b.hard[0].l+" », notée difficile.");
@@ -589,7 +589,7 @@ function renderBilan(){
  var first=plan.data.days[0].date,last=plan.data.days[plan.data.days.length-1].date,cur=first<=TODAY&&TODAY<=last,partial=cur&&TODAY!==last;
  var data=children().map(function(c){return [c,bilanKid(c,plan)];});
  var tot={n:0,t:0},nst=0,nbk=0;data.forEach(function(x){tot.n+=x[1].all.n;tot.t+=x[1].all.t;nst+=x[1].st.length;nbk+=x[1].bk.length;});
- var h='<section class="hero bilan-hero" style="background-color:'+tp.bg+';color:'+tp.txt+'"><div class="hero-id"><div><span class="over">Bilan de la semaine'+(partial?" · jusqu’à hier soir":"")+'</span><h1>'+esc(plan.data.title.replace(/^Du /,"Semaine du "))+'</h1></div></div><div class="hero-stats parents"><div><b>'+pct(tot)+' %</b><small>missions faites</small></div><div><b>'+nst+'</b><small>tampon'+(nst>1?"s":"")+'</small></div><div><b>'+nbk+'</b><small>livre'+(nbk>1?"s":"")+' fini'+(nbk>1?"s":"")+'</small></div></div></section>';
+ var h='<section class="hero bilan-hero" style="background-color:'+tp.bg+';color:'+tp.txt+'"><div class="hero-id"><div><span class="over">Bilan de la semaine'+(partial?" · jusqu’à hier soir":"")+'</span><h1>'+esc(plan.data.title.replace(/^Du /,"Semaine du "))+'</h1></div></div><div class="hero-stats parents"><div><b>'+pct(tot)+' %</b><small>missions faites</small></div><div><b>'+nst+'</b><small>sceau'+(nst>1?"x":"")+'</small></div><div><b>'+nbk+'</b><small>livre'+(nbk>1?"s":"")+' fini'+(nbk>1?"s":"")+'</small></div></div></section>';
  h+='<div class="bilan-bar noprint"><a class="btn sec mini" href="#parents">← Vue parents</a><button class="btn sec mini" type="button" data-act="print">Imprimer</button></div>';
  h+='<div class="noprint">'+weeksNav()+'</div>';
  if(first>TODAY)h+='<p class="det">Cette semaine n’a pas encore commencé : le bilan se remplira au fil des jours.</p>';
@@ -734,9 +734,9 @@ var TOURS={
  parcours:[[".dossier-hero","Ton parcours","Ton grade, ta promotion et tes semaines tenues."],[".ladder","Ton parcours de l’année","Six grades, de Recrue à Maître. Tu ne perds jamais un grade."],["h2=Mes objectifs","Tes objectifs","Un objectif donné par tes professeurs ou tes parents. Coche-le quand tu l’as tenu cette semaine."],["h2=Messages de mon mentor","Les messages de ton mentor","Les messages que tes parents t’ont adressés, gardés ici."],["h2=Mes sceaux","Tes sceaux","Rares : ton mentor les remet à la main pour un vrai effort."]],
  conseils:[[".tipfilter","Trier les conseils","Organisation, devoirs, révisions, leçons, lecture : choisis ce qui t’intéresse."],[".tips-grid","Les conseils","Conseils de l’Académie, de tes professeurs et de livres sur l’art d’apprendre."]],
  parents:[[".ptabs","Quatre onglets","La Vue parents est rangée en quatre onglets : Semaine, Enfants, Retours et conseils, Actions. Un chiffre signale ce qui attend votre réponse."],[".kidcards","Les enfants aujourd’hui","Un coup d’œil sur la journée de chacun. Touchez une carte pour ouvrir sa page."],[".bilan-cta","Le bilan de la semaine","Le dimanche, faites le point en famille : ce qui a marché, ce qui a coincé, la semaine qui vient."],[".ovcard","Avancement de la semaine","Le pourcentage de missions faites, jour par jour et pour chaque enfant."],[".hardcard","Points difficiles","Les missions que les enfants ont notées difficiles, avec un conseil pour vous."],[".methcard","Méthodes de travail","Comment les enfants ont révisé. Une méthode trop passive est signalée."],["#tour-btn","Revoir la visite","L’ampoule relance la visite de chaque écran."]],
- "parents-enfants":[[".pend-ideas","Idées à valider","Les idées proposées par les enfants : choisissez une date, puis acceptez ou refusez."],["h2=Bibliothèque","La bibliothèque","Les livres lus et la lecture en cours de chaque enfant."],["h2=Missions ajoutées","Missions ajoutées à la main","Les devoirs que vous avez saisis vous-même, à venir."]],
+ "parents-enfants":[[".pend-ideas","Idées à valider","Les idées proposées par les enfants : choisissez une date, puis acceptez ou refusez."],["h2=Bibliothèque","La bibliothèque","Les livres lus et la lecture en cours de chaque enfant."],["h2=Missions ajoutées","Missions ajoutées à la main","Les devoirs que vous avez saisis vous-même, à venir."],[".seals-card","Sceaux et messages du mentor","Pour corriger ou retirer un sceau ou un message déjà donné."]],
  "parents-retours":[[".notes-card","Retours des professeurs","Les trois plus récents par enfant ; « Voir les autres » déplie la suite."],[".ptips-card","Conseils pour les parents","Un conseil par semaine, et tous les autres dépliables. Les enfants ne les voient pas."],[".tips-card","Conseils de la famille","Ceux que vous avez ajoutés : professeurs, livres de méthode."]],
- "parents-actions":[[".acts","Les actions","Retour de professeur, conseil, tampon, mot du sensei, mission, saisie rapide, idée : touchez-en une pour ouvrir son formulaire."]],
+ "parents-actions":[[".acts","Les actions","Mission, saisie rapide, message du mentor, sceau, retour de professeur, conseil, idée : touchez-en une pour ouvrir son formulaire."]],
  bilan:[[".bilan-kid","Une carte par enfant","Les missions faites par catégorie, et quelques points proposés pour en parler ensemble."],[".bk-more","Le détail","Missions pas cochées, missions difficiles, méthodes, fiertés, semaine prochaine."],[".sunday","Préparer la semaine","Cinq gestes à cocher le dimanche, en famille."]],
  parametres:[["[data-fold=lockf]","Code parent","Protégez la Vue parents et les Paramètres des curieux."],["[data-fold=setbackup]","Sauvegarde","Une fois par trimestre, téléchargez une sauvegarde et rangez-la hors de GitHub."],["[data-fold=themesf]","Couleurs de héros","Chaque profil choisit sa couleur."]]};
 function tourKey(){var v=curView();if(child(v))return curSection();if(v==="parents"&&(location.hash||"").split("/")[1]==="bilan")return "bilan";if(v==="parents"&&pTab()!=="semaine")return "parents-"+pTab();return v;}
@@ -956,7 +956,7 @@ function renderFocus(c){
  if(lrm.length>=2&&lrm.every(function(x){return x.v.m.length&&x.v.m.every(function(k){return k==="relu";});}))h+='<div class="tipbox coach"><b>Coup de pouce</b><span>Tes dernières révisions : seulement relire le cours. Cette fois, essaie de te faire interroger ou de refaire des exercices sans la correction : c’est plus efficace pour retenir.</span></div>';
  var ft=tipFor(c.id,b.k==="lec"?"lec":b.k==="app"?"app":b.k==="rev"?"rev":b.k==="dev"?"dev":"x",(new Date(TODAY+"T12:00:00").getDate())+i);
  if(ft)h+='<div class="tipbox ctx"><span class="tip-src">'+esc(tipSrcLabel(ft))+'</span><b>'+esc(ft.title)+'</b><span>'+esc(ft.body)+'</span></div>';
- if(b.k==="rev")h+='<div class="tipbox">'+stampHtml(34)+'<span>Une bonne note après tes révisions ? Montre-la à un parent : tampon de l’Académie à la clé.</span></div>';
+ if(b.k==="rev")h+='<div class="tipbox">'+stampHtml(34,"努")+'<span>Une épreuve bien préparée, un vrai effort ? Ton mentor peut te remettre le sceau de l’effort.</span></div>';
  else if(b.k==="dev")h+='<div class="tipbox">'+stampHtml(34)+'<span>Bloqué ? Note ta question pour la poser au professeur.</span></div>';
  h+='</div><footer>';
  if(S.methFocus===b.id&&done)h+=methRow(b.id,"Valider et continuer");
@@ -973,6 +973,19 @@ function pTab(){var s=(location.hash||"").replace("#","").split("/");return s[0]
 function pTabsNav(cur){var pend=S.ideas.filter(function(x){return x.status==="proposee";}).length;
  return '<nav class="ptabs" aria-label="Sections de la Vue parents">'+PTABS.map(function(t){var n=t[0]==="enfants"?pend:0;return '<a class="ptab" href="#parents'+(t[0]==="semaine"?"":"/"+t[0])+'"'+(t[0]===cur?' aria-current="page"':'')+'>'+picto(t[2],26)+'<span>'+esc(t[1])+'</span>'+(n?'<b class="pbadge" aria-label="'+n+' à valider">'+n+'</b>':'')+'</a>';}).join("")+'</nav>';}
 function goForm(id){if(pTab()!=="actions"){S.afterRender=id;location.hash="#parents/actions";return;}render();var el=document.getElementById(id);if(el)(el.closest("details")||el).scrollIntoView({block:"start"});}
+function renderSealsParents(){
+ var h='<section class="card seals-card"><div class="ftitle">'+stampHtml(36,"努")+'<h2>Sceaux et messages du mentor</h2></div><p class="det">Pour corriger ou retirer un sceau ou un message déjà donné. « Modifier » ouvre le formulaire dans l’onglet Actions.</p>';
+ function srow(x){return '<div class="xl"><span><span class="xl-h"><b>'+esc((x.title||"")+(x.note?" · "+x.note:""))+'</b></span>'+(x.message?'<small>« '+esc(x.message)+' »</small>':'')+'<small>'+esc(fmtDate(x.date||x.created_at.slice(0,10)))+'</small></span><span class="nr-btns"><button class="btn sec mini" data-editstamp="'+esc(x.id)+'">Modifier</button><button class="btn sec mini'+(S.confirmDel==="s"+x.id?" danger":"")+'" data-delstamp="'+esc(x.id)+'">'+(S.confirmDel==="s"+x.id?"Confirmer la suppression":"Supprimer")+'</button></span></div>';}
+ h+='<h3 class="sub-h">Sceaux</h3>';
+ var any=false;
+ children().forEach(function(c){var st=stampsFor(c.id);if(!st.length)return;any=true;
+  h+='<div class="nk"><h4>'+esc(c.name)+' <small class="cnt">('+st.length+')</small></h4>'+st.slice(0,3).map(srow).join("")+(st.length>3?'<details class="more-notes"'+(S.open&&S.open["sk-"+c.id]?" open":"")+' data-more="sk-'+esc(c.id)+'"><summary>Voir les '+(st.length-3)+' autres</summary>'+st.slice(3).map(srow).join("")+'</details>':'')+'</div>';});
+ if(!any)h+='<p class="none">Aucun sceau donné pour le moment.</p>';
+ var ms=S.sensei.slice().sort(function(a,b){return a.created_at<b.created_at?1:-1;});
+ function mrow(m){var c=child(m.child);return '<div class="xl"><span><span class="xl-h"><b>'+esc(c?c.name:"Toute la promotion")+'</b> · '+esc(fmtDate(m.created_at.slice(0,10)))+'</span><small>'+esc(m.text)+'</small></span><span class="nr-btns"><button class="btn sec mini" data-editmsg="'+esc(m.id)+'">Modifier</button><button class="btn sec mini'+(S.confirmDel==="m"+m.id?" danger":"")+'" data-delmsg="'+esc(m.id)+'">'+(S.confirmDel==="m"+m.id?"Confirmer la suppression":"Supprimer")+'</button></span></div>';}
+ h+='<h3 class="sub-h">Messages du mentor</h3>'+(ms.length?ms.slice(0,3).map(mrow).join("")+(ms.length>3?'<details class="more-notes"'+(S.open&&S.open["mm"]?" open":"")+' data-more="mm"><summary>Voir les '+(ms.length-3)+' autres</summary>'+ms.slice(3).map(mrow).join("")+'</details>':''):'<p class="none">Aucun message pour le moment.</p>');
+ return h+'</section>';
+}
 function renderParents(noFam){
  var h="";var tp=THEMES[themeName(null)];var tab=noFam?"semaine":pTab();
  if(!noFam)h+=pTabsNav(tab);
@@ -1025,6 +1038,7 @@ function renderParents(noFam){
   // liste des ajouts
   var up=S.extras.filter(function(e){return e.due>=TODAY;});
   h+='<section class="card"><div class="ftitle">'+picto("Devoir",36)+'<h2>Missions ajoutées à la main</h2></div>'+(up.length?'<p>Date affichée : jour de <b>rendu</b>.</p><button class="btn sec wrapbtn" type="button" id="shift-extras">Dates « à faire » ? Tout décaler d’un jour</button>'+msgHtml("shift"):'')+(up.length?'<div class="scrollbox" tabindex="0" role="region" aria-label="Liste des missions ajoutées ('+up.length+')">'+up.map(function(e){var c=child(e.child);return '<div class="xl"><span><span class="xl-h"><b>'+esc(c?c.name:"Tous")+'</b> · à rendre le '+esc(fmtDate(e.due))+'</span><small>'+esc((e.subject?e.subject+" : ":"")+e.text)+'</small></span><button class="btn sec mini" data-del="'+esc(e.id)+'">Supprimer</button></div>';}).join("")+'</div>'+(up.length>5?'<p class="det">'+up.length+' missions : faites défiler la liste.</p>':''):'<p class="none">Aucune pour le moment.</p>')+'</section>';
+  h+=renderSealsParents();
  }
  if(!noFam&&tab==="retours"){
   h+=renderNotesParents();
@@ -1037,17 +1051,19 @@ function renderParents(noFam){
   var evOpts=[];children().forEach(function(c){evalsFor(c.id).forEach(function(e){if(e[0]<=addDays(TODAY,1))evOpts.push([c.id,e[1]+" ("+fmtDate(e[0])+")"]);});});
   h+=noteForm();
   h+=tipForm();
-  h+='<form class="card f stamp-card" id="stampf"><div class="ftitle">'+stampHtml(52)+'<h2>Donner un tampon</h2></div><p>Une bonne note après des révisions ? L’enfant reçoit le tampon de l’Académie sur sa carte d’élève.</p>';
-  h+='<label for="s-child">Enfant<select id="s-child">'+kidOptions(false)+'</select></label>';
-  h+='<label for="s-title">Évaluation<input id="s-title" type="text" list="s-evals" required placeholder="ex. SVT : la digestion"><datalist id="s-evals">'+evOpts.map(function(o){return '<option value="'+esc(o[1])+'">';}).join("")+'</datalist></label>';
-  h+='<div class="cols two"><label for="s-note">Note<input id="s-note" type="text" placeholder="17/20"></label><label for="s-date">Date<input id="s-date" type="date" value="'+TODAY+'"></label></div>';
-  h+='<label for="s-msg">Message<input id="s-msg" type="text" placeholder="Tes révisions ont payé !"></label>';
-  h+='<button class="btn stamp-btn" type="submit">Tamponner</button>'+msgHtml("stamp")+(S.stampsMissing?'<p class="msg err">Exécutez d’abord le bloc SQL de la version 0.3.0 dans Supabase.</p>':'')+'</form>';
+  var es=S.editStamp?S.stamps.filter(function(x){return String(x.id)===String(S.editStamp);})[0]||null:null;
+  h+='<form class="card f stamp-card" id="stampf"><div class="ftitle">'+stampHtml(52,"努")+'<h2>'+(es?"Modifier le sceau":"Donner un sceau")+'</h2></div><p>Un vrai effort, une épreuve bien préparée ? L’enfant reçoit le sceau de l’effort dans « Mon parcours ».</p>';
+  h+='<label for="s-child">Enfant<select id="s-child">'+kidOptions(false).replace(es?'value="'+esc(es.child)+'"':'@@','value="'+esc(es?es.child:"")+'" selected')+'</select></label>';
+  h+='<label for="s-title">Pour quoi<input id="s-title" type="text" list="s-evals" required placeholder="ex. SVT : la digestion" value="'+esc(es?es.title||"":"")+'"><datalist id="s-evals">'+evOpts.map(function(o){return '<option value="'+esc(o[1])+'">';}).join("")+'</datalist></label>';
+  h+='<div class="cols two"><label for="s-note">Note (facultatif)<input id="s-note" type="text" placeholder="17/20" value="'+esc(es?es.note||"":"")+'"></label><label for="s-date">Date<input id="s-date" type="date" value="'+esc(es?(es.date||es.created_at.slice(0,10)):TODAY)+'"></label></div>';
+  h+='<label for="s-msg">Message<input id="s-msg" type="text" placeholder="Tes révisions ont payé !" value="'+esc(es?es.message||"":"")+'"></label>';
+  h+='<div class="btnrow"><button class="btn stamp-btn" type="submit">'+(es?"Enregistrer les modifications":"Remettre le sceau")+'</button>'+(es?'<button class="btn sec" type="button" data-act="stamp-cancel">Annuler</button>':'')+'</div>'+msgHtml("stamp")+(S.stampsMissing?'<p class="msg err">Exécutez d’abord le bloc SQL de la version 0.3.0 dans Supabase.</p>':'')+'</form>';
   // mot du sensei
-  h+='<form class="card f sensei-card" id="senseif"><h2>Le mot du sensei</h2><p>Un message affiché en haut de la journée de l’enfant (le plus récent).</p>';
-  h+='<label for="m-child">Pour<select id="m-child">'+kidOptions(true)+'</select></label>';
-  h+='<label for="m-text">Message<textarea id="m-text" required placeholder="Belle série ! Ce soir, objectif rang A en maths."></textarea></label>';
-  h+='<button class="btn" type="submit">Publier</button>'+msgHtml("sensei")+'</form>';
+  var em=S.editSensei?S.sensei.filter(function(x){return String(x.id)===String(S.editSensei);})[0]||null:null;
+  h+='<form class="card f sensei-card" id="senseif"><h2>'+(em?"Modifier le message":"Message du mentor")+'</h2><p>Affiché 4 jours dans la journée de l’enfant (« Pour toi », ou « Pour toute la promotion »), puis gardé dans « Mon parcours ».</p>';
+  h+='<label for="m-child">Pour<select id="m-child">'+(em?kidOptions(true).replace(/ selected/g,"").replace('value="'+esc(em.child)+'"','value="'+esc(em.child)+'" selected'):kidOptions(true))+'</select></label>';
+  h+='<label for="m-text">Message<textarea id="m-text" required placeholder="Ta fiche est propre. Ce soir, fais-toi interroger : dix questions.">'+esc(em?em.text:"")+'</textarea></label>';
+  h+='<div class="btnrow"><button class="btn" type="submit">'+(em?"Enregistrer les modifications":"Publier")+'</button>'+(em?'<button class="btn sec" type="button" data-act="sensei-cancel">Annuler</button>':'')+'</div>'+msgHtml("sensei")+'</form>';
   // ajouter un devoir
   var nd=addDays(TODAY,1);
   h+='<form class="card f" id="addhw"><div class="ftitle">'+picto("Devoir",44)+'<h2>Ajouter une mission</h2></div><p>Pour un devoir ponctuel absent d’EcoleDirecte. Placé dans le planning à la prochaine synchronisation.</p>';
@@ -1266,16 +1282,18 @@ function bindForms(){
  if((f=document.getElementById("stampf")))f.addEventListener("submit",function(e){
   e.preventDefault();
   var row={child:val("s-child"),title:val("s-title"),note:val("s-note")||null,message:val("s-msg")||null,date:val("s-date")||TODAY};
-  var ok=function(x){S.stamps.push(x);flash("stamp","Tampon donné à "+(child(x.child)||{}).name+" !");};
-  if(DEMO){row.id="demo-"+Date.now();row.created_at=new Date().toISOString();ok(row);return;}
-  sb.from("stamps").insert(row).select().then(function(r){if(r.error)flash("stamp","Erreur : "+r.error.message,true);else ok(r.data[0]);});
+  var ed=S.editStamp;
+  var ok=function(x){if(ed)S.stamps=S.stamps.map(function(y){return String(y.id)===String(ed)?x:y;});else S.stamps.push(x);S.editStamp=null;S.open=S.open||{};S.open.stampf=false;flash("stamp",ed?"Sceau modifié.":"Sceau remis à "+(child(x.child)||{}).name+" !");};
+  if(DEMO){var old=ed?S.stamps.filter(function(y){return String(y.id)===String(ed);})[0]||{}:{};row.id=ed||("demo-"+Date.now());row.created_at=old.created_at||new Date().toISOString();ok(row);return;}
+  (ed?sb.from("stamps").update(row).eq("id",ed).select():sb.from("stamps").insert(row).select()).then(function(r){if(r.error)flash("stamp","Erreur : "+r.error.message,true);else ok(r.data[0]);});
  });
  if((f=document.getElementById("senseif")))f.addEventListener("submit",function(e){
   e.preventDefault();
   var row={child:val("m-child"),text:val("m-text")};
-  var ok=function(x){S.sensei.push(x);flash("sensei","Message publié.");};
-  if(DEMO){row.id="demo-"+Date.now();row.created_at=new Date().toISOString();ok(row);return;}
-  sb.from("sensei_messages").insert(row).select().then(function(r){if(r.error)flash("sensei","Erreur : "+r.error.message,true);else ok(r.data[0]);});
+  var ed=S.editSensei;
+  var ok=function(x){if(ed)S.sensei=S.sensei.map(function(y){return String(y.id)===String(ed)?x:y;});else S.sensei.push(x);S.editSensei=null;S.open=S.open||{};S.open.senseif=false;flash("sensei",ed?"Message modifié.":"Message publié.");};
+  if(DEMO){var old=ed?S.sensei.filter(function(y){return String(y.id)===String(ed);})[0]||{}:{};row.id=ed||("demo-"+Date.now());row.created_at=old.created_at||new Date().toISOString();ok(row);return;}
+  (ed?sb.from("sensei_messages").update(row).eq("id",ed).select():sb.from("sensei_messages").insert(row).select()).then(function(r){if(r.error)flash("sensei","Erreur : "+r.error.message,true);else ok(r.data[0]);});
  });
  if((f=document.getElementById("unlockf")))f.addEventListener("submit",function(e){
   e.preventDefault();var c=val("u-code");var keep=document.getElementById("u-keep").checked;
@@ -1307,7 +1325,7 @@ function val(id){return (document.getElementById(id).value||"").trim();}
 function pickWeek(idx){var p=S.plans[idx];if(!p)return;var has=p.data.days.some(function(d){return d.date===TODAY;});setDay(has?TODAY:(p.data.days[1]||p.data.days[0]).date);}
 
 root.addEventListener("click",function(e){
- var t=e.target.closest("[data-ropen],[data-rstart],[data-rdel],[data-rdrop],[data-rfinish],[data-sheet],[data-sheetclose],[data-sheetmode],[data-tipf],[data-edittip],[data-deltip],[data-note2tip],[data-mopen],[data-mtog],[data-mmin],[data-msave],[data-mskip],[data-ideaok],[data-ideano],[data-editnote],[data-delnote],[data-rate],[data-rateopen],[data-focus],[data-fclose],[data-fdone],[data-fundo],[data-fnext],[data-cancel],[data-uncancel],[data-delbook],[data-view],[data-day],[data-id],[data-go],[data-week],[data-del],[data-act],[data-delidea]");if(!t)return;
+ var t=e.target.closest("[data-ropen],[data-rstart],[data-rdel],[data-rdrop],[data-rfinish],[data-sheet],[data-sheetclose],[data-sheetmode],[data-tipf],[data-edittip],[data-deltip],[data-note2tip],[data-mopen],[data-mtog],[data-mmin],[data-msave],[data-mskip],[data-ideaok],[data-ideano],[data-editnote],[data-delnote],[data-editstamp],[data-delstamp],[data-editmsg],[data-delmsg],[data-rate],[data-rateopen],[data-focus],[data-fclose],[data-fdone],[data-fundo],[data-fnext],[data-cancel],[data-uncancel],[data-delbook],[data-view],[data-day],[data-id],[data-go],[data-week],[data-del],[data-act],[data-delidea]");if(!t)return;
  if(t&&readingClick(t))return;
  if(t.hasAttribute("data-delidea")){var di=t.getAttribute("data-delidea");var aft=function(){S.ideas=S.ideas.filter(function(x){return String(x.id)!==di;});render();};
   if(DEMO)aft();else sb.from("ideas").delete().eq("id",di).then(function(r){if(!r.error)aft();});return;}
@@ -1320,6 +1338,11 @@ root.addEventListener("click",function(e){
   var din=document.querySelector('[data-idate="'+iid+'"]');var upd=okI?{status:"ok",date:din&&din.value?din.value:null}:{status:"non"};
   var aft=function(){S.ideas=S.ideas.map(function(x){if(String(x.id)===iid){for(var k in upd)x[k]=upd[k];}return x;});flash("global",okI?"Idée acceptée : elle apparaît chez l’enfant.":"Idée refusée.");};
   if(DEMO)aft();else sb.from("ideas").update(upd).eq("id",iid).then(function(r){if(r.error)flash("global","Erreur : "+r.error.message,true);else aft();});return;}
+ if(t.hasAttribute("data-editstamp")){S.editStamp=t.getAttribute("data-editstamp");S.open=S.open||{};S.open.stampf=true;goForm("stampf");return;}
+ if(t.hasAttribute("data-editmsg")){S.editSensei=t.getAttribute("data-editmsg");S.open=S.open||{};S.open.senseif=true;goForm("senseif");return;}
+ if(t.hasAttribute("data-delstamp")||t.hasAttribute("data-delmsg")){var isSt=t.hasAttribute("data-delstamp"),did=t.getAttribute(isSt?"data-delstamp":"data-delmsg");var ck=(isSt?"s":"m")+did;if(S.confirmDel!==ck){S.confirmDel=ck;render();return;}S.confirmDel=null;
+  var aftd=function(){if(isSt){S.stamps=S.stamps.filter(function(x){return String(x.id)!==did;});if(String(S.editStamp)===did)S.editStamp=null;}else{S.sensei=S.sensei.filter(function(x){return String(x.id)!==did;});if(String(S.editSensei)===did)S.editSensei=null;}render();};
+  if(DEMO)aftd();else sb.from(isSt?"stamps":"sensei_messages").delete().eq("id",did).then(function(r){if(r.error)flash("global","Erreur : "+r.error.message,true);else aftd();});return;}
  if(t.hasAttribute("data-editnote")){S.editNote=t.getAttribute("data-editnote");S.open=S.open||{};S.open.notef=true;goForm("notef");return;}
  if(t.hasAttribute("data-delnote")){var nid=t.getAttribute("data-delnote");if(!t.dataset.ok){t.dataset.ok="1";t.textContent="Confirmer";return;}
   var aftn=function(){S.notes=S.notes.filter(function(n){return String(n.id)!==nid;});if(String(S.editNote)===nid)S.editNote=null;render();};
@@ -1370,6 +1393,8 @@ root.addEventListener("click",function(e){
  if(t.getAttribute("data-act")==="kidea-open"){S.ideaOpen=true;render();var kt=document.getElementById("ki-title");if(kt)kt.focus();return;}
  if(t.getAttribute("data-act")==="kidea-close"){S.ideaOpen=false;render();return;}
  if(t.getAttribute("data-act")==="tip-cancel"){S.editTip=null;S.tipDraft=null;S.open=S.open||{};S.open.tipf=false;render();return;}
+ if(t.getAttribute("data-act")==="stamp-cancel"){S.editStamp=null;S.open=S.open||{};S.open.stampf=false;render();return;}
+ if(t.getAttribute("data-act")==="sensei-cancel"){S.editSensei=null;S.open=S.open||{};S.open.senseif=false;render();return;}
  if(t.getAttribute("data-act")==="note-cancel"){S.editNote=null;S.open=S.open||{};S.open.notef=false;render();return;}
  if(t.getAttribute("data-act")==="hint-ok"){lsSet("kizuna-hint-check","1");render();return;}
  if(t.getAttribute("data-act")==="book-close"){S.bookOpen=false;render();var ob=document.querySelector('[data-act="book-open"]');if(ob)ob.focus();return;}

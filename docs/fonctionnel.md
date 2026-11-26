@@ -86,7 +86,8 @@ Depuis la 0.21, quatre onglets (adresses `#parents`, `#parents/enfants`, `#paren
   - **Avancement de la semaine** : tableau enfant × jour ;
   - **Points difficiles** (missions notées 4 ou 5) et **Méthodes de travail**, chacun avec un « Conseil pour vous » replié.
 - **Enfants** (chiffre rouge = idées à valider) : **Idées proposées** (accepter / refuser), **Bibliothèque des
-  enfants**, **Missions ajoutées à la main** (suppression, « tout décaler d'un jour »).
+  enfants**, **Missions ajoutées à la main** (suppression, « tout décaler d'un jour »), **Sceaux et messages du
+  mentor** (0.22.1 : Modifier ouvre le formulaire prérempli dans Actions ; Supprimer avec confirmation).
 - **Retours et conseils** :
   - **Retours des professeurs** par enfant : les 3 plus récents, puis « Voir les autres retours » (privé / visible
     par l'enfant, objectif et suivi, message d'origine repliable ; Modifier, En faire un conseil, Supprimer) ;
@@ -97,7 +98,8 @@ Depuis la 0.21, quatre onglets (adresses `#parents`, `#parents/enfants`, `#paren
   conseil » depuis l'onglet Retours ouvre directement le bon formulaire ici.
   - **Retour de professeur** (message d'origine privé + version pour l'enfant en trois parties + objectif +
     case « Montrer à l'enfant ») ; ne jamais y écrire le nom d'un autre élève ;
-  - **Conseil** ; **Tampon** (enfant, évaluation, note, date, message) ; **Mot du sensei** (pour un enfant ou tous) ;
+  - **Conseil** ; **Sceau de l'effort** (enfant, pour quoi, note facultative, date, message) ; **Message du mentor**
+    (pour un enfant ou tous) ;
   - **Mission** (date « à faire » ou « à rendre », matière, consigne, type) ;
   - **Saisie rapide** de plusieurs missions collées en texte (prénom, puis dates, puis une mission par ligne ;
     aperçu avant enregistrement) ;
