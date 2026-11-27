@@ -878,12 +878,23 @@ details.ptip>span{display:block;margin-top:6px}
 .chk{width:44px;height:44px}label .chk{width:36px;height:36px}
 @media (max-width:600px){.who{flex:1 1 auto;min-width:0;justify-content:flex-end}.pmenu{min-width:0}.pmenu summary{min-width:0}.pmenu summary .pm-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}}
 @media (max-width:380px){.topbar{padding-left:12px;padding-right:12px;margin-left:-12px;margin-right:-12px;gap:8px}.pmenu summary{padding:4px 10px 4px 12px;gap:5px}.pmenu summary .av{display:none}}
+/* ===== 0.22.2 : alertes du planning ===== */
+.alerts-card{border-left:6px solid #C62E3A;background:#FFF6F3}
+.alerts-card.calm{border-left-color:var(--line);background:var(--card)}
+.alerts-card h2{color:#B83E25}.alerts-card.calm h2{color:var(--muted);font-size:1rem}
+.alist{list-style:none;margin:8px 0 0;padding:0}
+.alist li{display:flex;flex-direction:column;gap:2px;padding:10px 0;border-top:1px solid #F3D9D2}
+.alist li:first-child{border-top:0}
+.alist li b{font-family:var(--display);font-size:.92rem}
+.ahist{margin-top:8px}
+.ahist>summary{cursor:pointer;font-weight:700;color:var(--muted);min-height:44px;display:flex;align-items:center}
+.ahist .alist{opacity:.8}
 </style>
 </head>
 <body>
 <div id="root"><p style="padding:2rem;font-family:sans-serif">Chargement de l’Académie…</p></div>
-<script src="config.js?v=0.22.1"></script>
+<script src="config.js?v=0.22.2"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script src="app.js?v=0.22.1"></script>
+<script src="app.js?v=0.22.2"></script>
 </body>
 </html>

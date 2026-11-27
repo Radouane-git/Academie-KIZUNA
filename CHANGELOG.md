@@ -5,6 +5,23 @@ Numérotation : `MAJEUR.MINEUR.CORRECTIF` (ex. 0.2.1).
 - **mineur** (0.**2**.0) : une nouveauté (un réglage, un écran, une règle de planning) ;
 - **majeur** (**1**.0.0) : la version jugée stable après plusieurs semaines d'usage réel.
 
+## [0.22.2] – 2026-11-27
+
+Corrections publiées directement.
+- **Alertes du planning réservées aux parents** : « À vérifier : … » (devoir découvert trop tard, journée trop chargée,
+  devoirs identiques…) ne s'affiche plus dans l'écran Conseils, que les enfants ouvrent sans code parent. Les alertes
+  sont maintenant en tête de Vue parents → Semaine, dans un encadré « À vérifier » bien visible, avec un chiffre sur
+  l'onglet Semaine.
+- **Alertes passées rangées** : une alerte dont la date est passée va dans « Historique » (replié) ; celles sans date
+  y vont à la fin de leur semaine. Seules les 3 dernières semaines sont gardées.
+- **Page de l'enfant sur la date du jour** : la journée choisie n'était jamais remise à zéro. Une appli restée ouverte
+  depuis la veille, ou un jour choisi la veille, rouvrait donc sur ce jour-là. Maintenant : un jour choisi ne vaut que
+  pour la journée en cours ; l'appli se recharge seule au changement de date (en arrière-plan ou au retour) ; toucher sa
+  carte sur l'accueil ouvre toujours la page sur aujourd'hui.
+- Visite guidée de la Vue parents : nouvelle étape « À vérifier ». Scripts `tests/` : 2 parcours de plus ; le test
+  « mission ajoutée » ne dépend plus du jour de la semaine.
+- Pas de nouveau bloc SQL ; pas de changement du planificateur.
+
 ## [0.22.1] – 2026-11-27
 
 Correction côté parents, publiée directement.

@@ -214,11 +214,15 @@ function defaultDay(){
 }
 function curView(){var h=(location.hash||"").replace("#","").split("/")[0];var ok=children().map(function(c){return c.id;}).concat(["parents","conseils","parametres","accueil"]);return ok.indexOf(h)>=0?h:"accueil";}
 function start(){
- var saved=null;try{saved=sessionStorage.getItem("planning-day");}catch(e){}
- S.day=(saved&&planOf(saved))?saved:defaultDay();
+ var saved=null,on=null;try{saved=sessionStorage.getItem("planning-day");on=sessionStorage.getItem("planning-day-on");}catch(e){}
+ S.day=(saved&&on===TODAY&&planOf(saved))?saved:defaultDay();
  render();subscribe();
 }
-function setDay(d){S.day=d;try{sessionStorage.setItem("planning-day",d);}catch(e){}render();}
+function saveDay(d){try{sessionStorage.setItem("planning-day",d);sessionStorage.setItem("planning-day-on",TODAY);}catch(e){}}
+function setDay(d){S.day=d;saveDay(d);render();}
+function newDay(){var n=iso(new Date());if(n===TODAY)return false;var a=document.activeElement;if(a&&/INPUT|TEXTAREA|SELECT/.test(a.tagName))return false;try{sessionStorage.removeItem("planning-day");}catch(e){}location.reload();return true;}
+document.addEventListener("visibilitychange",function(){if(!document.hidden)newDay();});
+setInterval(newDay,60000);
 
 /* ------------------------------------------------------------ rendu (Académie Kizuna) */
 var THEMES={
@@ -733,7 +737,7 @@ var TOURS={
  livres:[[".read-card","Ton livre en cours","Ouvre ton carnet pour noter les personnages, les lieux, l’époque et le résumé de chaque chapitre."],["[data-rstart]","Commencer un livre","Un nouveau livre ? Ouvre son carnet de lecture : il remplira presque tout seul ta fiche de lecture."],[".books","Tes livres lus","Chaque livre fini compte pour tes badges. Le bouton « Ma fiche de lecture » ouvre ta fiche, prête à imprimer."]],
  parcours:[[".dossier-hero","Ton parcours","Ton grade, ta promotion et tes semaines tenues."],[".ladder","Ton parcours de l’année","Six grades, de Recrue à Maître. Tu ne perds jamais un grade."],["h2=Mes objectifs","Tes objectifs","Un objectif donné par tes professeurs ou tes parents. Coche-le quand tu l’as tenu cette semaine."],["h2=Messages de mon mentor","Les messages de ton mentor","Les messages que tes parents t’ont adressés, gardés ici."],["h2=Mes sceaux","Tes sceaux","Rares : ton mentor les remet à la main pour un vrai effort."]],
  conseils:[[".tipfilter","Trier les conseils","Organisation, devoirs, révisions, leçons, lecture : choisis ce qui t’intéresse."],[".tips-grid","Les conseils","Conseils de l’Académie, de tes professeurs et de livres sur l’art d’apprendre."]],
- parents:[[".ptabs","Quatre onglets","La Vue parents est rangée en quatre onglets : Semaine, Enfants, Retours et conseils, Actions. Un chiffre signale ce qui attend votre réponse."],[".kidcards","Les enfants aujourd’hui","Un coup d’œil sur la journée de chacun. Touchez une carte pour ouvrir sa page."],[".bilan-cta","Le bilan de la semaine","Le dimanche, faites le point en famille : ce qui a marché, ce qui a coincé, la semaine qui vient."],[".ovcard","Avancement de la semaine","Le pourcentage de missions faites, jour par jour et pour chaque enfant."],[".hardcard","Points difficiles","Les missions que les enfants ont notées difficiles, avec un conseil pour vous."],[".methcard","Méthodes de travail","Comment les enfants ont révisé. Une méthode trop passive est signalée."],["#tour-btn","Revoir la visite","L’ampoule relance la visite de chaque écran."]],
+ parents:[[".alerts-card","À vérifier","Quand le planning ne trouve pas de place pour un devoir, l’alerte arrive ici, et seulement ici. Les alertes passées sont rangées dans l’historique."],[".ptabs","Quatre onglets","La Vue parents est rangée en quatre onglets : Semaine, Enfants, Retours et conseils, Actions. Un chiffre signale ce qui attend votre réponse."],[".kidcards","Les enfants aujourd’hui","Un coup d’œil sur la journée de chacun. Touchez une carte pour ouvrir sa page."],[".bilan-cta","Le bilan de la semaine","Le dimanche, faites le point en famille : ce qui a marché, ce qui a coincé, la semaine qui vient."],[".ovcard","Avancement de la semaine","Le pourcentage de missions faites, jour par jour et pour chaque enfant."],[".hardcard","Points difficiles","Les missions que les enfants ont notées difficiles, avec un conseil pour vous."],[".methcard","Méthodes de travail","Comment les enfants ont révisé. Une méthode trop passive est signalée."],["#tour-btn","Revoir la visite","L’ampoule relance la visite de chaque écran."]],
  "parents-enfants":[[".pend-ideas","Idées à valider","Les idées proposées par les enfants : choisissez une date, puis acceptez ou refusez."],["h2=Bibliothèque","La bibliothèque","Les livres lus et la lecture en cours de chaque enfant."],["h2=Missions ajoutées","Missions ajoutées à la main","Les devoirs que vous avez saisis vous-même, à venir."],[".seals-card","Sceaux et messages du mentor","Pour corriger ou retirer un sceau ou un message déjà donné."]],
  "parents-retours":[[".notes-card","Retours des professeurs","Les trois plus récents par enfant ; « Voir les autres » déplie la suite."],[".ptips-card","Conseils pour les parents","Un conseil par semaine, et tous les autres dépliables. Les enfants ne les voient pas."],[".tips-card","Conseils de la famille","Ceux que vous avez ajoutés : professeurs, livres de méthode."]],
  "parents-actions":[[".acts","Les actions","Mission, saisie rapide, message du mentor, sceau, retour de professeur, conseil, idée : touchez-en une pour ouvrir son formulaire."]],
@@ -971,7 +975,22 @@ function kidOptions(withAll){return children().map(function(c){return '<option v
 var PTABS=[["semaine","Semaine","Avancement"],["enfants","Enfants","Loisir"],["retours","Retours et conseils","Prof"],["actions","Actions","Devoir"]];
 function pTab(){var s=(location.hash||"").replace("#","").split("/");return s[0]==="parents"&&["enfants","retours","actions"].indexOf(s[1])>=0?s[1]:"semaine";}
 function pTabsNav(cur){var pend=S.ideas.filter(function(x){return x.status==="proposee";}).length;
- return '<nav class="ptabs" aria-label="Sections de la Vue parents">'+PTABS.map(function(t){var n=t[0]==="enfants"?pend:0;return '<a class="ptab" href="#parents'+(t[0]==="semaine"?"":"/"+t[0])+'"'+(t[0]===cur?' aria-current="page"':'')+'>'+picto(t[2],26)+'<span>'+esc(t[1])+'</span>'+(n?'<b class="pbadge" aria-label="'+n+' à valider">'+n+'</b>':'')+'</a>';}).join("")+'</nav>';}
+ return '<nav class="ptabs" aria-label="Sections de la Vue parents">'+PTABS.map(function(t){var n=t[0]==="enfants"?pend:t[0]==="semaine"?planAlerts().now.length:0;return '<a class="ptab" href="#parents'+(t[0]==="semaine"?"":"/"+t[0])+'"'+(t[0]===cur?' aria-current="page"':'')+'>'+picto(t[2],26)+'<span>'+esc(t[1])+'</span>'+(n?'<b class="pbadge" aria-label="'+n+(t[0]==="semaine"?' à vérifier':' à valider')+'">'+n+'</b>':'')+'</a>';}).join("")+'</nav>';}
+var MOIS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
+function alertDate(n,p){var s=(n[0]+" "+n[1]).toLowerCase(),re=/(\d{1,2})(?:er)? (janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre)/g,m,best=null;
+ var y0=+p.data.days[0].date.slice(0,4),m0=+p.data.days[0].date.slice(5,7);
+ while((m=re.exec(s))){var mo=MOIS.indexOf(m[2])+1,y=y0+(mo<m0-6?1:0),d=y+"-"+(mo<10?"0":"")+mo+"-"+(+m[1]<10?"0":"")+(+m[1]);if(!best||d>best)best=d;}
+ return best;}
+function planAlerts(){var out=[],seen={};
+ S.plans.forEach(function(p){var days=p.data&&p.data.days;if(!days||!days.length)return;var last=days[days.length-1].date;if(last<addDays(TODAY,-21))return;
+  (p.data.notes||[]).forEach(function(n){var k=n[0]+"|"+n[1];if(seen[k])return;seen[k]=1;out.push({t:n[0],x:n[1],d:alertDate(n,p)||last});});});
+ return {now:out.filter(function(a){return a.d>=TODAY;}).sort(function(a,b){return a.d<b.d?-1:1;}),past:out.filter(function(a){return a.d<TODAY;}).sort(function(a,b){return a.d<b.d?1:-1;})};}
+function alertItem(a){return '<li><b>'+esc(a.t)+'</b><span>'+esc(a.x)+'</span></li>';}
+function renderAlerts(){var al=planAlerts();if(!al.now.length&&!al.past.length)return "";
+ var h='<section class="card alerts-card'+(al.now.length?"":" calm")+'"><div class="ftitle">'+picto("Difficile",36)+'<h2>'+(al.now.length?'À vérifier <small class="cnt">('+al.now.length+')</small>':'Aucune alerte en cours')+'</h2></div>';
+ if(al.now.length)h+='<p class="det">Ce que le planning n’a pas pu placer ou trouve anormal : à régler avec l’enfant, ou à signaler au professeur. Les enfants ne voient pas ces alertes.</p><ul class="alist">'+al.now.map(alertItem).join("")+'</ul>';
+ if(al.past.length)h+='<details class="ahist" data-more="ahist"'+(S.open&&S.open.ahist?" open":"")+'><summary>Historique : '+al.past.length+' alerte'+(al.past.length>1?"s":"")+' passée'+(al.past.length>1?"s":"")+'</summary><ul class="alist">'+al.past.map(alertItem).join("")+'</ul></details>';
+ return h+'</section>';}
 function goForm(id){if(pTab()!=="actions"){S.afterRender=id;location.hash="#parents/actions";return;}render();var el=document.getElementById(id);if(el)(el.closest("details")||el).scrollIntoView({block:"start"});}
 function renderSealsParents(){
  var h='<section class="card seals-card"><div class="ftitle">'+stampHtml(36,"努")+'<h2>Sceaux et messages du mentor</h2></div><p class="det">Pour corriger ou retirer un sceau ou un message déjà donné. « Modifier » ouvre le formulaire dans l’onglet Actions.</p>';
@@ -996,6 +1015,7 @@ function renderParents(noFam){
   var tot={n:0,t:0};children().forEach(function(c){var w=weekProg(c.id,plan);tot.n+=w.n;tot.t+=w.t;});
   var evc=0;children().forEach(function(c){evc+=evalsFor(c.id).filter(function(e){return e[0]>=TODAY&&dDiff(e[0],TODAY)<=7;}).length;});
   h+='<section class="hero" style="background-color:'+tp.bg+';color:'+tp.txt+'"><div class="hero-id"><div><span class="over">Bureau du sensei</span><h1>'+esc(plan?plan.data.title.replace(/^Du /,"Semaine du "):"Semaine")+'</h1></div></div><div class="hero-stats parents"><div><b>'+pct(tot)+' %</b><small>de la semaine</small></div><div><b style="color:'+tp.acc+'">'+evc+'</b><small>évaluations à 7 jours</small></div><div><b>'+S.stamps.length+'</b><small>tampons</small></div></div></section>';
+  h+=renderAlerts();
   var wdn=new Date(TODAY+"T12:00:00").getDay();
   h+='<div class="bilan-cta'+(wdn===0||wdn===6?" hot":"")+'"><span>'+(wdn===0?"C’est dimanche : le bilan de la semaine est prêt.":wdn===6?"Demain, c’est le bilan de la semaine.":"Où en est la semaine ?")+'</span><a class="btn mini" href="#parents/bilan">Bilan de la semaine</a></div>';
   var pendN=S.ideas.filter(function(x){return x.status==="proposee";}).length;
@@ -1120,9 +1140,7 @@ function renderSettings(noFam){
  return h+'</div></div>';
 }
 function renderTips(plan){
- var notes=(plan&&plan.data.notes)||[];
  var h='<section class="hero" style="background-color:#0D3B45;color:#FFFFFF"><div class="hero-id"><div><span class="over">Conseils de l’Académie</span><h1>Bien apprendre, bien s’organiser</h1></div></div></section>';
- if(notes.length)h+='<div class="cols">'+notes.map(function(n){return '<div class="card warn"><h2>À vérifier : '+esc(n[0])+'</h2><p>'+esc(n[1])+'</p></div>';}).join("")+'</div>';
  h+='<nav class="tipfilter" aria-label="Filtrer les conseils">'+[["tous","Tous"]].concat(MOMENTS).map(function(m){return '<button class="wk" data-tipf="'+m[0]+'" aria-pressed="'+(S.tipFilter===m[0])+'">'+m[1]+'</button>';}).join("")+'</nav>';
  var list=allTips(null).filter(function(t){return S.tipFilter==="tous"||t.moments.indexOf(S.tipFilter)>=0;});
  h+='<p class="acts-intro tips-count">'+list.length+' conseil'+(list.length>1?"s":"")+' · touchez un titre pour le lire.</p><div class="tips-grid folded">'+list.map(function(t){return '<details class="tip src-'+esc(t.src)+'"><summary><span class="tip-src">'+esc(tipSrcLabel(t))+(t.subject?' · '+esc(t.subject):'')+'</span><h3>'+esc(t.title)+'</h3></summary><p>'+esc(t.body)+'</p></details>';}).join("")+'</div>';
@@ -1325,6 +1343,7 @@ function val(id){return (document.getElementById(id).value||"").trim();}
 function pickWeek(idx){var p=S.plans[idx];if(!p)return;var has=p.data.days.some(function(d){return d.date===TODAY;});setDay(has?TODAY:(p.data.days[1]||p.data.days[0]).date);}
 
 root.addEventListener("click",function(e){
+ var hc=e.target.closest&&e.target.closest(".home-card");if(hc&&S.plans){S.day=defaultDay();saveDay(S.day);}
  var t=e.target.closest("[data-ropen],[data-rstart],[data-rdel],[data-rdrop],[data-rfinish],[data-sheet],[data-sheetclose],[data-sheetmode],[data-tipf],[data-edittip],[data-deltip],[data-note2tip],[data-mopen],[data-mtog],[data-mmin],[data-msave],[data-mskip],[data-ideaok],[data-ideano],[data-editnote],[data-delnote],[data-editstamp],[data-delstamp],[data-editmsg],[data-delmsg],[data-rate],[data-rateopen],[data-focus],[data-fclose],[data-fdone],[data-fundo],[data-fnext],[data-cancel],[data-uncancel],[data-delbook],[data-view],[data-day],[data-id],[data-go],[data-week],[data-del],[data-act],[data-delidea]");if(!t)return;
  if(t&&readingClick(t))return;
  if(t.hasAttribute("data-delidea")){var di=t.getAttribute("data-delidea");var aft=function(){S.ideas=S.ideas.filter(function(x){return String(x.id)!==di;});render();};
@@ -1406,7 +1425,7 @@ root.addEventListener("click",function(e){
  if(t.hasAttribute("data-week")){pickWeek(+t.getAttribute("data-week"));return;}
  if(t.hasAttribute("data-go")){S.day=t.getAttribute("data-day");location.hash=t.getAttribute("data-go");return;}
  if(t.hasAttribute("data-view")){S.pmenu=false;var nv=t.getAttribute("data-view");if((location.hash||"").replace("#","")===nv)render();else location.hash=nv;return;}
- if(t.hasAttribute("data-day")){if(t.hasAttribute("data-sec")){var cv=curView();S.day=t.getAttribute("data-day");try{sessionStorage.setItem("planning-day",S.day);}catch(e2){}location.hash=cv;return;}setDay(t.getAttribute("data-day"));return;}
+ if(t.hasAttribute("data-day")){if(t.hasAttribute("data-sec")){var cv=curView();S.day=t.getAttribute("data-day");saveDay(S.day);location.hash=cv;return;}setDay(t.getAttribute("data-day"));return;}
  if(t.hasAttribute("data-id")){var i=t.getAttribute("data-id");setDone(i,!S.done[i]);}
 });
 root.addEventListener("toggle",function(e){if(e.target.hasAttribute&&e.target.hasAttribute("data-rl")){S.rlOpen=S.rlOpen||{};S.rlOpen[e.target.getAttribute("data-rl")]=e.target.open;}if(e.target.hasAttribute&&e.target.hasAttribute("data-fold")){S.open=S.open||{};S.open[e.target.getAttribute("data-fold")]=e.target.open;}if(e.target.classList&&e.target.classList.contains("pmenu"))S.pmenu=e.target.open;if(e.target.classList&&e.target.classList.contains("edt"))S.edtOpen=e.target.open;},true);

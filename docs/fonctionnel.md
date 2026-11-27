@@ -22,6 +22,8 @@ de l'ENT, et qu'il coche lui-même. Les parents suivent l'avancement, ajoutent c
 
 - Un seul **mot de passe familial** ouvre l'appli (demandé une fois par appareil).
 - L'appli s'ouvre sur l'**accueil** « Qui ouvre l'Académie ? » : une carte par enfant (couleur, insigne et grade, missions du jour).
+- Toucher sa carte sur l'accueil ouvre la page de l'enfant sur **aujourd'hui**. Un autre jour choisi ne vaut que pour
+  la journée en cours ; au changement de date, l'appli restée ouverte se recharge seule (0.22.2).
 - Adresses : `#accueil`, `#<enfant>`, `#<enfant>/semaine`, `#<enfant>/livres`, `#<enfant>/parcours` (anciennes adresses
   `/tampons` et `/dossier` redirigées), `#parents`,
   `#parametres`, `#conseils`.
@@ -80,6 +82,9 @@ Depuis la 0.21, quatre onglets (adresses `#parents`, `#parents/enfants`, `#paren
 
 - **Semaine** :
   - **Bureau du sensei** : semaine en cours, pourcentage, évaluations à 7 jours, tampons ;
+  - **À vérifier** (0.22.2) : les alertes du planning (devoir découvert trop tard, journée trop chargée, évaluation
+    saisie deux fois, devoirs identiques à la semaine passée), réservées aux parents ; chiffre sur l'onglet Semaine ;
+    alertes passées dans « Historique » replié (3 dernières semaines). Jamais dans l'écran Conseils ;
   - accès au **Bilan de la semaine**, alerte « idées à valider », rappel du code parent ;
   - **une carte par enfant** : missions du jour, semaine, prochaine évaluation, missions notées difficiles ;
     un clic ouvre sa journée ;
@@ -191,7 +196,8 @@ Le planning est recalculé à chaque synchronisation (7h et 18h). Réglages dans
 ### 5.4 Journées trop chargées
 1. Le travail peut aller jusqu'à 25 minutes avant le dîner (la corvée passe après).
 2. Puis après le dîner, jusqu'à 21h30, les plus courtes et les révisions d'abord.
-3. Ce qui ne rentre toujours pas va dans l'encadré **Pas de place avant le coucher**, et une remarque prévient les parents.
+3. Ce qui ne rentre toujours pas va dans l'encadré **Pas de place avant le coucher**, et une alerte prévient les parents
+   (Vue parents → Semaine → « À vérifier »).
 
 ### 5.4 bis Échéances et doublons
 - Rien n'est jamais placé après les cours le jour de l'échéance (sauf la relecture du matin même).
