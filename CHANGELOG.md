@@ -5,6 +5,15 @@ Numérotation : `MAJEUR.MINEUR.CORRECTIF` (ex. 0.2.1).
 - **mineur** (0.**2**.0) : une nouveauté (un réglage, un écran, une règle de planning) ;
 - **majeur** (**1**.0.0) : la version jugée stable après plusieurs semaines d'usage réel.
 
+## [0.22.3] – 2026-11-28
+
+Petit changement demandé par le père, publié directement.
+- **Menu des profils** (téléphone et petits écrans) : « Vue parents » devient « Parent », dans la liste et sur le bouton
+  du menu quand on est dans l'espace parents. Le reste de l'appli (titres, visites guidées, bouton « Parents » du
+  bandeau sur ordinateur) ne change pas.
+- Scripts `tests/` : deux parcours ne dépendent plus du jour de la semaine (week-end).
+- Pas de nouveau bloc SQL.
+
 ## [0.22.2] – 2026-11-27
 
 Corrections publiées directement.
